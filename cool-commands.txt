@@ -1,0 +1,462 @@
+Wireless access points
+sudo iwlist scanning|less
+
+Connecting to s-video out
+xrandr
+
+Finding in directories beneath
+Find all files containing text 'NBMAX' and ending in .F90
+find . | xargs grep NBMAX *.F90
+Find all files with 'cool' somewhere in the name
+find . -name  *cool*
+Find all files ending in .html in current directory
+find . -name *.html
+Find all files ending in .html in current directory and subdirectories
+find . -name '*.html'
+
+View only files not ending in '.txt'
+ls --ignore=*.txt
+
+Viewing active processes
+top
+
+Changing sound settings
+alsamixer
+
+Figure out which speaker is left and right
+speaker-test -Dplug:front -c2 -t sine -f100
+
+Append last command to this text file
+echo !! >> ~/Dropbox/how-to/cool-commands.txt
+
+Grepping
+grep PHY unofficial-transcript-11-24-11.txt
+grep ALLOCATE COORD *.F90
+grep -Fxv -f DERIVT.F90 MODULE.F90 
+grep -r dveff *.f90
+grep '=>' *.f90
+grep -r *.mp3 .
+grep Offenbach .
+ls -R | grep kim *.f90
+grep -ir "kim_api" . --include=*.f90
+grep -r "kim-str" .
+time grep "hi"
+ls /usr/bin | grep "csound"
+nano | ls | grep "ann"
+
+find | grep NBMAX *.F90
+
+view error messages in less
+bash compile.sh 2>&1 | less
+send stderr to text file
+bash env.sh 2> err_log.txt
+send stdout and stderr to text file
+bash env.sh &> full_log.txt
+
+return all lines containing "kim_api" (case insensitive) and ending with .f90
+grep -ir "kim_api" . --include=*.f90
+
+rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
+rename -n 's/^/digital_media_archive_assistant_/' *.png
+this would work also:
+for i in *.png; do mv $i digital_media_archive_assistant_$i; done
+
+Using the system dictionary:
+grep -i '^s.*m.*b' /usr/share/dict/words #this is how samba was named
+egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
+
+Debugging segfaults in C:
+printf("Line %d reached.\n",__LINE__);//debug
+Debugging segfaults in Fortran:
+print*,__FILE__,__LINE__
+
+GNU debugger (gdb) basics
+gdb ./vc_forces_numer_deriv
+r
+bt
+frame 2
+info locals
+info args
+
+Disk usage:
+du |sort -n -r
+du -k --max-depth=1 /home | sort -nr
+
+mkvextract tracks movie5.mkv 2:audio_track.ac3
+ls --almost-all --format=single-column
+sudo chmod -R +rwx .mozilla
+!! #repeat previous command
+type rr #identify the kind of command rr is
+source .bashrc #make bash re-read modified .bashrc file
+. .bashrc #make bash re-read modified .bashrc file
+apt-cache search my-package #search apt packages for 'my-package'
+find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' #find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
+cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
+sudo chown nathaniel: .xdvirc
+cat precise.txt | grep root > to-chown.txt
+cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: #transfer ownership to nathaniel instead of root
+
+curl -o /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
+curl -C - -O 'url_for_file' #Download file, automatically with same name and ability to resume download
+wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img #simpler
+
+echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
+#Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
+#Should I run this?
+
+
+for f in *.gsp #for every file ending in .gsp
+do
+    echo $f #display the filename
+    hexdump -C $f > "${f%.*}.txt" #make a text hexdump
+done
+
+#Process control
+ps aux |grep athena
+pstree
+vmstat
+
+ps aux --sort=-%cpu #list processes using most CPU
+ps aux --sort=-%mem #list processes using most memory
+
+startx -- :1 #start x session
+
+ls -lSrh #list biggest files
+
+lsof #display open files
+
+#Sure ways to restart a wireless network
+ping -c 4 google.com
+lspci | grep -i network
+#03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
+modprobe -l | grep rtl
+sudo modprobe -r rtl8192ce 
+sudo modprobe rtl8192ce
+ping -c 4 google.com
+
+#Another method
+sudo /etc/init.d/networking restart
+
+#First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
+#Restart X server
+sudo service lightdm restart
+#Magic SysRq key: rebooting when all other options fail
+hold down Alt-SysRq, then type  r e i s u b
+
+
+date --date='2 hours 22 minutes' +%r #The time 2 hours and 22 minutes from now, formatted with AM/PM
+date --date='45 days after 9/11/2012' +%r
+#find number of days' difference between two dates
+echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
+
+grep -r "string" . #recursively search all files for string
+
+#search man pages
+man -K "David MacKenzie" | grep "David MacKenzie" | wc -l #returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+
+git grep -i rhubarb $(git rev-list --all) # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
+
+compgen -ac | grep my-command # searh for commands and aliases named 'my-command'
+
+#Get wireshark working for non-root user
+sudo apt-get install wireshark
+sudo dpkg-reconfigure wireshark-common 
+sudo usermod -a -G wireshark $USER
+gnome-session-quit --logout --no-prompt
+
+locate -i file
+updatedb
+/usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
+
+
+echo -n '12764787846358441471' | wc -m #this is a 20-digit prime
+time factor 12764787846358441471 #factoring this will take on the order of a few seconds
+12764787846358441471: 12764787846358441471
+
+real    0m14.582s
+user    0m14.533s
+sys 0m0.004s
+#This is what I get on my laptop
+
+chmod +x zab.py #make zap.py executable
+
+#In python interpretive shell
+globals() locals() vars() dir()
+
+#Create images from LaTeX DVI document
+dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
+
+sudo pm-suspend # manually sleep
+
+apt-cache showpkg xserver-xorg-input-synaptics
+#Use synaptic to downgrade and lock
+sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
+#Add this to prevent upgrades to package
+// List of packages to not update
+Unattended-Upgrade::Package-Blacklist {
+      "xserver-xorg-input-synaptics";
+};
+#sage command
+plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
+VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
+
+
+#Get rid of network popups
+killall nm-applet ; nm-applet &
+
+8	9	20	48
+#Fun with brace expansion
+for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
+
+#find Unicode/non-ascii characters in text file by numbered line
+cat utf8.txt | LC_COLLATE=C grep -n '[^ -~]' --color=always | less -r
+#show only the matching characteres
+cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' --color=always | less -r
+#send to text file instead of less
+cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' > non-ascii.txt
+
+grep 'it.*it' /usr/share/dict/words | sed '/s/it/IIT/g' | less
+
+unzip '*.zip' #unzip all files ending in .zip
+updmap --enable Map=tengwarscript.map
+
+#ip address for IIT physics office printer 216.47.138.174
+
+#decompress and unarchive a bzipped file
+tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
+
+#decompress and unarchive a gzipped file
+tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
+
+cat /bin/cat #mojibake-fy the screen
+reset #fix it
+
+#get out of pretty much any terminal program and back to the shell
+Ctrl-Z
+#move the job back to the foreground
+fg
+
+#Patching
+diff -u new_file old_file > patch.txt #Generates a patch file that can generate new_file from old_file
+#To check the patch:
+patch -b old_file #Patches old_file and creates a file called old_file.orig that is unpatched
+vimdiff old_file old_file.orig #compare the patched file to the original file
+
+find ./ -exec file '{}' \; #find out what kind of file all the stuff in the directories below are
+
+ssh -D 9999 iit@id1.mr.aps.anl.gov #secure shell into the Argonne beamline account for IIT
+ssh -D 9999 nbeaver@216.47.138.69  #secure shell into desktop at physics office
+
+#in python, save interactive history in current directory:
+import readline
+readline.write_history_file("my_history.txt")
+
+#instant memory leak!
+echo $(yes hurpaflerp)
+
+#Check ip address to see if it responds, then load the video
+ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
+rsync -rave ssh nbeaver@216.47.138.69:~/* ./
+
+#Search with less case insensitive
+less -i
+(Or just press -i while less is running)
+
+#List networks
+sudo lshw -C network
+
+#Check battery state/power level
+cat /proc/acpi/battery/BAT0/state
+
+#Get a new DVD drive to work
+sudo regionset /dev/dvd4
+
+#Capture a disc image
+cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
+
+#Execute 'file' on every file below current directory 
+find . -exec file '{}' + | less
+
+#Restart the gui for ubuntu
+unity-2d-shell --reset
+
+#Find gateway ip address
+route -n
+
+#How to start a new flashbake directory:
+#1. Initialize the git repository in the relevant directory.
+git init
+#2. Make a .flashbake file.
+echo "*.txt" > .flashbake
+#3. Make a .gitignore file (optional).
+#4. Add a cronjob like this:
+*/15 * * * * /usr/local/bin/flashbake ~/Dropbox/writings/ 5 2> ~/Dropbox/flashbake-status.txt
+
+#Restart sound daemon, e.g. when flash has choppy audio
+pulseaudio --kill
+pulseaudio -D #start it up again as a daemon
+
+#Debug wifi
+sudo lshw -C network > wifi-card-info.txt
+sudo service network-manager stop
+sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log 
+dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
+
+#Detach process from gnome-terminal
+Ctrl-Z #Access bash prompt
+bg     #Put job in background
+#Note job number, or use
+jobs
+disown -h %1 #Detach job 1 from current terminal
+
+#Restart compiz from a terminal emulator
+DISPLAY=:0 compiz --replace & disown
+#If that doesn't work...
+unity --reset & disown
+
+
+#Generate 4-word passphrase
+shuf -n4 /usr/share/dict/words
+
+#Print document from the command line
+lpr -P "Brother-HL-4070CDW" doc.pdf
+
+#List avahi/bonjour services like printers on the local area network (LAN)
+avahi-browse -a -v -t -r
+sudo arp-scan -l | less
+
+#On computer #1
+nc -l 55555
+#On computer #2, where $IP is computer #1's ip address
+nc $IP 55555
+
+#After sshing in,
+write nbeaver <enter>
+#Type message. They can write you back, too.
+wall <enter>
+#Type message, Ctrl-D
+
+#Grep wifi connections for passkeys or passwords (uses grep "OR" \|)
+sudo cat /etc/NetworkManager/system-connections/* | grep 'psk=\|password='
+
+#Encrypt file with gpg
+gpg -c super-secret-file.txt
+
+#Generate encypted file with vim
+vim -x encrypted-file.txt
+
+#On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
+Ctrl-X Ctrl-E
+#On bash command line, cut word before/after cursor
+Ctrl-W
+Esc-W
+#On bash command line, incremental undo
+Ctrl-X Ctrl-U
+#On bash command line, move forward/backword one character
+Ctrl-F
+Ctrl-B
+#On bash command line, move forward/backword one word
+Esc-F
+Esc-B
+
+# Remove spaces and duplicate lines
+cat myfile.txt | tr -s ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
+sudo grep -r helper /var/log/
+
+# Latex build for Bibtex
+pdflatex -synctex=1 -interaction=nonstopmode %.tex|bibtex %.aux|pdflatex -synctex=1 -interaction=nonstopmode %.tex|evince %.pdf
+
+#Generate combined file with name of file included
+tail -n +1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
+
+#Use awk to give column 2, space, column 1, tab, then the last column
+awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | uniq > iit-name-and-email.txt
+
+#Kill escalation
+kill 21213 #sends SIGTERM to process 21213
+kill -3 21213 #send QUIT to process 21213
+kill -9 21213 #sends unblockable KILL signal to kernel
+
+#Find connected program
+netstat -tulanp | less
+
+#Disk usage of current directory (total only)
+du -sh
+#Director/file taking up the most space
+du -hsx * | sort -rh | head -10
+
+#Adding metadata to pdfs with pdftk
+#Add an info dictionary if there isn't one already (harmless)
+pdftk book.pdf cat output book.pdf
+#Extract metadata
+pdftk book.pdf dump_data > info.txt
+#Edit metadata
+vim info.txt
+#Update pdf metadata
+pdftk book.pdf update_info  info.txt output out-book.pdf 
+#Dump all metadata
+for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
+
+#Copy all files in a remote director to this computer
+scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
+
+#Run redshift with location near Chicago
+redshift -l 41:87
+
+#Using gpg for encryption
+gpg -c myfile.txt #Generates myfile.txt.gpg
+#Be ready to provide a passphrase
+gpg -c -o myfile.enc myfile #If you want to specify the output name
+#Don't forget to erase the original file!
+#Decrypt the encrypted file and push it to stdout
+gpg -d myfile.enc
+#Decrypt the encrypted file and save it to a file
+gpg -o myfilenew myfile.enc 
+
+#Get all kinds of data, including disk usage
+vmstat 1
+
+#Rename all file ending in Unknown.pdf and strip the ' - Unknown' part of their name
+for f in *Unknown.pdf; do mv "$f" ${f% - Unknown.pdf}.pdf; done
+
+#Avoiding the '^[[A' or '^[[B' effect when trying to get previous command (pressing up or down arrow) for a cli program
+rlwrap cmd
+rlwrap java -cp /FromWeb/frink.jar frink.parser.Frink "$@"
+rlwrap math
+
+#Text to speech
+echo 'Hello, world!' | espeak --stdin
+
+#List to your computer say "Ping!" every 2 seconds
+ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
+
+#Generate random alphanumeric password
+strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo
+
+#Get information about zip files in current directory
+for f in *.zip; do unzip -v $f; done
+
+#Cracking zip files:
+#Dictionary method
+fcrackzip -u -v -D -p /usr/share/dict/words platelet.zip 
+#Brute-force method, no knowledge of password, only setting length limits
+fcrackzip -u -l 3-4 geek.zip
+time fcrackzip -u -l 3-4 geek.zip 
+
+
+PASSWORD FOUND!!!!: pw == geek
+
+real	0m49.633s
+user	0m1.916s
+sys	0m2.236s
+
+#Do something for each line of a file
+while read line; do 
+    echo $line # or whaterver you want to do with the $line variable
+done < file.txt
+#On one line
+while read line; do echo -e "$line\n"; done < file.txt
+
+# Run redshift in the background so that the terminal can be closed
+# and use nohup so that it says open even after logging out
+nohup redshift -l 41:87 & disown
