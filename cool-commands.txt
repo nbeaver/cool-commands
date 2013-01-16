@@ -460,3 +460,6 @@ while read line; do echo -e "$line\n"; done < file.txt
 # Run redshift in the background so that the terminal can be closed
 # and use nohup so that it says open even after logging out
 nohup redshift -l 41:87 & disown
+
+# Download a local copy of the weather
+wget -p --convert-links 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
