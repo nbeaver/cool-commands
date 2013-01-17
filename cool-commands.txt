@@ -463,3 +463,6 @@ nohup redshift -l 41:87 & disown
 
 # Download a local copy of the weather into a specified directory
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
+
+# Allow everyone to read a file
+ sudo chmod a+r file
