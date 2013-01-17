@@ -466,3 +466,6 @@ wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'htt
 
 # Allow everyone to read a file
  sudo chmod a+r file
+
+# Find out what shell you're using
+echo $SHELL
