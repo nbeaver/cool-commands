@@ -469,3 +469,14 @@ wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'htt
 
 # Find out what shell you're using
 echo $SHELL
+
+# Find out whether a package is installed or not
+apt-cache policy gnash
+dpkg -l "*gnash*"
+
+#Get description of pakcage
+aptitude show gnash
+dpkg -s gnash
+
+#Find out corresponding package to given command
+dpkg -S `which gnash`
