@@ -483,3 +483,4 @@ dpkg -S `which gnash`
 
 #Screencast
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
+ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
