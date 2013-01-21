@@ -469,6 +469,7 @@ wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'htt
 
 # Find out what shell you're using
 echo $SHELL
+echo $0
 
 # Find out whether a package is installed or not
 apt-cache policy gnash
