@@ -488,3 +488,6 @@ ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
 
 #See programs using the internet
 lsof -i -P | less
+
+#Compile with the gfortran compiler
+gfortran myprogram.f95 -o myprogram
