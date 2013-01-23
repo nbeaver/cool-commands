@@ -182,6 +182,8 @@ chmod +x zab.py #make zap.py executable
 
 #In python interpretive shell
 globals() locals() vars() dir()
+# Run python, ending with an interactive shell to fiddle with
+python -i myscript.py
 
 #Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
