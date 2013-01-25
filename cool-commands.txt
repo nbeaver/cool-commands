@@ -500,3 +500,6 @@ gfortran myprogram.f95 -o myprogram
 
 #Show kernel information
 uname -a
+
+#Try to fix wifi
+sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
