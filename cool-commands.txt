@@ -497,3 +497,6 @@ lsof -i -P | less
 
 #Compile with the gfortran compiler
 gfortran myprogram.f95 -o myprogram
+
+#Show kernel information
+uname -a
