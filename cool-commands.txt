@@ -506,3 +506,6 @@ sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unlo
 
 #Matrix-like command. Totally useless.
 cat /dev/urandom | hexdump
+
+#Get EXIF metadata for an image
+exiftool -a -u -g1 IMG_3689.JPG
