@@ -407,7 +407,9 @@ for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dum
 scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
 
 #Run redshift with location near Chicago
-redshift -l 41:87
+redshift -l 41:-87
+#Improved accuracy and run in the background:
+nohup redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v & disown
 
 #Using gpg for encryption
 gpg -c myfile.txt #Generates myfile.txt.gpg
