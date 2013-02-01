@@ -511,3 +511,7 @@ cat /dev/urandom | hexdump
 
 #Get EXIF metadata for an image
 exiftool -a -u -g1 IMG_3689.JPG
+
+#Unmount partitions and detach disk
+df #to see mounted partitions
+sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
