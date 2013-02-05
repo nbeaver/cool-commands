@@ -176,7 +176,7 @@ updatedb
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
 
 
-echo -n '12764787846358441471' | wc -m #this is a 20-digit prime
+echo -n '12764787846358441471' | wc --chars #this is a 20-digit prime
 time factor 12764787846358441471 #factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
 
@@ -269,7 +269,10 @@ echo $(yes hurpaflerp)
 
 #Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
+
+#Rsyncing home directory contents into current directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
+rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 
 #Search with less case insensitive
 less -i
@@ -293,7 +296,7 @@ find . -exec file '{}' + | less
 #Restart the gui for ubuntu
 unity-2d-shell --reset
 
-#Find gateway ip address
+#Find numeric gateway ip address
 route -n
 
 #How to start a new flashbake directory:
@@ -307,7 +310,7 @@ echo "*.txt" > .flashbake
 
 #Restart sound daemon, e.g. when flash has choppy audio
 pulseaudio --kill
-pulseaudio -D #start it up again as a daemon
+pulseaudio --daemonize #start it up again as a daemon
 
 #Debug wifi
 sudo lshw -C network > wifi-card-info.txt
@@ -329,14 +332,14 @@ unity --reset & disown
 
 
 #Generate 4-word passphrase
-shuf -n4 /usr/share/dict/words
+shuf --head-count=4 /usr/share/dict/words
 
 #Print document from the command line
 lpr -P "Brother-HL-4070CDW" doc.pdf
 
 #List avahi/bonjour services like printers on the local area network (LAN)
-avahi-browse -a -v -t -r
-sudo arp-scan -l | less
+avahi-browse --all --verbose --terminate --resolve
+sudo arp-scan --localnet | less
 
 #On computer #1
 nc -l 55555
@@ -353,7 +356,7 @@ wall <enter>
 sudo cat /etc/NetworkManager/system-connections/* | grep 'psk=\|password='
 
 #Encrypt file with gpg
-gpg -c super-secret-file.txt
+gpg --symmetric super-secret-file.txt
 
 #Generate encypted file with vim
 vim -x encrypted-file.txt
@@ -373,14 +376,14 @@ Esc-F
 Esc-B
 
 # Remove spaces and duplicate lines
-cat myfile.txt | tr -s ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
+cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
 sudo grep -r helper /var/log/
 
 # Latex build for Bibtex
 pdflatex -synctex=1 -interaction=nonstopmode %.tex|bibtex %.aux|pdflatex -synctex=1 -interaction=nonstopmode %.tex|evince %.pdf
 
 #Generate combined file with name of file included
-tail -n +1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
+tail --lines=+1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
 
 #Use awk to give column 2, space, column 1, tab, then the last column
 awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | uniq > iit-name-and-email.txt
@@ -392,11 +395,14 @@ kill -9 21213 #sends unblockable KILL signal to kernel
 
 #Find connected program
 netstat -tulanp | less
+netstat --tcp --udp --listening --all --numeric --program | less #long version
 
 #Disk usage of current directory (total only)
 du -sh
+du --summarize --human-readable
 #Director/file taking up the most space
 du -hsx * | sort -rh | head -10
+du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head -10
 
 #Adding metadata to pdfs with pdftk
 #Add an info dictionary if there isn't one already (harmless)
