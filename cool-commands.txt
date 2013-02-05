@@ -25,6 +25,7 @@ alsamixer
 
 Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
+speaker-test --device plug:front --channels 2 --test sine --frequency 100 #long version
 
 Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
@@ -32,14 +33,15 @@ echo !! >> ~/Dropbox/how-to/cool-commands.txt
 Grepping
 grep PHY unofficial-transcript-11-24-11.txt
 grep ALLOCATE COORD *.F90
-grep -Fxv -f DERIVT.F90 MODULE.F90 
-grep -r dveff *.f90
+grep -Fxv -f DERIVT.F90 MODULE.F90 #subtract first file from second file
+grep --fixed-strings --line-regexp --invert-match --file=DERIVT.F90 MODULE.F90 #long version
+grep --recursive dveff *.f90
 grep '=>' *.f90
-grep -r *.mp3 .
+grep --recursive *.mp3 .
 grep Offenbach .
-ls -R | grep kim *.f90
-grep -ir "kim_api" . --include=*.f90
-grep -r "kim-str" .
+ls --recursive | grep kim *.f90
+grep --ignore-case --recursive "kim_api" . --include=*.f90
+grep --recursive "kim-str" .
 time grep "hi"
 ls /usr/bin | grep "csound"
 nano | ls | grep "ann"
@@ -57,7 +59,7 @@ return all lines containing "kim_api" (case insensitive) and ending with .f90
 grep -ir "kim_api" . --include=*.f90
 
 rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
-rename -n 's/^/digital_media_archive_assistant_/' *.png
+rename --no-act 's/^/digital_media_archive_assistant_/' *.png
 this would work also:
 for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 
@@ -79,7 +81,8 @@ info locals
 info args
 
 Disk usage:
-du |sort -n -r
+du |sort --numeric-sort --reverse
+du |sort -nr #quick version
 du -k --max-depth=1 /home | sort -nr
 
 mkvextract tracks movie5.mkv 2:audio_track.ac3
@@ -96,8 +99,8 @@ sudo chown nathaniel: .xdvirc
 cat precise.txt | grep root > to-chown.txt
 cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: #transfer ownership to nathaniel instead of root
 
-curl -o /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
-curl -C - -O 'url_for_file' #Download file, automatically with same name and ability to resume download
+curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
+curl --continue-at - --remote-name 'url_for_file' #Download file, automatically with same name and ability to resume download
 wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img #simpler
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
@@ -122,15 +125,16 @@ ps aux --sort=-%mem #list processes using most memory
 startx -- :1 #start x session
 
 ls -lSrh #list biggest files
+ls -l -S --reverse --human-readable #-l = long listing and -S = sort
 
 lsof #display open files
 
 #Sure ways to restart a wireless network
-ping -c 4 google.com
+ping -c 4 google.com #ping 4 times
 lspci | grep -i network
 #03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
-modprobe -l | grep rtl
-sudo modprobe -r rtl8192ce 
+modprobe --list | grep rtl
+sudo modprobe --remove rtl8192ce 
 sudo modprobe rtl8192ce
 ping -c 4 google.com
 
@@ -141,7 +145,7 @@ sudo /etc/init.d/networking restart
 #Restart X server
 sudo service lightdm restart
 #Magic SysRq key: rebooting when all other options fail
-hold down Alt-SysRq, then type  r e i s u b
+hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
 
 
 date --date='2 hours 22 minutes' +%r #The time 2 hours and 22 minutes from now, formatted with AM/PM
@@ -152,20 +156,23 @@ echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60
 grep -r "string" . #recursively search all files for string
 
 #search man pages
-man -K "David MacKenzie" | grep "David MacKenzie" | wc -l #returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l #returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
 
 git grep -i rhubarb $(git rev-list --all) # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
 
-compgen -ac | grep my-command # searh for commands and aliases named 'my-command'
+compgen -ac | grep my-command # search for commands and aliases named 'my-command'. 
+#Note: -a is for aliases, -c is for commands
 
 #Get wireshark working for non-root user
 sudo apt-get install wireshark
 sudo dpkg-reconfigure wireshark-common 
-sudo usermod -a -G wireshark $USER
+sudo usermod --append --groups wireshark $USER
 gnome-session-quit --logout --no-prompt
 
-locate -i file
+locate --ignore-case file
 updatedb
+
+#Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
 
 
