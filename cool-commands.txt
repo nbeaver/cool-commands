@@ -393,6 +393,9 @@ kill 21213 #sends SIGTERM to process 21213
 kill -3 21213 #send QUIT to process 21213
 kill -9 21213 #sends unblockable KILL signal to kernel
 
+#Kill a process, wait a second, then see if it's still running
+kill -3 4782 && sleep 1 && ps aux | grep 4782
+
 #Find connected program
 netstat -tulanp | less
 netstat --tcp --udp --listening --all --numeric --program | less #long version
