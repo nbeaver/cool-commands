@@ -402,7 +402,7 @@ du -sh
 du --summarize --human-readable
 #Director/file taking up the most space
 du -hsx * | sort -rh | head -10
-du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head -10
+du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head --lines=10
 
 #Adding metadata to pdfs with pdftk
 #Add an info dictionary if there isn't one already (harmless)
@@ -440,7 +440,8 @@ vmstat 1
 #Rename all file ending in Unknown.pdf and strip the ' - Unknown' part of their name
 for f in *Unknown.pdf; do mv "$f" ${f% - Unknown.pdf}.pdf; done
 
-#Avoiding the '^[[A' or '^[[B' effect when trying to get previous command (pressing up or down arrow) for a cli program
+# Avoiding the '^[[A' or '^[[B' effect when trying to get previous command
+# (pressing up or down arrow) for a cli program
 rlwrap cmd
 rlwrap java -cp /FromWeb/frink.jar frink.parser.Frink "$@"
 rlwrap math
@@ -459,7 +460,8 @@ for f in *.zip; do unzip -v $f; done
 
 #Cracking zip files:
 #Dictionary method
-fcrackzip -u -v -D -p /usr/share/dict/words platelet.zip 
+fcrackzip --use-unzip --verbose --dictionary --init-password /usr/share/dict/words platelet.zip 
+fcrackzip -uvDp /usr/share/dict/words platelet.zip 
 #Brute-force method, no knowledge of password, only setting length limits
 fcrackzip -u -l 3-4 geek.zip
 time fcrackzip -u -l 3-4 geek.zip 
@@ -486,7 +488,7 @@ nohup redshift -l 41:87 & disown
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
 
 # Allow everyone to read a file
- sudo chmod a+r file
+sudo chmod a+r file
 
 # Find out what shell you're using
 echo $SHELL
@@ -494,14 +496,17 @@ echo $0
 
 # Find out whether a package is installed or not
 apt-cache policy gnash
+dpkg --list "*gnash*"
 dpkg -l "*gnash*"
 
 #Get description of pakcage
 aptitude show gnash
+dpkg --status gnash
 dpkg -s gnash
 
 #Find out corresponding package to given command
 dpkg -S `which gnash`
+dpkg --search `which gnash`
 
 #Make a screencast
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
@@ -514,7 +519,7 @@ lsof -i -P | less
 gfortran myprogram.f95 -o myprogram
 
 #Show kernel information
-uname -a
+uname --all
 
 #Try to fix wifi
 sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -522,9 +527,11 @@ sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unlo
 #Matrix-like command. Totally useless.
 cat /dev/urandom | hexdump
 
-#Get EXIF metadata for an image
+#Get EXIF metadata for an image, including duplicate and unknown tags, sorted by group (for family 1).
 exiftool -a -u -g1 IMG_3689.JPG
+exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
 #Unmount partitions and detach disk
 df #to see mounted partitions
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
+
