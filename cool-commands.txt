@@ -538,3 +538,5 @@ exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 df #to see mounted partitions
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
 
+#Get list of recently installed packages
+zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
