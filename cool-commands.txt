@@ -540,3 +540,6 @@ sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisk
 
 #Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
+
+#Add something to your $PATH, a colon-separated list of directories
+export PATH=$PATH:$HOME/my-path
