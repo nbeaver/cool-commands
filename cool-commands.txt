@@ -369,6 +369,9 @@ gpg --symmetric super-secret-file.txt
 #Generate encypted file with vim
 vim -x encrypted-file.txt
 
+#Start editing at bottom of file with vim
+vim + myfile.txt
+
 #On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
 Ctrl-X Ctrl-E
 #On bash command line, cut word before/after cursor
