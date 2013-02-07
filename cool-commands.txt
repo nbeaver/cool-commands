@@ -346,7 +346,15 @@ nc -l 55555
 #On computer #2, where $IP is computer #1's ip address
 nc $IP 55555
 
-#After sshing in,
+#After sshing in, any of these
+users
+who
+w
+#will tell you who is logged in.
+#Also try
+last
+#to see who was logged in previously.
+#To message user nbeaver, enter
 write nbeaver <enter>
 #Type message. They can write you back, too.
 wall <enter>
