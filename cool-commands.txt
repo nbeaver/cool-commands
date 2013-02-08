@@ -561,3 +561,4 @@ less -R
 
 #Suspend to screensaver and lock screen
 xscreensaver-command -lock
+bind -p | less
