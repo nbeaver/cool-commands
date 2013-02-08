@@ -558,3 +558,6 @@ export PATH=$PATH:$HOME/my-path
 #View colored output in less
 less --RAW-CONTROL-CHARS
 less -R
+
+#Suspend to screensaver and lock screen
+xscreensaver-command -lock
