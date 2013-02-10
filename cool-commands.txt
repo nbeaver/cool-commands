@@ -561,4 +561,9 @@ less -R
 
 #Suspend to screensaver and lock screen
 xscreensaver-command -lock
+
+# See all keybindings
 bind -p | less
+
+# List a user's crontab
+crontab -u username -l | less
