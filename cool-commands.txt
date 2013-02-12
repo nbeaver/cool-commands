@@ -102,6 +102,8 @@ cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel
 curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
 curl --continue-at - --remote-name 'url_for_file' #Download file, automatically with same name and ability to resume download
 wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img #simpler
+# How to download a file without nesting it in a bunch of directories
+wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics'
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 #Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
@@ -567,3 +569,6 @@ bind -p | less
 
 # List a user's crontab
 crontab -u username -l | less
+
+# This is apparently how to solve your XFCE problems
+rm -rf ~/.cache/sessions
