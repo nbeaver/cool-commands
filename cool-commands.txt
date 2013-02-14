@@ -572,3 +572,9 @@ crontab -u username -l | less
 
 # This is apparently how to solve your XFCE problems
 rm -rf ~/.cache/sessions
+
+# Change all spaces in file names into underscores
+rename 's/\ /_/g' *
+
+# Change all spaces in file names into underscores, even files with weird names
+find . -depth|rename 's/\ /_/g'
