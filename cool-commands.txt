@@ -578,3 +578,6 @@ rename 's/\ /_/g' *
 
 # Change all spaces in file names into underscores, even files with weird names
 find . -depth|rename 's/\ /_/g'
+
+# Extract embedded images from a pdf and dump them into the current directory
+pdfimages -j mypdf ./
