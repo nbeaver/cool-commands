@@ -92,7 +92,7 @@ sudo chmod -R +rwx .mozilla
 type rr #identify the kind of command rr is
 source .bashrc #make bash re-read modified .bashrc file
 . .bashrc #make bash re-read modified .bashrc file
-apt-cache search my-package #search apt packages for 'my-package'
+apt-cache search my-package #search apt packages for 'my-package', case insensitive
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' #find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 sudo chown nathaniel: .xdvirc
