@@ -601,8 +601,9 @@ python -m http.server 8000
 # 4. In web browser, go to http://IP_OF_SERVER:8000
 # 5. Download!
 
-# If you want to know which packages are available, use this. Does not require root priveleges.
+# If you want to know which packages are available, use one of these. Does not require root priveleges.
 apt-get --simulate install list_of_packages
+aptitude --simulate install list_of_packages #this one also tells you how much space it will require
 
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
 grep -v '^#\|^$'
