@@ -515,7 +515,7 @@ apt-cache policy gnash
 dpkg --list "*gnash*"
 dpkg -l "*gnash*"
 
-#Get description of pakcage
+#Get description of package
 aptitude show gnash
 dpkg --status gnash
 dpkg -s gnash
@@ -581,3 +581,6 @@ find . -depth|rename 's/\ /_/g'
 
 # Extract embedded images from a pdf and dump them into the current directory
 pdfimages -j mypdf ./
+
+# For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
+apt-cache search --names-only '^gnash$'
