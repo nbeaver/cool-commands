@@ -589,10 +589,13 @@ apt-cache search --names-only '^gnash$'
 cut -f 1 mytext.txt | tr '\n' ' ' | less
 
 # Simple file sharing
+http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
 (On sending machine:)
 1. Navigate to directory of choice.
 2. Run
 python -m SimpleHTTPServer
+or, for python 3.0,
+python -m http.server 8000
 3. Find ip address and tell it to receiving machine.
 (On receiving machine)
 4. In web browser, go to http://IP_OF_SERVER:8000
