@@ -600,3 +600,6 @@ python -m http.server 8000
 (On receiving machine)
 4. In web browser, go to http://IP_OF_SERVER:8000
 5. Download!
+
+# If you want to know which packages are available, use this. Does not require root priveleges.
+apt-get --simulate install list_of_packages
