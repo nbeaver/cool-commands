@@ -584,3 +584,6 @@ pdfimages -j mypdf ./
 
 # For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
 apt-cache search --names-only '^gnash$'
+
+# Get the first field of a text file and put it all on one line
+cut -f 1 mytext.txt | tr '\n' ' ' | less
