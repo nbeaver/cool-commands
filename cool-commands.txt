@@ -603,3 +603,6 @@ python -m http.server 8000
 
 # If you want to know which packages are available, use this. Does not require root priveleges.
 apt-get --simulate install list_of_packages
+
+# Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
+grep -v '^#\|^$'
