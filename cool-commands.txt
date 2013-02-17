@@ -587,3 +587,13 @@ apt-cache search --names-only '^gnash$'
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
+
+# Simple file sharing
+(On sending machine:)
+1. Navigate to directory of choice.
+2. Run
+python -m SimpleHTTPServer
+3. Find ip address and tell it to receiving machine.
+(On receiving machine)
+4. In web browser, go to http://IP_OF_SERVER:8000
+5. Download!
