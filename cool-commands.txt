@@ -1,36 +1,36 @@
-Wireless access points
+# Wireless access points
 sudo iwlist scanning|less
 
-Connecting to s-video out
+# Connecting to s-video out
 xrandr
 
-Finding in directories beneath
-Find all files containing text 'NBMAX' and ending in .F90
+# Finding in directories beneath
+# Find all files containing text 'NBMAX' and ending in .F90
 find . | xargs grep NBMAX *.F90
-Find all files with 'cool' somewhere in the name
+# Find all files with 'cool' somewhere in the name
 find . -name  *cool*
-Find all files ending in .html in current directory
+# Find all files ending in .html in current directory
 find . -name *.html
-Find all files ending in .html in current directory and subdirectories
+# Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
 
-View only files not ending in '.txt'
+# View only files not ending in '.txt'
 ls --ignore=*.txt
 
-Viewing active processes
+# Viewing active processes
 top
 
-Changing sound settings
+# Changing sound settings
 alsamixer
 
-Figure out which speaker is left and right
+# Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
 speaker-test --device plug:front --channels 2 --test sine --frequency 100 #long version
 
-Append last command to this text file
+# Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
 
-Grepping
+# Grepping
 grep PHY unofficial-transcript-11-24-11.txt
 grep ALLOCATE COORD *.F90
 grep -Fxv -f DERIVT.F90 MODULE.F90 #subtract first file from second file
@@ -48,31 +48,31 @@ nano | ls | grep "ann"
 
 find | grep NBMAX *.F90
 
-view error messages in less
+# View error messages in less
 bash compile.sh 2>&1 | less
-send stderr to text file
+# Send stderr to text file
 bash env.sh 2> err_log.txt
-send stdout and stderr to text file
+# Send stdout and stderr to text file
 bash env.sh &> full_log.txt
 
-return all lines containing "kim_api" (case insensitive) and ending with .f90
+# Return all lines containing "kim_api" (case insensitive) and ending with .f90
 grep -ir "kim_api" . --include=*.f90
 
-rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
+# Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
-this would work also:
+# This would work also:
 for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 
-Using the system dictionary:
+# Using the system dictionary:
 grep -i '^s.*m.*b' /usr/share/dict/words #this is how samba was named
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
 
-Debugging segfaults in C:
+# Debugging segfaults in C:
 printf("Line %d reached.\n",__LINE__);//debug
-Debugging segfaults in Fortran:
+# Debugging segfaults in Fortran:
 print*,__FILE__,__LINE__
 
-GNU debugger (gdb) basics
+# GNU debugger (gdb) basics
 gdb ./vc_forces_numer_deriv
 r
 bt
@@ -80,7 +80,7 @@ frame 2
 info locals
 info args
 
-Disk usage:
+# Disk usage:
 du |sort --numeric-sort --reverse
 du |sort -nr #quick version
 du -k --max-depth=1 /home | sort -nr
@@ -589,17 +589,17 @@ apt-cache search --names-only '^gnash$'
 cut -f 1 mytext.txt | tr '\n' ' ' | less
 
 # Simple file sharing
-http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
-(On sending machine:)
-1. Navigate to directory of choice.
-2. Run
+# http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
+# (On sending machine:)
+# 1. Navigate to directory of choice.
+# 2. Run
 python -m SimpleHTTPServer
-or, for python 3.0,
+# or, for python 3.0,
 python -m http.server 8000
-3. Find ip address and tell it to receiving machine.
-(On receiving machine)
-4. In web browser, go to http://IP_OF_SERVER:8000
-5. Download!
+# 3. Find ip address and tell it to receiving machine.
+# (On receiving machine)
+# 4. In web browser, go to http://IP_OF_SERVER:8000
+# 5. Download!
 
 # If you want to know which packages are available, use this. Does not require root priveleges.
 apt-get --simulate install list_of_packages
