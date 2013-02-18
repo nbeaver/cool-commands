@@ -630,3 +630,9 @@ find ~/Dropbox/ -lname '*Dropbox*'
 
 # Find all directories with a name including 'Link'. These are suspicious characters Dropbox has dereferenced into directories instead of symbolic links.
 find ~/Dropbox -type d -name '*Link*'
+
+# Make a symbolic link in current directory
+ln --symbolic /path/to/blah.txt link-to-blah.txt
+
+# Change all text files with 'apt-get' in the name to 'package'
+rename 's/apt-get/package/' *.txt
