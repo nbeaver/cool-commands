@@ -389,6 +389,15 @@ Esc-F
 Esc-B
 # On bash command line, reverse search through previous commands
 Ctrl-R
+# Bash history modifiers (bang commands) http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
+!! #execute last command
+!-1 #execute last command
+!!:1 #first argument of the last command
+!1 #first argument of the last command
+!!:$ #last argument of preceding commnad
+!$ #last argument of preceding commnad
+!gzip #execute most recent gzip command
+!?etc.gz #Like Ctrl-R, runs most recent command matching 'etc.gz'
 
 # Remove spaces and duplicate lines
 cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
