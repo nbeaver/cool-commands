@@ -374,19 +374,21 @@ vim -x encrypted-file.txt
 #Start editing at bottom of file with vim
 vim + myfile.txt
 
-#On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
+# On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
 Ctrl-X Ctrl-E
-#On bash command line, cut word before/after cursor
+# On bash command line, cut word before/after cursor
 Ctrl-W
 Esc-W
-#On bash command line, incremental undo
+# On bash command line, incremental undo
 Ctrl-X Ctrl-U
-#On bash command line, move forward/backword one character
+# On bash command line, move forward/backword one character
 Ctrl-F
 Ctrl-B
-#On bash command line, move forward/backword one word
+# On bash command line, move forward/backword one word
 Esc-F
 Esc-B
+# On bash command line, reverse search through previous commands
+Ctrl-R
 
 # Remove spaces and duplicate lines
 cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
