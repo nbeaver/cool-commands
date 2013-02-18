@@ -624,3 +624,9 @@ cp -r test/.[a-zA-Z0-9]* target
 
 # Find all symbolic links in a folder
 find ~/Dropbox -type l -ls 
+
+# Find all symbolic links in a folder to a folder
+find ~/Dropbox/ -lname '*Dropbox*'
+
+# Find all directories with a name including 'Link'. These are suspicious characters Dropbox has dereferenced into directories instead of symbolic links.
+find ~/Dropbox -type d -name '*Link*'
