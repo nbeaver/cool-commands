@@ -607,3 +607,6 @@ aptitude --simulate install list_of_packages #this one also tells you how much s
 
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
 grep -v '^#\|^$'
+
+# Copy hidden files (dotfiles)
+cp -r test/.[a-zA-Z0-9]* target
