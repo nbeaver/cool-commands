@@ -621,3 +621,6 @@ grep -v '^#\|^$'
 
 # Copy hidden files (dotfiles)
 cp -r test/.[a-zA-Z0-9]* target
+
+# Find all symbolic links in a folder
+find ~/Dropbox -type l -ls 
