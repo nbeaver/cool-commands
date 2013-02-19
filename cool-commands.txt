@@ -636,3 +636,9 @@ ln --symbolic /path/to/blah.txt link-to-blah.txt
 
 # Change all text files with 'apt-get' in the name to 'package'
 rename 's/apt-get/package/' *.txt
+
+# See what drives are mounted
+less /etc/mtab
+
+# Unmount a drive (use the directory it's mounted at, not /dev/)
+umount /media/SMALLBEANS
