@@ -642,3 +642,11 @@ less /etc/mtab
 
 # Unmount a drive (use the directory it's mounted at, not /dev/)
 umount /media/SMALLBEANS
+
+# Move files in a directory up one
+mv */* ./
+
+# Move files in current directory to parent directory
+#Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
+mv * .[^.]* ..
+
