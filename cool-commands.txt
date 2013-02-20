@@ -652,3 +652,4 @@ mv * .[^.]* ..
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
 ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
+#for f in *.m4v; do ffmpeg -i $f -target ntsc-dvd $(basename $f .m4v).mpg; done
