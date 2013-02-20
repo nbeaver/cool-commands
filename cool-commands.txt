@@ -650,3 +650,5 @@ mv */* ./
 #Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
 mv * .[^.]* ..
 
+# Re-encode a file to play on a standard device, e.g. Sony Bravia TV
+ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
