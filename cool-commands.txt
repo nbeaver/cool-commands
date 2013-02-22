@@ -658,3 +658,20 @@ for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).
 
 # Count number of files in working directory, recursively
 find . -type f | wc -l
+
+# Set up an ad-hoc wireless network between two linux machines
+# http://unixlab.blogspot.com/2010/01/setting-up-ad-hoc-wireless-network.html
+# On machine A
+ifconfig wlan0 down
+iwconfig  wlan0 channel 4
+iwconfig  wlan0 mode ad-hoc
+iwconfig  wlan0 essid 'fermilevel'
+iwconfig  wlan0 key 1234567890
+ifconfig  wlan0 192.168.1.1
+# on machine B
+ifconfig wlan0 down
+iwconfig  wlan0 channel 4
+iwconfig  wlan0 mode ad-hoc
+iwconfig  wlan0 essid 'fermilevel'
+iwconfig  wlan0 key 1234567890
+ifconfig  wlan0 192.168.1.2
