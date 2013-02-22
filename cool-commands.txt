@@ -655,3 +655,6 @@ ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
 
 # Do it for every file, and run on three processors (if it's compiled to support multithreading)
 for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).mpg; done
+
+# Count number of files in working directory, recursively
+find . -type f | wc -l
