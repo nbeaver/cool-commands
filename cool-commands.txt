@@ -675,3 +675,6 @@ iwconfig  wlan0 mode ad-hoc
 iwconfig  wlan0 essid 'fermilevel'
 iwconfig  wlan0 key 1234567890
 ifconfig  wlan0 192.168.1.2
+
+# Search for a particular process by name
+ps u -C duplicity
