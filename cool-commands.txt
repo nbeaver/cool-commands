@@ -681,3 +681,6 @@ ps u -C duplicity
 
 # Recently installed packages
 zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
+
+# Search for all directories containing 'doc' in /usr/share except the ones in /usr/share/doc
+find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print 
