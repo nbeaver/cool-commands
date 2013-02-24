@@ -689,3 +689,6 @@ find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print
 
 # Get an Artist - Song output from an m3u playlist
 cat playlist.m3u | grep EXT | cut -d, -f 2 | less
+
+# Find out which shell session you're using
+ps -p $$
