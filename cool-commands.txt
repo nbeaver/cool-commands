@@ -472,6 +472,8 @@ for f in *Unknown.pdf; do mv "$f" ${f% - Unknown.pdf}.pdf; done
 rlwrap cmd
 rlwrap java -cp /FromWeb/frink.jar frink.parser.Frink "$@"
 rlwrap math
+# Save a logfile of output (including echoed input)
+rlwrap -l mylog.txt math
 
 #Text to speech
 echo 'Hello, world!' | espeak --stdin
@@ -684,3 +686,6 @@ zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
 
 # Search for all directories containing 'doc' in /usr/share except the ones in /usr/share/doc
 find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print 
+
+# Get an Artist - Song output from an m3u playlist
+cat playlist.m3u | grep EXT | cut -d, -f 2 | less
