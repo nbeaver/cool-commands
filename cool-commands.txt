@@ -696,3 +696,6 @@ ps -p $$
 # Compress and tar a directory called 'meansum'
 tar -czvf meansum.tgz meansum/
 tar --create --gzip --verbose --file meansum.tgz meansum/
+
+# The reddit disapproval face
+ಠ_ಠ
