@@ -694,4 +694,5 @@ cat playlist.m3u | grep EXT | cut -d, -f 2 | less
 ps -p $$
 
 # Compress and tar a directory called 'meansum'
-tar czf meansum.tgz meansum/
+tar -czvf meansum.tgz meansum/
+tar --create --gzip --verbose --file meansum.tgz meansum/
