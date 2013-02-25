@@ -699,3 +699,6 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 
 # The reddit disapproval face
 ಠ_ಠ
+
+# Choose output for wget
+wget --no-host-directories 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics' --output-document ~/Dropbox/UbuntuBackup/basic.ics && date > ~/Dropbox/UbuntuBackup/calendar-refresh-time.txt
