@@ -706,3 +706,6 @@ wget --no-host-directories 'http://www.google.com/calendar/ical/nbeaver%40hawk.i
 # Show full path of a file with ls
 ls -d $PWD/*
 cat wget-ical-out.txt | xsel -b
+
+# Use a text file as a command line argument
+w3m $(<temp.txt)
