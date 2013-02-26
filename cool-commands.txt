@@ -709,3 +709,6 @@ cat wget-ical-out.txt | xsel -b
 
 # Use a text file as a command line argument
 w3m $(<temp.txt)
+
+# Get the fonts used by a pdf; useful to determine if it's ocr'ed or not.
+pdffonts *.pdf | cut -d' ' -f 1
