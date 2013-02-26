@@ -711,4 +711,7 @@ cat wget-ical-out.txt | xsel -b
 w3m $(<temp.txt)
 
 # Get the fonts used by a pdf; useful to determine if it's ocr'ed or not.
-pdffonts *.pdf | cut -d' ' -f 1
+pdffonts *.pdf
+
+# Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
+pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
