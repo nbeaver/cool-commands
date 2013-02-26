@@ -718,3 +718,4 @@ pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 
 # Get return value of last command
 echo $?
+killall korgac
