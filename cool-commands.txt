@@ -1,7 +1,7 @@
 # Wireless access points
 sudo iwlist scanning|less
 
-# Connecting to s-video out
+# Connecting to s-video out, resizing screen or monitor, connecting to projector or external display
 xrandr
 
 # Finding in directories beneath
@@ -29,11 +29,14 @@ speaker-test --device plug:front --channels 2 --test sine --frequency 100 #long 
 
 # Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
+# This is useful if you want to run it as a shell script. You can also just save it to a shell script like this:
+echo !! > my-script.sh
 
 # Grepping
 grep PHY unofficial-transcript-11-24-11.txt
 grep ALLOCATE COORD *.F90
 grep -Fxv -f DERIVT.F90 MODULE.F90 #subtract first file from second file
+grep -Fx -f DERIVT.F90 MODULE.F90 #intersection of first file and second file
 grep --fixed-strings --line-regexp --invert-match --file=DERIVT.F90 MODULE.F90 #long version
 grep --recursive dveff *.f90
 grep '=>' *.f90
@@ -48,7 +51,7 @@ nano | ls | grep "ann"
 
 find | grep NBMAX *.F90
 
-# View error messages in less
+# View error messages in less by redirecting stderr to stdout
 bash compile.sh 2>&1 | less
 # Send stderr to text file
 bash env.sh 2> err_log.txt
@@ -62,6 +65,14 @@ grep -ir "kim_api" . --include=*.f90
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
 # This would work also:
 for i in *.png; do mv $i digital_media_archive_assistant_$i; done
+
+# Rename all files starting with Ch so that they now end with .doc.
+rename -nv 's/$/.doc/' Ch*
+rename -v 's/$/.doc/' Ch*
+
+# From commandlinefu.com
+rename 'y/ /_/' * # replace spaces with underscores
+mv filename.{old,new} # Quick file rename
 
 # Using the system dictionary:
 grep -i '^s.*m.*b' /usr/share/dict/words #this is how samba was named
@@ -89,7 +100,10 @@ mkvextract tracks movie5.mkv 2:audio_track.ac3
 ls --almost-all --format=single-column
 sudo chmod -R +rwx .mozilla
 !! #repeat previous command
-type rr #identify the kind of command rr is
+
+type rr # identify the kind of command rr is
+type -a rr # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
+# For example, type -a ls gives you both /bin/ls and whatever ls is aliased to, as it often is.
 source .bashrc #make bash re-read modified .bashrc file
 . .bashrc #make bash re-read modified .bashrc file
 apt-cache search my-package #search apt packages for 'my-package', case insensitive
@@ -99,11 +113,16 @@ sudo chown nathaniel: .xdvirc
 cat precise.txt | grep root > to-chown.txt
 cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: #transfer ownership to nathaniel instead of root
 
+# Using curl to download from the command line
 curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
 curl --continue-at - --remote-name 'url_for_file' #Download file, automatically with same name and ability to resume download
+# Using wget to download from the command line
 wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img #simpler
+wget --continue 'http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img' #resume a partial download
 # How to download a file without nesting it in a bunch of directories
 wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics'
+# Using wget to get a recursive (default to 5 links deep) local copy of a page.
+wget --no-host-directories --recursive --convert-links --page-requisites 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 #Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
@@ -123,6 +142,26 @@ vmstat
 
 ps aux --sort=-%cpu #list processes using most CPU
 ps aux --sort=-%mem #list processes using most memory
+
+# What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
+PROCESS STATE CODES
+       Here are the different values that the s, stat and state output specifiers (header "STAT" or "S") will display to describe the state of a process:
+       D    uninterruptible sleep (usually IO)
+       R    running or runnable (on run queue)
+       S    interruptible sleep (waiting for an event to complete)
+       T    stopped, either by a job control signal or because it is being traced.
+       W    paging (not valid since the 2.6.xx kernel)
+       X    dead (should never be seen)
+       Z    defunct ("zombie") process, terminated but not reaped by its parent.
+
+       For BSD formats and when the stat keyword is used, additional characters may be displayed:
+       <    high-priority (not nice to other users)
+       N    low-priority (nice to other users)
+       L    has pages locked into memory (for real-time and custom IO)
+       s    is a session leader
+       l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
+       +    is in the foreground process group.
+
 
 startx -- :1 #start x session
 
@@ -171,7 +210,15 @@ sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
 gnome-session-quit --logout --no-prompt
 
+# Locate all files with a path or name containing 'file'
 locate --ignore-case file
+# Locate all files ending with '.cif'
+locate *.cif
+# Locate all base filenames starting with phys
+locate -b phys*
+# Locate using the ? for one or zero unknown letter, * for many unknown letters
+locate *.htm?
+# Udate the locate database
 updatedb
 
 #Make a tree using the Contex Free grammar image generator
@@ -197,6 +244,9 @@ python -i myscript.py
 dir(object)
 # Get help on a method
 help(object.method)
+# To drop into an interactive shell from a script:
+import code
+code.interact(local=locals())
 
 #Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
@@ -232,7 +282,12 @@ cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' > non-ascii.txt
 
 grep 'it.*it' /usr/share/dict/words | sed '/s/it/IIT/g' | less
 
+zip -r myfolder.zip myfolder/ # recursively zip a directory, putting the zip file into the current directory
+unzip -l myfile.zip # list contents of zip file
 unzip '*.zip' #unzip all files ending in .zip
+unzip myfile.zip -d /path/to/desired/directory
+
+# Latex for adding tengwar stuff (unfinished)
 updmap --enable Map=tengwarscript.map
 
 #ip address for IIT physics office printer 216.47.138.174
@@ -243,13 +298,27 @@ tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 #decompress and unarchive a gzipped file
 tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 
+# decompress and unacrhive a tarred, gzipped file
+tar zxf keepassx-0.4.3.tar.gz # The - is not necessary.
+
+# list contents of a tarred file, i.e. tar archive
+tar -tf myfile.tar 
+tar --list --file myfile.tar
+
+# untar a tarred file into the working directory
+tar -xvf myfile.tar
+tar --extract --verbose --file myfile.tar
+
+# untar a tarred file to a specified directory
+tar -xvf myfile.tar -C /path/to/my/directory
+tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
+
 cat /bin/cat #mojibake-fy the screen
 reset #fix it
 
-#get out of pretty much any terminal program and back to the shell
-Ctrl-Z
-#move the job back to the foreground
-fg
+Ctrl-Z #get out of pretty much any terminal program and back to the shell
+fg # move the job back to the foreground
+kill %3 # kill job by jobspec (3, in this case)
 
 #Patching
 diff -u new_file old_file > patch.txt #Generates a patch file that can generate new_file from old_file
@@ -259,7 +328,19 @@ vimdiff old_file old_file.orig #compare the patched file to the original file
 
 find ./ -exec file '{}' \; #find out what kind of file all the stuff in the directories below are
 
-ssh -D 9999 iit@id1.mr.aps.anl.gov #secure shell into the Argonne beamline account for IIT
+# Much like any other find exec command, but more efficient
+find . -type f -name "*.deadtime" -exec rm '{}' +
+
+# http://stackoverflow.com/questions/6085156/using-vs-with-exec-in-find
+find . -exec ls '{}' \;
+# ls file1
+# ls file2
+# ls file3
+find . -exec ls '{}' \+
+# ls file1 file2 file3
+
+ssh -D 9999 iit@id1.mr.aps.anl.gov #secure shell into the APS sector 10 insertion device beamline account for IIT
+ssh -D 9999 iit@bm1.mr.aps.anl.gov #secure shell into the APS sector 10 bending magnet beamline account for IIT
 ssh -D 9999 nbeaver@216.47.138.69  #secure shell into desktop at physics office
 
 #in python, save interactive history in current directory:
@@ -272,7 +353,7 @@ echo $(yes hurpaflerp)
 #Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 
-#Rsyncing home directory contents into current directory
+#Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
 rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 
@@ -280,11 +361,17 @@ rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 less -i
 (Or just press -i while less is running)
 
-#List networks
+# List networks
 sudo lshw -C network
+
+# See connected networky stuff like browsers
+lsof -i -P +c 0 +M
 
 #Check battery state/power level
 cat /proc/acpi/battery/BAT0/state
+# 5387 mAh is 100%
+# 3087 mAh is 58%
+# 7900 mWh is 14%, so full capacity should be about 56000 mWh
 
 #Get a new DVD drive to work
 sudo regionset /dev/dvd4
@@ -312,7 +399,7 @@ echo "*.txt" > .flashbake
 
 #Restart sound daemon, e.g. when flash has choppy audio
 pulseaudio --kill
-pulseaudio --daemonize #start it up again as a daemon
+pulseaudio --start #start it up again as a daemon
 
 #Debug wifi
 sudo lshw -C network > wifi-card-info.txt
@@ -328,6 +415,8 @@ jobs
 disown -h %1 #Detach job 1 from current terminal
 
 #Restart compiz from a terminal emulator
+# Note: Disown defaults to %1, so make sure you don't have any other jobs.
+# bash: warning: deleting stopped job 1 with process group
 DISPLAY=:0 compiz --replace & disown
 #If that doesn't work...
 unity --reset & disown
@@ -336,13 +425,25 @@ unity --reset & disown
 #Generate 4-word passphrase
 shuf --head-count=4 /usr/share/dict/words
 
-#Print document from the command line
+# Print document from the command line to a network printer by printer's name
 lpr -P "Brother-HL-4070CDW" doc.pdf
+# See the print queue by printer's name
+lpq -P "Brother-HL-4070CDW"  
 
 #List avahi/bonjour services like printers on the local area network (LAN)
 avahi-browse --all --verbose --terminate --resolve
 sudo arp-scan --localnet | less
+sudo arp-scan --interface eth3 --localnet | less
+# When avahi-daemon sucks up 100% cpu
+# https://bugs.launchpad.net/ubuntu/+source/avahi/+bug/1059286
+sudo restart cups && sudo restart avahi-daemon
 
+# Discover machines on the LAN
+ifconfig eth0
+# Note Bcast address. Now ping it:
+ping -b -c 3 -i 20 $BROADCASE_ADDRESS
+
+#Chat using netcat
 #On computer #1
 nc -l 55555
 #On computer #2, where $IP is computer #1's ip address
@@ -374,10 +475,14 @@ vim -x encrypted-file.txt
 #Start editing at bottom of file with vim
 vim + myfile.txt
 
+#Edit stdin in vim
+vim -
+
 # On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
 Ctrl-X Ctrl-E
-# On bash command line, cut word before/after cursor
+# On bash command line, cut word before cursor
 Ctrl-W
+# On bash command line, cut word after cursor
 Esc-W
 # On bash command line, incremental undo
 Ctrl-X Ctrl-U
@@ -387,8 +492,16 @@ Ctrl-B
 # On bash command line, move forward/backword one word
 Esc-F
 Esc-B
-# On bash command line, reverse search through previous commands
+# On bash command line, reverse incremental search through previous commands
 Ctrl-R
+# While using reverse incremental search:
+Enter  # Executes command immediately
+Ctrl-J # Copies command to prompt, allowing further editing
+Ctrl-G # Escapes incremental search without doing anything
+# Move to beginning of history
+Alt-Shift-,
+# Move to end of history
+Alt-Shift-.
 # Bash history modifiers (bang commands) http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
 !! #execute last command
 !-1 #execute last command
@@ -413,8 +526,11 @@ tail --lines=+1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn
 awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | uniq > iit-name-and-email.txt
 
 #Kill escalation
-kill 21213 #sends SIGTERM to process 21213
-kill -3 21213 #send QUIT to process 21213
+kill 21213 #sends SIGTERM (like Ctrl-C) to process 21213
+kill -15 21213 #sends SIGTERM (like Ctrl-C) to process 21213
+kill -2 21213 #send SIGINT to process 21213
+kill -1 21213 #send SIGHUP to process 21213
+kill -3 21213 #send SIGQUIT (like Ctrl-\) to process 21213; will dump core
 kill -9 21213 #sends unblockable KILL signal to kernel
 
 #Kill a process, wait a second, then see if it's still running
@@ -523,7 +639,8 @@ sudo chmod a+r file
 echo $SHELL
 echo $0
 
-# Find out whether a package is installed or not
+# Find out whether a package is installed or not.
+# Also tells you the version and whether it's installed from a ppa.
 apt-cache policy gnash
 dpkg --list "*gnash*"
 dpkg -l "*gnash*"
@@ -533,9 +650,18 @@ aptitude show gnash
 dpkg --status gnash
 dpkg -s gnash
 
-#Find out corresponding package to given command
-dpkg -S `which gnash`
-dpkg --search `which gnash`
+#Find out corresponding package to given command (what package a command "belongs" to)
+dpkg -S $(which gnash)
+dpkg --search $(which gnash)
+
+# Guess the executable or command associated with a package.
+# This actually lists all the files installed, so we need to grep out the executables.
+# Caveat: will not tell you about wrapper scripts or arguments that need to be passed.
+# In this case, it's trying to figure out the handbrake gui program which is named completely unlike HandbrakeCLI.
+dpkg -L handbrake-gtk | grep bin
+/usr/bin
+/usr/bin/ghb
+dpkg --listfiles handbrake-gtk | grep bin
 
 #Make a screencast
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
@@ -576,6 +702,8 @@ less -R
 
 #Suspend to screensaver and lock screen
 xscreensaver-command -lock
+# Choose display; normally :0.0 unless you have another x server running.
+xscreensaver-command --lock --display :1.0
 
 # See all keybindings
 bind -p | less
@@ -618,6 +746,11 @@ python -m http.server 8000
 apt-get --simulate install list_of_packages
 aptitude --simulate install list_of_packages #this one also tells you how much space it will require
 
+# If you want to get the source code for a package, run this. It does not require root priveleges.
+apt-get source <package-name>
+
+# Install 
+
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
 grep -v '^#\|^$'
 
@@ -635,6 +768,8 @@ find ~/Dropbox -type d -name '*Link*'
 
 # Make a symbolic link in current directory
 ln --symbolic /path/to/blah.txt link-to-blah.txt
+# Make a symbolic link with spaces in the name.
+ln -s ~/.gnupg/ "Link to .gnupg"
 
 # Change all text files with 'apt-get' in the name to 'package'
 rename 's/apt-get/package/' *.txt
@@ -657,6 +792,8 @@ ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
 
 # Do it for every file, and run on three processors (if it's compiled to support multithreading)
 for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).mpg; done
+# Do it for a big TV, and run it on 4 processors
+for f in *.m4v; do ffmpeg -threads 4 -i $f -s wxga -vcodec mpeg1video $(basename $f .m4v).mpg; done
 
 # Count number of files in working directory, recursively
 find . -type f | wc -l
@@ -719,3 +856,715 @@ pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 # Get return value of last command
 echo $?
 killall korgac
+echo $RANDOM
+
+# X over SSH
+ssh -X nbeaver@rontgen.phys.iit.edu
+
+# Execute a graphical program over SSH (in this case, gedit)
+dbus-launch gedit
+
+# See disk activity without being root!
+iostat -xkdz 1
+
+# Show mounted drives in near little table
+mount | column -t
+
+# Kill stopped jobs
+kill $(jobs -p)
+
+# Use a string as if it were a file
+cat <<< 'HI'
+
+# From here: http://mmb.pcb.ub.es/~carlesfe/unix/tricks.txt
+# let people in your group access folders without messing up file permissions (never do 'chmod g+x * -R'!)
+find . -type d -exec chmod g+x {} \; 
+
+# Run a command 5 minutes later
+echo "Done" | at now + 5 minutes
+# or
+at now + 5 minutes
+warning: commands will be executed using /bin/sh
+at> echo "Done"
+at> <EOT>
+# See 'at' commands
+atq
+# Remove at commands
+atrm
+
+# Reminder to go to bed at 10:30pm
+echo  "DISPLAY=$DISPLAY xmessage Go to bed\!" | at 22:30
+
+# Editing text file 'in place' (i.e. without having to make the temp file on your own)
+# http://unix.stackexchange.com/questions/11067/is-there-a-way-to-modify-a-file-in-place
+# Remove all lines containing foo:
+sed -i '/foo/d' myfile
+# Keep all lines containing foo:
+sed -i '/foo/!d' myfile
+# Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
+sed -i.bak -e 's/hello/jello/' hello.txt
+
+# SSH without a password
+ssh-keygen -t rsa
+# Use defaults (blank password)
+# In my case, public key was saved as ~/.ssh/id_rsa.pub
+# Now copy public key to remote computer. I originally used:
+scp /home/nathaniel/.ssh/id_rsa.pub nbeaver@chloride.phys.iit.edu:~/.ssh/authorized_keys
+# This will overwrite the file authorized_keys, so only do this if it doesn't already exist.
+# There is actually a builtin command to do this sensibly (surprise, surprise!):
+ssh-copy-id -i ~/.ssh/id_rsa.pub nbeaver@chloride.phys.iit.edu
+
+# How to tell if someone is ssh'ed into this machine:
+last
+# Or
+ps aux | grep ssh
+# Example:
+nbeaver   7395  0.0  0.0   4756   572 ?        Ss   Oct18   0:00 /usr/bin/ssh-agent /usr/bin/dbus-launch --exit-with-session x-session-manager
+nbeaver  16870  0.0  0.1   8180  1480 ?        S    22:01   0:00 sshd: nbeaver@pts/1
+
+# Disable system speaker in X:
+xset -b
+
+# From http://overapi.com/linux/
+# Run cmd1 then cmd2
+cmd1 ; cmd2
+# Run cmd2 if cmd1 is successful
+cmd1 && cmd2
+# Run cmd2 if cmd1 is not successful
+cmd1 || cmd2
+# Show distribution 
+less /etc/issue
+# Show executable path
+echo $PATH
+# Run last command starting with abc
+!abc
+# Print last command starting with abc
+!abc:p
+# Last argument of previous command
+!$
+# Last argument of previous command
+ALT-.
+# All arguments of previous command
+!*
+
+# See information about battery, power, etc.
+upower --dump | less
+
+# Check video file for errors
+# http://606u.dir.bg/avicheck/
+ffmpeg -v 5 -i file.avi -f null - 
+# Double video volume (256 is unchanged)
+# http://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
+ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
+# Split up video into segments
+# http://superuser.com/questions/31135/split-mpeg-video-from-command-line
+# http://unix.stackexchange.com/questions/1670/how-can-i-use-ffmpeg-to-split-mpeg-video-into-10-minute-chunks-for-youtube-uploa
+ffmpeg -i source-file.foo -ss 0 -t 600 first-10-min.m4v
+ffmpeg -i source-file.foo -ss 600 -t 600 second-10-min.m4v
+ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 out1.mpg -ss
+
+# Get audio file from video
+ffmpeg -i myvid.mp4 ./out.mp3
+
+# See open files in home directory
+lsof /home/nathaniel
+
+# Start less at the first instance of a pattern
+less -p ghemical /var/log/dpkg.log
+
+# Start less at the bottom of a file
+less +G /var/log/dpkg.log
+
+# Determine iso resolution, codec, etc:
+ffmpeg -i image.iso
+avconv -i image.iso
+# mediainfo will only tell you ISO format and file size :(
+
+# Blank the screen temporarily
+xset dpms force standby
+
+# Use less on multiple files
+less file1 file2 file3
+# While in less:
+:n
+:p
+
+# Bluetooth
+blueman-manager
+# On cellphone, go to Settings -> Bluetooth -> On/Off -> On.
+# Choose browse files on device to make sure it is connected.
+# Then you should be able to receive cellphone contacts just fine.
+# On cellphone, go to Bluetooth -> Send a contact -> nathaniel-laptop-0 -> Options -> Check All -> Send.
+# Don't worry about accepting incoming stuff, just wait for the cellphone to finish.
+# They will be dumped into /home/nathaniel/Public
+# Pictures are done similarly -- Bluetooth Devices, Rumor2, Browse Device.
+# Then just copy over using Nautilus.
+# If you have trouble (e.g. "Not authorized" error),
+# try sending a file from the cellphone. Even if it fails,
+# it seems to reset the communications back to where it will work the next time you use Nautilus.
+
+# Change mp3 sample rate of every mp3 file in a directory
+mkdir converted
+for i in *.mp3; do sox --multi-threaded "$i" -r 44100 "converted/$i"; done
+# Make sure you don't try to to change the files in place; they will be trashed.
+# Either put them in a another directory, as above, or modify the file name.
+cat Sn_Ni3Sn4_nano_02-21-2013.002 | tail -n +18 | column -t | less
+
+# Run through a bunch of text files like cat, but with the filenames visible
+tail --lines=+1 *.txt | less
+
+# Diff two man pages by running one into stdout and the other to stderr. (Not named pipes, as far as I can tell.)
+man chattr > 1; man chmod > 2; diff -u 1 2 | less
+
+# Watch a file for changes
+tail -f myfile.log
+less +F myfile.log
+
+# Open file using $EDITOR or $VISUAL in less:
+v
+
+# Diff gzipped files (diffuse is my favorite graphical diff at the moment).
+diffuse <(zcat file1.gzip) <(zcat file2.gzip)
+
+# IRC chat command to register nickname
+/msg NickServ register [password] email@email-provider.com
+# All freenode servers listen on ports 6665, 6666, 6667, 6697 (SSL only), 7000 (SSL only), 7070 (SSL only), 8000, 8001 and 8002
+# All GeekShed servers accept standard connections on the following ports: 6667, 6660, 6661, 6662, 6663, 6664, 6665, 6666, 6668, 6669, 7029, 7070, 1494, 1755, and 6697 (SSL only).
+# IIT filters 6666, 6667, 6668, and 6669, and a lot more. SSL works just dandy, though.
+# Start a new channel, e.g. #openkim. Make sure you are registered first.
+/join #openkim
+
+# List open network ports and the process that owns them
+sudo lsof -i
+sudo netstat -lptu
+sudo netstat -tulpn
+sudo netstat -tuplen
+
+# Using nmap
+# Print a list of target hosts
+sudo nmap -sL 216.47.138.* | less
+# Skip port scan/'ping scan'/slightly more intrusive than -sL/determines if host is online
+nmap -sP 198.37.19.*
+nmap -sn 10.10.10.0/24
+# http://www.linuxforums.org/forum/newbie/51732-see-all-users-currently-lan-2.html
+# These can take a while...
+# TCP scan, assuming network 192.168.1.0/255.255.255.0.  
+nmap -T Aggressive -sT 192.168.1.*
+# ICMP echo request scan
+nmap -T Aggressive -sP 192.168.1.*
+# UDP scan
+nmap -T Aggressive -sU 192.168.1.*
+# Enable OS detection
+sudo nmap -O 198.37.20.176
+sudo nmap -O ord08s06-in-f7.1e100.net
+# From the nmap man page, tells which ports are open, OS, and traceroute
+nmap -A -T4 scanme.nmap.org
+nmap -A -T4 198.37.20.176
+
+# See printer status from the command line
+lpstat -t
+
+# Determine the process id (PID) by clicking on an open window with the mouse
+xprop _NET_WM_PID
+# Determine executable related to window
+xprop WM_CLASS
+# Search for the process number, e.g. 1400
+ps -p 1400
+grep -ir 'discrepancy' /var/log | less
+
+# Suspend the bash shell
+suspend
+# Oh my goodness! How do I get it back?
+ps aux | grep bash
+# We want this one:
+1000     11004  0.0  0.1  10172  6552 pts/2    Ts+  15:01   0:00 /bin/bash
+# 'kill' the process (actually bring it back to life):
+kill -SIGCONT 11004
+
+# Output multiline strings
+echo -e '1\n2'
+printf "%d\n%d\n" 1 2
+echo '1
+> 2'
+
+# Convert fahrenheit to celsius
+units --terse 'tempF(212)' 'tempC'
+# Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
+units -f '' -f ~/Dropbox/projects/units/my-units.dat 
+
+# Reset screen resolution if another program goofs it up
+xrandr -s 1600x900
+
+# Trying to kill all those blasted error reports from when xscreensave dies.
+killall apport-gtk
+# Well, that got rid of the bug reporting windows. But what about those tray notifications that say,
+# 'crash reported detected'? You have to click on all of them individualy.
+sudo service stop whoopsie # Doesn't help.
+sudo vim /etc/default/whoopsie # Changed true to false; didn't help.
+killall xfce4-notifyd # Didn't help.
+sudo service apport stop # Didn't help.
+sudo rm /var/crash/* # This works!
+sudo vim /etc/default/apport # This might be even better if the error reporting continues to be annoying.
+
+# Using your very own text editor even if someone's VISUAL is set to something else and you don't want to mess it up.
+env VISUAL=pico crontab -e
+
+# Find symlinks to a file. From http://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
+find -L /haystack -xtype l -samefile /target
+
+# Get a listed of sorted email addresses from a text file. From http://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
+cat raw.txt | egrep -o "[^[:space:]]+@[^[:space:]]+" | tr -d "<,>" | sort > sorted-email-list.txt
+# This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
+grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})' file.html | sort | uniq > sorted-email-list.txt
+
+# Open that connection editor that normally you click on the wifi icon to access.
+nm-connection-editor
+
+# Do network connections from the command line
+nmcli
+
+# Readline wizardry:
+alt-shift-8 # (i.e. M-*) put all the matching completions on the line
+Ctrl-W # delete preceding word
+Alt-D # delete following word 
+Ctrl-U # delete line
+Ctrl-A-K # delete line
+Ctrl-XX # move between EOL and current cursor position
+Ctrl-Shift-- # Undo
+Ctrl-X Ctrl-U # Undo
+# There really isn't a redo command.
+Ctrl-Y # Paste whatever you last deleted
+
+# See kernel log like dmesg, but much more human readable. Only for this session, though.
+less /var/log/kern.log
+
+# See connections in promiscuous mode and turn on port display. 
+sudo iftop -pP
+sudo iftop -pP -i wlan2
+
+# See info pages, but in the 'less' pager. Much nicer.
+info gpg | less
+
+# Reverse DNS lookup
+host 216.47.138.69
+# 69.138.47.216.in-addr.arpa domain name pointer chloride.phys.iit.edu.
+
+nslookup 216.47.138.69
+#Server:		127.0.0.1
+#Address:	127.0.0.1#53
+#
+#69.138.47.216.in-addr.arpa	name = chloride.phys.iit.edu.
+
+# Slightly more detailed
+host -a 216.47.138.69
+dig -x 216.47.138.69
+
+# See available network interfaces, e.g. wlan, eth
+ip link show
+netstat -i
+/usr/sbin/ifconfig -a
+
+# See what an interface can do, e.g. if wakeonlan is enabled
+ethtool eth3
+sudo /sbin/ethtool eth0
+
+# Wake on LAN using mac address
+wakeonlan 00:0d:56:d2:a8:24
+wakeonlan -i 216.47.138.69 00:0d:56:d2:a8:24
+
+# You want it to shutdown and you really mean it!
+sudo /sbin/poweroff -d -f -h -i -p
+# Newer ones use this syntax.
+sudo /sbin/poweroff --force --poweroff --verbose
+# Or maybe this?
+sudo shutdown -h now
+sudo init 0
+sudo halt
+
+# See what the time is anywhere in the world, interactively.
+tzselect
+# See what the time is in India.
+echo -e '5\n14\n1' | tzselect 2>&1 | grep 'Local time' # time in India
+echo -e '2\n49\n11\n1' | tzselect 2>&1 | grep 'Local time' # time in Chicago (CST)
+
+# See if you've got any linux backports installed
+apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
+
+# List available WiFi access points.
+nmcli dev wifi
+# Sort available wifi access points by signal strength, strongest at the top
+nmcli dev wifi | sort -k1.93nr
+
+# Remove files with dashes, e.g. a file called '-'
+rm -- -
+# Remove all files without being goofed up by leading dashes.
+rm -- *
+
+# Kill an unresponsive SSH session
+#http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
+<Enter> ~ .
+
+# Escape latex special characters (reserved characters)
+echo "55% increase" | pandoc -t latex
+echo '~ # $ % ^ & _ { } < > \ |' | pandoc -t latex
+echo '~ # $ % ^ & _ { } < > \ |' | pandoc -t latex --listings
+
+# Convert files using pandoc, e.g. markdown to latex
+pandoc -f markdown -t latex myfile.markdown  > myfile.tex
+
+# Check if advanced globbing patterns are on
+shopt extglob
+# Turn them on
+shopt -s extglob
+# Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
+mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
+
+# Get current beamline status at APS
+w3m http://www.aps.anl.gov/aod/blops/status/srStatus.html | grep "Operations Status"
+
+# Insert all possible completions (readline completion trick)
+<Alt><Shift>8 #i.e. M-*
+
+# More readline stuff
+C-x C-u # undo
+M-f # forward one word. M is meta, i.e. alt key.
+M-b # back one word. M is meta, i.e. alt key.
+
+# Put this in .inputrc for menu completion (like vim, where it cycles through options)
+"\C-f": menu-complete
+
+# Fun on the beamline. :)
+iit@bm1:~$ w
+ 21:06:54 up 272 days,  3:11, 10 users,  load average: 0.00, 0.00, 0.04
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+segre    tty1                      19Dec12 177days  0.37s  0.35s -bash
+kwiatal  tty2                      26Mar13 80days  0.46s  0.39s -bash
+katsouda pts/0    :0.0             Thu14    2.00s  2:02   5:18  gnome-terminal
+katsouda pts/1    :0.0             14:46    1:02m 13.10s  5:18  gnome-terminal
+katsouda pts/4    :0.0             14:46    1:32m 17:04   5:18  gnome-terminal
+iit      pts/5    mr116.mr.aps.anl 20:05    0.00s  0.05s  0.01s w
+katsouda pts/8    :0.0             14:46    1:03m  0.02s  5:18  gnome-terminal
+katsouda pts/7    :0.0             14:46    1:01m  0.02s  5:18  gnome-terminal
+iit      pts/11   mr116.mr.aps.anl 19:17    1:33m  0.10s  0.02s pager -s
+gu34012  pts/9    mr011.mr.aps.anl 07Jun13  1:08m 22:37  22:36  /opt/mx/bin/mxmotor -F /opt/mx/etc/motor.dat -s /home/gu34012/.mx/bm1_scan.dat
+# Tell Razib to open a new terminal while we're waiting for a raster scan to complete and tell me what he sees with 'who am i'.
+iit@bm1:~$ who am i
+iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
+it@bm1:~$ write katsoudas pts/10
+Hello, Razib!
+iit@bm1:~$ who am i
+iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
+iit@bm1:~$ 
+Message from katsoudas@bm1 on pts/10 at 21:18 ...
+Is this some kind of joke
+EOF
+iit@bm1:~$ ps aux | grep ssh
+# Blah blah blah...
+iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5  
+# That's me!
+
+# Show mtime (modification time, age of data in file, updated by writing to file)
+ls -l
+# Show ctime (inode change time, updated by writing to file or changing permissions)
+ls -lc
+# Show atime (access time, updated by reading the file)
+ls -lu
+# Directory times are updated when a file in them is added, removed or renamed, but not when it is only modified.
+
+# When apt-get is updating and running dpkg, then gets interrupted, use this:
+sudo dpkg --configure -a
+
+# See reverse dependecies (which packages depend on a specified package)
+apt-cache rdepends gcc
+# Limit to those that are installed
+apt-cache --installed rdepends gcc
+# Do it recursively
+apt-cache --installed --recurse rdepends gcc
+
+
+lspci -nnk | grep -A3 "Network controller"
+
+# The venerable finger command
+iit@bm1:~$ finger iit
+Login: iit            			Name: IIT General Usage Account
+Directory: /home/iit                	Shell: /bin/bash
+Office: IIT - MRCAT, 630.252.1710 - 
+On since Tue Jun 18 18:35 (CDT) on pts/0 from 107-210-253-34.lightspeed.cicril.sbcglobal.net
+No mail.
+No Plan.
+
+# Find words in the dictionary starting with certain letters
+look xa
+
+# Using screen
+screen # start a new screen session; press enter at welcome screen
+Ctrl-a, d # detach current screen; you can log out and it will keep going
+screen -r # reconnect to a previous screen session
+Ctrl-a, c # create new screen window
+Ctrl-a, a # move to other screen window
+Ctrl-a, w # list open screen windows
+
+# Convert an image from a pdf to one that LaTeX can work with, a png
+pnmtopng park-2009-synthesis.ppm > park-2009-synthesis.png
+
+# Clear xsel clipboard
+xsel -c -p; xsel -c -s; xsel -c -b;
+kill 3105; sleep 1; ps -p 3105
+
+# Lookup information about a website or ip address
+whois iit.edu
+
+# Remove newlines, trailing and otherwise
+tr -d '\n'
+
+# Get the last entry in history
+history | tail -n2 | head -n1| cut -c 8-
+
+# Rsync is pretty awesome.
+sudo rsync --verbose --progress --archive --compress --rsh ssh --rsync-path="sudo rsync" /var/www/pmwiki nbeaver@chloride.phys.iit.edu:/var/www/
+
+# Get local copy of website
+wget -E -H -k -K -p -e robots=off 'https://www.iit.edu/'
+# Check to see if the website is up beyond using something like ping.
+wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.com/miegakure/
+curl --head --silent --location "http://www.reddit.com/r/obscurantism"
+# No redirects
+curl --head --silent "http://www.reddit.com/r/obscurantism"
+wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
+
+# Access stuff like bluetooth settings if you can't remember how to launch it graphically.
+gnome-control-center network
+
+# Trace the route/path of the connection to an ip address or website
+tracepath google.com
+tracepath 10.96.21.19
+
+# Cool use of the find command: http://www.tuxradar.com/content/command-line-tricks-smart-geeks
+# Find all files in home directory modified or created today.
+find ~ -type f -mtime 0
+# If you know it's an mp3...
+find ~ -type f -mtime 0 -iname '*.mp3'
+# Find files in your home directory that you don't own
+find ~ ! -user ${USER}
+# Install from source, but turn it into a debian package first
+./configure && make && checkinstall
+# Show the real directory of a symlinked one
+pwd -P
+# Move to real directory
+cd $(pwd -P)
+# Display a quick message
+xmessage -display :0.0 "You are late"
+
+# Morse code!
+echo "Hello" | morse -s | tr -d '\n'
+echo ' .... . .-.. .-.. ---  ...-.-' | morse -d
+
+# What's taking up space on your home directory?
+du --summarize ~/* | sort -nr | less
+
+# Suspend the computer to RAM and wake up 60 seconds later
+sudo rtcwake -m mem -s 60
+# Don't suspend, just shchedule a wakeup 60 seconds later
+sudo rtcwake -m no -s 60
+
+# If your package manager gives you trouble, don't bother swearing, just reinstall!
+sudo apt-get --reinstall --purge install flashplugin-installer
+
+# Browse gopher with lynx
+lynx gopher://gopher.floodgap.com/1/world
+
+# Link to USPS package tracking for three packages
+https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
+
+# Mute master sound
+mixer set 'Master' mute
+# Unmute master sound
+amixer set 'Master' unmute
+
+# List only dotfiles
+ls -a | grep '^\.'
+
+# Graphically change timezone
+time-admin
+
+# Combine/merge/join/concatenate pdf files together
+pdfjoin 1.pdf 2.pdf  # creates a 2-join.pdf file with both 1 and 2.
+pdfunite 1.pdf 2.pdf 1-and-2.pdf # creates a 1-and-2.pdf file with both 1 and 2.
+pdftk *.pdf cat output onelargepdfile.pdf
+# Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
+# Combine/merge/join/concatenate pdf files together in numerical order of filename, instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea. Sorry.
+pdfjoin $(ls -v)
+
+# Oh my gosh, I just entered my password in the terminal and now it will be in the bash history! What can I do?
+unset HISTFILE
+# Whew!
+
+# Remote desktop into a Windows machine
+rdesktop 123.45.678.910
+
+# VNC into a machine (Windows or Linux) with a VNC server running (TightVNC in this case)
+vncviewer dhcp195.wh.iit.edu:5900
+
+# See cron updates and ssmtp status
+less /var/log/syslog
+
+# Identify printer model.
+sudo escputil -d -r /dev/usb/lp0 
+# Check printer ink levels.
+sudo escputil -i -r /dev/usb/lp0
+# Check printer status (including ink levels).
+sudo escputil -s -r /dev/usb/lp0 
+# Run nozzle check.
+sudo escputil -n -r /dev/usb/lp0 
+# Alignment (does not work for me, sadly.)
+sudo escputil -a -r /dev/usb/lp0 
+
+# Add a ppa (personal package archives)
+sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa
+sudo apt-get update
+sudo apt-get upgrade
+
+# Figure out what is listening on port 80 (http://www.cyberciti.biz/faq/find-linux-what-running-on-port-80-command/)
+netstat -tulpn | grep :80
+fuser 80/tcp
+lsof -i :80 | grep LISTEN
+
+# Look at process id 2720
+ls -l /proc/2720/exe 
+# lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
+
+# Launch printer stuff from command line
+system-config-printer
+
+# Add a red dot to the prompt, e.g. when recording; from here: https://news.ycombinator.com/item?id=6190600
+PS1=`printf "\033[1;31m\342\227\217\033[0m\\$ "` sh
+
+# Sort a file in place and guarantee uniqueness as well.
+sort --unique myfile.txt --output=myfile.txt
+sort  myfile.txt -u -o myfile.txt
+
+# Eject dvd drive
+eject /dev/dvd4 
+# Close dvd drive (does not work on most laptops)
+eject -t /dev/dvd4
+# Toggle dvd drive (also does not work on most laptops)
+eject -T /dev/dvd4
+
+# Start a new x session (generally you already have 0 running)
+startx -- :1 &
+
+# Check the web cam based on the device file
+camorama -d /dev/video1
+
+# Change default terminal emulator
+sudo update-alternatives --config x-terminal-emulator
+
+# Using globstar
+shopt -s globstar
+vim -p **/*.txt
+
+# See which packages are using the most disk space.
+dpkg-query -W --showformat='${Installed-Size} ${Package}\n' | sort -nr | less
+
+# Using gcc (gnu c compiler) without a makefile (on the fly, so to speak)
+gcc testing.c # compile c file into 'a.out' binary
+gcc -Wall -o "testing" "testing.c" # compile into 'testing' binary and show warnings
+gcc -Wall -o "testing" "testing.c" -lm # compile with math.h
+gcc -Wall -o "testing" "testing.c" --llapack # compile with lapack
+
+# Restrict locate to a single path
+locate --count /home/nathaniel/*/Makefile
+
+# use the recoll command from the terminal
+recoll -t oatmeal | less -S
+
+# See ten newest processes
+ps k-start_time
+# See oldest processes first
+ps axkstart_time | less
+# See newest processes first
+ps axk-start_time | less
+ps --sort -start_time -ef | less
+
+# Downloading flash videos
+# Ohloh comparison:
+# https://www.ohloh.net/p/compare?project_0=clive&project_1=cclive&project_2=youtube-dl
+youtube-dl 'http://youtu.be/otXf1VukQkU' # lots of development activity
+quvi 'http://youtu.be/otXf1VukQkU'   # quvi is a library that other languages can call, too
+clive  'http://youtu.be/otXf1VukQkU' # stands for 'command live video extraction'
+cclive 'http://youtu.be/otXf1VukQkU' # rewrite of clive in C++
+
+# When gvfsd-metadata spazzes out on you, run this.
+rm -rf ~/.local/share/gvfs-metadata
+# This is a well-known bug.
+# https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/517021
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=624507
+
+# Searching for unicode characters.
+charmap # nice gui, but more than I generally need
+unicode beta # find all unicode characters with 'beta' in the name
+unicode '.*greek.*small.*beta.*' | less # you can use regular expressions, too
+unicode 'greek small letter beta' | less # gets one results
+unicode -w 'greek small letter beta' | less # gets the wikipedia page about the unicode characters
+# Upside down letters
+unicode 'letter turned a'
+# Superscripts
+unicode  "modifier letter small a"
+# Looking it up by character
+unicode -i UTF-8 ╗
+# Look it up by hex (UTF-16BE)
+unicode -x 2557
+unicode -x 002557
+unicode U+2557
+# Look it up by decimal number
+unicode -d 9559
+
+# See who's been sshing into the machine lately.
+sudo grep -i ssh /var/log/auth.log | less -S
+
+# Goodness, am I in a shell launched by bash, or by sshd or something else?
+echo $SHLVL # If this is 1, the shell was launched by a terminal, sshd, etc. If not, it was launched by another shell.
+# Who is the parent process, anyway?
+ps -p $PPID
+
+# See the contents of a gzip'd file without creating a temp file.
+zcat file.gz
+# See paged contents of a gzip'd file without creating a temp file.
+zless file.gz
+
+# One way to re-run a process in gdb:
+1. Look up the process with ps.
+ps aux | grep comsol
+1000     24466  0.0  0.0   2236   660 pts/9    S+   12:45   0:00 /bin/sh /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/comsol
+1000     24497  106  3.8 820832 152864 pts/9   Sl+  12:45   0:12 /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
+2. Paste the corresponding command after gdb --args.
+gdb --args /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
+3. Trouble is, anything set up by wrapper scripts won't work...
+
+# Probably a better way to run a process in gdb.
+1. Run the process.
+2. Look up the process with ps.
+ps aux | grep comsol
+1000       503  7.7  4.4 853340 179816 pts/9   Sl+  12:55   0:19 /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
+3. Attach gdb to the process by process id (may need to be root).
+sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher 503
+4. Once in gdb, press c to continue execution of program.
+
+# Filter out control sequences like backspace, return, etc.
+cat myfile.txt | col -b > filtered.txt
+
+# List books in calibre library.
+calibredb list --fields 'title,authors,size'
+# Full documentation here:
+# http://manual.calibre-ebook.com/cli/calibredb.html#calibredb-list
+
+# Find out which Linux distribution you are running.
+cat /etc/issue
+# Find out which Debian/Ubuntu distribution you have installed.
+lsb_release -a
+
+# See one-letter macros definitions for LaTeX.
+texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G H I J K L M N O P Q R S T U V X Y Z
+
+# See all non-printing characters in a text file
+cat -A myfile.txt
