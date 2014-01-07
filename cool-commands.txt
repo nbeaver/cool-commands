@@ -123,6 +123,8 @@ wget --continue 'http://cdimage.debian.org/cdimage/release/current-live/i386/usb
 wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics'
 # Using wget to get a recursive (default to 5 links deep) local copy of a page.
 wget --no-host-directories --recursive --convert-links --page-requisites 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
+# Use wget to check for broken links in an html file
+cat file.html | wget --no-check-certificate --spider -nv -F -i -
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 #Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
@@ -372,6 +374,21 @@ cat /proc/acpi/battery/BAT0/state
 # 5387 mAh is 100%
 # 3087 mAh is 58%
 # 7900 mWh is 14%, so full capacity should be about 56000 mWh
+
+# Check processor/cpu/chip information
+cat /proc/cpuinfo
+less /proc/cpuinfo
+
+# Check hard drive info
+cat /proc/scsi/scsi
+sudo hdparm -I /dev/sda
+sudo lshw -class disk
+
+# Check hard drive partitions
+cat /proc/diskstats
+
+# Get general dump of hardware info
+lshw
 
 #Get a new DVD drive to work
 sudo regionset /dev/dvd4
@@ -1451,7 +1468,10 @@ eject -t /dev/dvd4
 eject -T /dev/dvd4
 
 # Start a new x session (generally you already have 0 running)
+# Go to a tty using e.g. ctrl-alt-F1
 startx -- :1 &
+# or do this
+xinit -- :1
 
 # Check the web cam based on the device file
 camorama -d /dev/video1
@@ -1568,3 +1588,25 @@ texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G 
 
 # See all non-printing characters in a text file
 cat -A myfile.txt
+
+# See wifi network usage
+vnstat -i wlan2
+# See it updated every 2 seconds (by default)
+watch vnstat -i wlan2
+
+# Process files with spaces in the filenames
+IFS=$'\n'
+for file in *.txt ; do
+    # commands on $file here
+done
+# Another option is to use find with --exec flag
+
+# find duplicate files (assuming that identical file size means they're the same)
+duff *
+duff -r /path/to/directory
+# find duplicate files (assuming that identical file sizes does not necessarily mean the same)
+duff -t *
+duff -rt /path/to/directory
+# Other options:
+fdupes
+rdfind /path/to/directory
