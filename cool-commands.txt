@@ -941,6 +941,16 @@ nbeaver  16870  0.0  0.1   8180  1480 ?        S    22:01   0:00 sshd: nbeaver@p
 
 # Disable system speaker in X:
 xset -b
+# Turn off console beeps (system bell) for all programs
+xset b off
+# Set the beep length to 0 (does the same as turning it off)
+setterm -blength 0
+# Check if the beep is on or not
+xset q | grep bell
+# another way to turn off the system bell
+rmmod pcspkr
+# making it permanent
+echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
 
 # From http://overapi.com/linux/
 # Run cmd1 then cmd2
@@ -1203,6 +1213,13 @@ tzselect
 # See what the time is in India.
 echo -e '5\n14\n1' | tzselect 2>&1 | grep 'Local time' # time in India
 echo -e '2\n49\n11\n1' | tzselect 2>&1 | grep 'Local time' # time in Chicago (CST)
+# A better way, based on
+# http://www.cyberciti.biz/tips/date-command-set-tz-environment-variable.html
+export TZ=America/Chicago && date && unset TZ
+export TZ=Asia/Kolkata && date && unset TZ
+export TZ=Asia/Dhaka && date && unset TZ
+# What time will it be 10 hours from now in Bangladesh?
+export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
 
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
@@ -1610,3 +1627,8 @@ duff -rt /path/to/directory
 # Other options:
 fdupes
 rdfind /path/to/directory
+
+# Set the default Gnome browser
+update-alternatives --config gnome-www-browser
+# Default for foreign programs (system-wide)
+update-alternatives --config x-www-browser
