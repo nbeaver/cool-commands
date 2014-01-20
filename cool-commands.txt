@@ -127,16 +127,20 @@ wget --no-host-directories --recursive --convert-links --page-requisites 'http:/
 cat file.html | wget --no-check-certificate --spider -nv -F -i -
 # Download a local copy of the weather into a specified directory
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
+wget --page-requisites --convert-links --directory-prefix '~/not_backed_up/weather-reports/chicago-weather/' 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
 # Choose output for wget
-wget --no-host-directories 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics' --output-document ~/Dropbox/UbuntuBackup/basic.ics && date > ~/Dropbox/UbuntuBackup/calendar-refresh-time.txt
+wget --no-host-directories 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics' --output-document ~/Dropbox/UbuntuBackup/basic.ics
 # Get local copy of website
 wget -E -H -k -K -p -e robots=off 'https://www.iit.edu/'
+wget --adjust-extension --span-hosts --convert-links --backup-converted --page-requisites --execute robots=off 'https://www.iit.edu/'
 # Check to see if the website is up beyond using something like ping.
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.com/miegakure/
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
 # No redirects
 curl --head --silent "http://www.reddit.com/r/obscurantism"
 wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
+# Download just the first level of linked files, and don't re-download them if they haven't been updated
+wget --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --timestamping http://bernhard-adams.com/IIT-phy412/
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 #Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
