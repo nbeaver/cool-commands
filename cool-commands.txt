@@ -3,6 +3,15 @@ sudo iwlist scanning|less
 
 # Connecting to s-video out, resizing screen or monitor, connecting to projector or external display
 xrandr
+# Reset screen resolution if another program goofs it up
+xrandr -s 1600x900
+# http://forums.debian.net/viewtopic.php?f=10&t=40955
+# Automatically turn on a second screen
+xrandr --output VGA --auto
+# Clone screens
+xrandr --output VGA --same-as LVDS
+# Extend screens
+xrandr --output VGA --left-of LVDS
 
 # Finding in directories beneath
 # Find all files containing text 'NBMAX' and ending in .F90
@@ -237,7 +246,7 @@ locate -b phys*
 # Locate using the ? for one or zero unknown letter, * for many unknown letters
 locate *.htm?
 # Udate the locate database
-updatedb
+sudo updatedb
 
 #Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
@@ -343,6 +352,10 @@ diff -u new_file old_file > patch.txt #Generates a patch file that can generate 
 #To check the patch:
 patch -b old_file #Patches old_file and creates a file called old_file.orig that is unpatched
 vimdiff old_file old_file.orig #compare the patched file to the original file
+# To use the patch
+patch < patch.txt
+$ To revert the patch
+patch -R < patch.txt
 
 find ./ -exec file '{}' \; #find out what kind of file all the stuff in the directories below are
 
@@ -778,6 +791,10 @@ aptitude --simulate install list_of_packages #this one also tells you how much s
 
 # If you want to get the source code for a package, run this. It does not require root priveleges.
 apt-get source <package-name>
+# If you want to build it from source, do this:
+apt-get build-dep <package-name>
+# If you're having problems building from source:
+auto-apt run ./configure
 
 # Install 
 
@@ -1130,8 +1147,6 @@ units --terse 'tempF(212)' 'tempC'
 # Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
 units -f '' -f ~/Dropbox/projects/units/my-units.dat 
 
-# Reset screen resolution if another program goofs it up
-xrandr -s 1600x900
 
 # Trying to kill all those blasted error reports from when xscreensave dies.
 killall apport-gtk
@@ -1192,10 +1207,16 @@ nslookup 216.47.138.69
 #Address:	127.0.0.1#53
 #
 #69.138.47.216.in-addr.arpa	name = chloride.phys.iit.edu.
+nslookup debian.org
 
 # Slightly more detailed
 host -a 216.47.138.69
 dig -x 216.47.138.69
+# Also works on domain names
+host senfter.debian.org
+
+# Choose a mirror to download from by comparing speed and latency
+sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 
 # See available network interfaces, e.g. wlan, eth
 ip link show
@@ -1218,6 +1239,8 @@ sudo /sbin/poweroff --force --poweroff --verbose
 sudo shutdown -h now
 sudo init 0
 sudo halt
+# Rebooting
+sudo shutdown -r now
 
 # See what the time is anywhere in the world, interactively.
 tzselect
@@ -1308,6 +1331,9 @@ iit@bm1:~$ ps aux | grep ssh
 iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5  
 # That's me!
 
+# Display which tty you are on
+tty
+
 # Show mtime (modification time, age of data in file, updated by writing to file)
 ls -l
 # Show ctime (inode change time, updated by writing to file or changing permissions)
@@ -1337,6 +1363,12 @@ Office: IIT - MRCAT, 630.252.1710 -
 On since Tue Jun 18 18:35 (CDT) on pts/0 from 107-210-253-34.lightspeed.cicril.sbcglobal.net
 No mail.
 No Plan.
+# Find out who you are (username)
+whoami
+# Find out if you have root (sudoing) priveleges
+sudo -v
+# Find out what you can do if you have sudo priveleges
+sudo -l
 
 # Find words in the dictionary starting with certain letters
 look xa
@@ -1635,3 +1667,34 @@ rdfind /path/to/directory
 update-alternatives --config gnome-www-browser
 # Default for foreign programs (system-wide)
 update-alternatives --config x-www-browser
+
+# Using make
+# Ignore errors, just keep on trucking.
+make -i
+# Choose the directory to make into
+make -C /path/to/directory
+make --directory=/path/to/directory
+
+gtk-redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode
+
+# Lock the screen
+xflock4
+
+# Quick way to find process ids based on command name
+pgrep cron
+# See the full line, not just the id
+pgrep -a vim
+# Search the exact thing
+pgrep -x bash
+
+# Show version numbers with apt-get
+sudo apt-get update -V
+# get changelog (requires internet connection)
+apt-get changelog git
+
+# See output
+annotate-output
+
+# Open emacs in the terminal instead of a separate window
+emacs -nw
+emacs --no-window-system
