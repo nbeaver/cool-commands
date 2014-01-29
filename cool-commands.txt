@@ -1043,20 +1043,11 @@ less file1 file2 file3
 # While in less:
 :n
 :p
+# Save logfile with less (if it's a stream).
+:s
 
 # Bluetooth
 blueman-manager
-# On cellphone, go to Settings -> Bluetooth -> On/Off -> On.
-# Choose browse files on device to make sure it is connected.
-# Then you should be able to receive cellphone contacts just fine.
-# On cellphone, go to Bluetooth -> Send a contact -> nathaniel-laptop-0 -> Options -> Check All -> Send.
-# Don't worry about accepting incoming stuff, just wait for the cellphone to finish.
-# They will be dumped into /home/nathaniel/Public
-# Pictures are done similarly -- Bluetooth Devices, Rumor2, Browse Device.
-# Then just copy over using Nautilus.
-# If you have trouble (e.g. "Not authorized" error),
-# try sending a file from the cellphone. Even if it fails,
-# it seems to reset the communications back to where it will work the next time you use Nautilus.
 
 # Change mp3 sample rate of every mp3 file in a directory
 mkdir converted
