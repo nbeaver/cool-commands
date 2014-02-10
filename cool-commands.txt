@@ -57,6 +57,10 @@ grep --recursive "kim-str" .
 time grep "hi"
 ls /usr/bin | grep "csound"
 nano | ls | grep "ann"
+# Grepping raw strings without regular expressions
+grep -F
+grep --fixed-strings
+git diff --word-diff | grep -F '[-[ ]-]{+[*]+}'
 
 find | grep NBMAX *.F90
 
@@ -99,6 +103,8 @@ bt
 frame 2
 info locals
 info args
+# Running gdb commands
+gdb -ex 'set logging on' -ex 'run' iceweasel
 
 # Disk usage:
 du |sort --numeric-sort --reverse
@@ -220,6 +226,11 @@ date --date='2 hours 22 minutes' +%r #The time 2 hours and 22 minutes from now, 
 date --date='45 days after 9/11/2012' +%r
 #find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
+# Standard American date
+date +%m/%d/%Y
+# Standard American date one week from now
+date --date='next week' +%m/%d/%Y
+date --date='7 days' +%m/%d/%Y
 
 grep -r "string" . #recursively search all files for string
 
@@ -482,6 +493,7 @@ sudo arp-scan --localnet | less
 sudo arp-scan --interface eth3 --localnet | less
 # When avahi-daemon sucks up 100% cpu
 # https://bugs.launchpad.net/ubuntu/+source/avahi/+bug/1059286
+# *Ubuntu only*
 sudo restart cups && sudo restart avahi-daemon
 
 # Discover machines on the LAN
@@ -585,6 +597,8 @@ kill -3 4782 && sleep 1 && ps aux | grep 4782
 #Find connected program
 netstat -tulanp | less
 netstat --tcp --udp --listening --all --numeric --program | less #long version
+# List open ports
+netstat -pln
 
 #Disk usage of current directory (total only)
 du -sh
@@ -949,7 +963,7 @@ sed -i '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
 sed -i.bak -e 's/hello/jello/' hello.txt
 
-# SSH without a password
+# SSH without a password (using ssh keys). You only need to do this once.
 ssh-keygen -t rsa
 # Use defaults (blank password)
 # In my case, public key was saved as ~/.ssh/id_rsa.pub
@@ -987,8 +1001,9 @@ cmd1 ; cmd2
 cmd1 && cmd2
 # Run cmd2 if cmd1 is not successful
 cmd1 || cmd2
-# Show distribution 
+# Show distribution (version of Linux)
 less /etc/issue
+lsb_release -a
 # Show executable path
 echo $PATH
 # Run last command starting with abc
@@ -1035,7 +1050,7 @@ ffmpeg -i image.iso
 avconv -i image.iso
 # mediainfo will only tell you ISO format and file size :(
 
-# Blank the screen temporarily
+# Blank the screen temporarily (turn off display)
 xset dpms force standby
 
 # Use less on multiple files
@@ -1214,6 +1229,10 @@ ip link show
 netstat -i
 /usr/sbin/ifconfig -a
 
+# Find out your ip address
+ifconfig
+ip addr show
+
 # See what an interface can do, e.g. if wakeonlan is enabled
 ethtool eth3
 sudo /sbin/ethtool eth0
@@ -1245,6 +1264,8 @@ export TZ=Asia/Kolkata && date && unset TZ
 export TZ=Asia/Dhaka && date && unset TZ
 # What time will it be 10 hours from now in Bangladesh?
 export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
+# Just using date command
+date --date='TZ="Asia/Dhaka" 10 hours'
 
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
@@ -1451,6 +1472,10 @@ time-admin
 pdfjoin 1.pdf 2.pdf  # creates a 2-join.pdf file with both 1 and 2.
 pdfunite 1.pdf 2.pdf 1-and-2.pdf # creates a 1-and-2.pdf file with both 1 and 2.
 pdftk *.pdf cat output onelargepdfile.pdf
+# Insert pages into a pdf
+pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B A15-end output manual.pdf
+# Inset pages in whatever order necessary into a pdf
+pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
 # Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
 # Combine/merge/join/concatenate pdf files together in numerical order of filename, instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea. Sorry.
 pdfjoin $(ls -v)
@@ -1581,6 +1606,10 @@ unicode -x 002557
 unicode U+2557
 # Look it up by decimal number
 unicode -d 9559
+# Look it up by octal
+unicode -o 22527
+# Using `ga` in vim gives hex, decimal, and octal, useful for searching unicode(1).
+# Using `g8` in vim gives UTF-8 representation, not useful for searching unicde (1).
 
 # See who's been sshing into the machine lately.
 sudo grep -i ssh /var/log/auth.log | less -S
@@ -1689,3 +1718,23 @@ annotate-output
 # Open emacs in the terminal instead of a separate window
 emacs -nw
 emacs --no-window-system
+
+# Figure out your current DNS server
+cat /etc/resolv.conf
+
+# Make a directory with the format yyyy-mm-dd of today's date
+mkdir $(date -I)
+
+# Make a popup message
+gdialog --msgbox "Test"
+kdialog --msgbox "Test"
+# Make a popup message over SSH
+export DISPLAY=:0.0 && gdialog --msgbox "Test"
+# If you hit Ctrl-C, it stops (i.e. releases the terminal so you can type again) and disappears from the screen on the remote machine.
+# If the user closes the box, does the same thing.
+# If you're not sure which screen someone is connected to, use `w`
+w
+# This will show e.g. :0 :1. The dot part is the (optional) screen number, if the X-server is using multiple screens.
+# http://unix.stackexchange.com/questions/17255/is-there-a-command-to-list-all-open-displays-on-a-machine
+# You can also do obnoxious things like make the window bigger and add Pango markup to change font size and color.
+zenity --warning --width=400 --height=400 --text='<span font="32" color="red">Look out!</span>'
