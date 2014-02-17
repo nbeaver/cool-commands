@@ -465,7 +465,7 @@ sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
 #Detach process from gnome-terminal
-Ctrl-Z #Access bash prompt
+Ctrl-Z #Access shell prompt
 bg     #Put job in background
 #Note job number, or use
 jobs
@@ -599,6 +599,8 @@ netstat -tulanp | less
 netstat --tcp --udp --listening --all --numeric --program | less #long version
 # List open ports
 netstat -pln
+# See list of things that are listening remotely
+netstat -tnlp | grep -v 127.0.0 | grep -v ::1:
 
 #Disk usage of current directory (total only)
 du -sh
@@ -693,8 +695,21 @@ nohup redshift -l 41:87 & disown
 sudo chmod a+r file
 
 # Find out what shell you're using
+# This is what the default shell is supposed to be
 echo $SHELL
+# This is the actual shell you're running inside (name of the running process)
 echo $0
+
+# Change the default shell to bash if your username is nbeaver
+chsh --shell /bin/bash nbeaver
+# Or, using which:
+chsh --shell $(which bash) nbeaver
+# Note that chsh will only work if you are in /etc/passwd.
+# Otherwise you will have to edit .profile and add this.
+export SHELL=/bin/bash
+bash
+# This will require you to hit Ctrl-D twice when one want to log out,
+# once when you exit bash and once when you exit dash.
 
 # Find out whether a package is installed or not.
 # Also tells you the version and whether it's installed from a ppa.
@@ -915,6 +930,8 @@ pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 # Get return value of last command
 echo $?
 killall korgac
+
+# Get random 6 digit number
 echo $RANDOM
 
 # X over SSH
@@ -1738,3 +1755,23 @@ w
 # http://unix.stackexchange.com/questions/17255/is-there-a-command-to-list-all-open-displays-on-a-machine
 # You can also do obnoxious things like make the window bigger and add Pango markup to change font size and color.
 zenity --warning --width=400 --height=400 --text='<span font="32" color="red">Look out!</span>'
+
+# Launch a process while making it think that the date and time is different than it actually is.
+faketime 'last Friday 5 pm' /bin/date
+faketime '2008-12-24 08:15:42' /bin/date
+datefudge "2007-04-01 10:23" date -R
+
+# Some ipython tricks
+# Save lines 1-7 and 10 to myfile.py
+%save myfile 1-7 10
+# Append lines 11-12
+%save -a myfile 11-12
+
+# Joke program to print dates in the Discordian calendar
+# http://en.wikipedia.org/wiki/Discordian_calendar
+ddate
+# Joke message; spit out a random Discordian slogan.
+ddate +%.
+
+# Weborf web server as daemon
+weborf --basedir ~/weborf/ --cache ~/Downloads/weborf-cache/ --noexec --mime -d
