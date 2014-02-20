@@ -156,6 +156,9 @@ curl --head --silent "http://www.reddit.com/r/obscurantism"
 wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
 # Download just the first level of linked files, and don't re-download them if they haven't been updated
 wget --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --timestamping http://bernhard-adams.com/IIT-phy412/
+# Download from obnoxious user-agent filtering sites
+# http://sparc86.wordpress.com/2009/04/08/wget-shows-http-error-403-forbidden/
+wget -U firefox http://www.wideislandview.com/2009/07/recipe-no-fuss-rice-cooker-banana-bread/
 
 echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 #Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
@@ -262,7 +265,6 @@ sudo updatedb
 #Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
 
-
 echo -n '12764787846358441471' | wc --chars #this is a 20-digit prime
 time factor 12764787846358441471 #factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
@@ -285,6 +287,11 @@ help(object.method)
 # To drop into an interactive shell from a script:
 import code
 code.interact(local=locals())
+# random phone number
+rand = random.randint(1000000000,9999999999)
+# Put the hyphens in
+s = str(rand)
+s[:3] +"-"+ s[3:6] +"-"+ s[6:]
 
 #Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
@@ -826,6 +833,7 @@ apt-get build-dep <package-name>
 auto-apt run ./configure
 
 # Install 
+./install
 
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
 grep -v '^#\|^$'
@@ -912,7 +920,6 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 
 # The reddit disapproval face
 ಠ_ಠ
-
 
 # Show full path of a file with ls
 ls -d $PWD/*
