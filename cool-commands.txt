@@ -1,7 +1,7 @@
 # Wireless access points
 sudo iwlist scanning|less
 
-# Connecting to s-video out, resizing screen or monitor, connecting to projector or external display
+# Connecting to s-video out, changing display resolution, connecting to projector or external display
 xrandr
 # Reset screen resolution if another program goofs it up
 xrandr -s 1600x900
@@ -284,6 +284,8 @@ python -i myscript.py
 dir(object)
 # Get help on a method
 help(object.method)
+# Get help on a package
+help(numpy)
 # To drop into an interactive shell from a script:
 import code
 code.interact(local=locals())
@@ -292,6 +294,7 @@ rand = random.randint(1000000000,9999999999)
 # Put the hyphens in
 s = str(rand)
 s[:3] +"-"+ s[3:6] +"-"+ s[6:]
+
 
 #Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
@@ -340,7 +343,7 @@ updmap --enable Map=tengwarscript.map
 #decompress and unarchive a bzipped file
 tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 
-#decompress and unarchive a gzipped file
+# decompress and unarchive a gzipped file
 tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 
 # decompress and unacrhive a tarred, gzipped file
@@ -357,6 +360,9 @@ tar --extract --verbose --file myfile.tar
 # untar a tarred file to a specified directory
 tar -xvf myfile.tar -C /path/to/my/directory
 tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
+
+# Gzip a single file
+gzip myfile.txt # produces myfile.txt.gz
 
 cat /bin/cat #mojibake-fy the screen
 reset #fix it
@@ -408,7 +414,7 @@ rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 
 #Search with less case insensitive
 less -i
-(Or just press -i while less is running)
+#(Or just press -i while less is running)
 
 # List networks
 sudo lshw -C network
@@ -449,8 +455,12 @@ find . -exec file '{}' + | less
 #Restart the gui for ubuntu
 unity-2d-shell --reset
 
-#Find numeric gateway ip address
+# Show numeric gateway ip address
 route -n
+# Another way to get the same thing
+netstat -rn
+# Show gateway name
+route
 
 #How to start a new flashbake directory:
 #1. Initialize the git repository in the relevant directory.
@@ -666,6 +676,12 @@ echo 'Hello, world!' | espeak --stdin
 #List to your computer say "Ping!" every 2 seconds
 ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
 
+# Check network connectivity for dropped packets
+ping -f -i 1 8.8.8.8
+# Observe where the packets are being dropped at the same time
+mtr -t
+# Press 'p' in mtr to pause.
+
 #Generate random alphanumeric password
 strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo
 
@@ -752,8 +768,11 @@ lsof -i -P | less
 #Compile with the gfortran compiler
 gfortran myprogram.f95 -o myprogram
 
-#Show kernel information
+# Show kernel information (e.g. 64-bit vs 32-bit)
 uname --all
+
+# Show cpu information (e.g. 64-bit vs 32-bit)
+lscpu
 
 #Try to fix wifi
 sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -923,7 +942,6 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 
 # Show full path of a file with ls
 ls -d $PWD/*
-cat wget-ical-out.txt | xsel -b
 
 # Use a text file as a command line argument
 w3m $(<temp.txt)
@@ -1288,8 +1306,12 @@ export TZ=Asia/Kolkata && date && unset TZ
 export TZ=Asia/Dhaka && date && unset TZ
 # What time will it be 10 hours from now in Bangladesh?
 export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
-# Just using date command
+# What time will it be here when it's 10 hours later in Dhaka?
 date --date='TZ="Asia/Dhaka" 10 hours'
+# What time of day will it be in India if it's at a specified Central Standard Time?
+TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +%r
+# What will be the full date?
+TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +'%A, %B %e, %r'
 
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
@@ -1416,13 +1438,28 @@ screen -r # reconnect to a previous screen session
 Ctrl-a, c # create new screen window
 Ctrl-a, a # move to other screen window
 Ctrl-a, w # list open screen windows
+# Figure out if you're using screen
+echo $STY
+# Or just press Ctrl-a ?
 
 # Convert an image from a pdf to one that LaTeX can work with, a png
 pnmtopng park-2009-synthesis.ppm > park-2009-synthesis.png
 
+# Copy some text to clipboard
+echo "Hi" | xsel --clipboard
+echo "Hi" | xsel -b
+# Append some text to clipboard
+echo "Hi" | xsel
 # Clear xsel clipboard
 xsel -c -p; xsel -c -s; xsel -c -b;
 kill 3105; sleep 1; ps -p 3105
+
+# Copy working directory to clipboard
+pwd | tr -d '\n' | xsel -b
+# Copy working directory to clipboard, no trailing newline
+pwd | tr -d '\n' | xsel -b
+# Alternative method; shell-dependent (non-portable)
+echo -n $(pwd) | xsel -b
 
 # Lookup information about a website or ip address
 whois iit.edu
@@ -1782,3 +1819,62 @@ ddate +%.
 
 # Weborf web server as daemon
 weborf --basedir ~/weborf/ --cache ~/Downloads/weborf-cache/ --noexec --mime -d
+
+# See security updates
+apt-get -s dist-upgrade |grep "^Inst" |grep -i securi 
+
+# Login with mobile shell
+mosh username@remote.computer
+# Login with a different port than the default (60000-61000)
+mosh -p 53000 username@remote.computer
+
+# Diff by word
+wdiff a.txt b.txt
+# Diff by word and suppress common words (useful for very long lines)
+wdiff --no-common a.txt b.txt
+wdiff -3 a.txt b.txt
+
+# List all fonts
+fc-list
+
+# Copy SSH public key to clipboard
+xclip -sel clip < ~/.ssh/id_rsa.pub
+
+# How to ditch KDE completely
+sudo apt-get purge kdelibs-bin kdelibs5-data 
+
+# Report a debian bug
+reportbug
+# Report a bug for a particular file
+reportbug --filename /usr/share/xfce4/helpers/iceweasel.desktop
+# Report a bug for a particular package
+reportbug iceweasel
+# Report a bug for a command in your path
+reportbug --path --filename=cd
+# Send kudos instead of reporting a bug
+reportbug --kudos
+# Report a bug with mutt (note that --attach will not transfer to mutt)
+reportbug --mutt
+
+# Notes on data entry to LibreOffice Calc
+Ctrl-Shift-P toggle superscript
+Ctrl-Shift-B toggle subscript
+
+# Entering unicode on Linux
+# Insert ℃ (degrees Celsius)
+Ctrl-Shift-U 2103 <Enter>
+# Insert ° (degree symbol)
+Ctrl-Shift-U b0 <Enter>
+# Insert α (alpha)
+Ctrl-Shift U 3b1 <Enter>
+# Insert β (beta)
+Ctrl-Shift U 3b2 <Enter>
+# Insert ₂ 
+Ctrl-Shift U 2082 <Enter>
+# Insert ® (registered trademark sign)
+Ctrl-Shift U ae <Enter>
+
+# Using zsync for downloads
+zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync
+# Do not do this! It will download the entire iso and then tell you it is a zsync file
+zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso
