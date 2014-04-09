@@ -83,6 +83,11 @@ for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 rename -nv 's/$/.doc/' Ch*
 rename -v 's/$/.doc/' Ch*
 
+# Rename files so that Cu becomes C
+rename -nv 's/Cu/C/' Te_Na2Cu2Te.*
+rename 's/Cu/C/' Te_Na2Cu2Te.*
+# Te_Na2Cu2Te.001 renamed as Te_Na2C2Te.001
+
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
 mv filename.{old,new} # Quick file rename
@@ -203,6 +208,7 @@ startx -- :1 #start x session
 
 ls -lSrh #list biggest files
 ls -l -S --reverse --human-readable #-l = long listing and -S = sort
+ls -v1 # Show files one on each line and in numeric order instead of alphanumeric
 
 lsof #display open files
 
@@ -362,10 +368,15 @@ tar -xvf myfile.tar -C /path/to/my/directory
 tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
 
 # Gzip a single file
-gzip myfile.txt # produces myfile.txt.gz
+gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
 
 cat /bin/cat #mojibake-fy the screen
 reset #fix it
+
+# Freeze terminal output
+Ctrl-S
+# Unfreeze terminal output
+Ctrl-Q
 
 Ctrl-Z #get out of pretty much any terminal program and back to the shell
 fg # move the job back to the foreground
@@ -436,6 +447,7 @@ less /proc/cpuinfo
 cat /proc/scsi/scsi
 sudo hdparm -I /dev/sda
 sudo lshw -class disk
+smartctrl -a /dev/sda
 
 # Check hard drive partitions
 cat /proc/diskstats
@@ -503,6 +515,10 @@ shuf --head-count=4 /usr/share/dict/words
 lpr -P "Brother-HL-4070CDW" doc.pdf
 # See the print queue by printer's name
 lpq -P "Brother-HL-4070CDW"  
+# See running jobs
+lpstat
+# List printers
+lpstat -s
 
 #List avahi/bonjour services like printers on the local area network (LAN)
 avahi-browse --all --verbose --terminate --resolve
@@ -786,6 +802,8 @@ exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
 #Unmount partitions and detach disk
 df #to see mounted partitions
+df -h # to see human readable sizes
+df -T # to see filesystem types
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
 
 #Get list of recently installed packages
@@ -898,6 +916,10 @@ for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).
 # Do it for a big TV, and run it on 4 processors
 for f in *.m4v; do ffmpeg -threads 4 -i $f -s wxga -vcodec mpeg1video $(basename $f .m4v).mpg; done
 
+# Run handbrake from the commandline to do much the same thing, but for an .iso disk image
+HandBrakeCLI -Z "High Profile" -i a_movie.iso -o a_movie.mp4
+# http://superuser.com/questions/329349/how-do-i-convert-iso-to-mp4-without-mounting-with-ffmpeg
+
 # Count number of files in working directory, recursively
 find . -type f | wc -l
 
@@ -952,8 +974,11 @@ pdffonts *.pdf
 # Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
 pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 
-# Get return value of last command
+# Get return (error) value of last command
 echo $?
+
+# Annoying KDE problems
+# https://bugs.kde.org/show_bug.cgi?id=120421
 killall korgac
 
 # Get random 6 digit number
@@ -1878,3 +1903,49 @@ Ctrl-Shift U ae <Enter>
 zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync
 # Do not do this! It will download the entire iso and then tell you it is a zsync file
 zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso
+
+# Using the venerable bc command
+echo '1 + 2' | bc
+# Using the even more venerable dc command
+echo '1 2 + p' | dc
+
+# A simple stopwatch; press Ctrl-C or Ctrl-D to end.
+time cat
+# http://lifehacker.com/285093/turn-the-terminal-into-a-stopwatch-with-time-cat
+# An even simple stopwatch; press enter or Ctrl-D to end
+time read
+# http://www.commandlinefu.com/commands/view/1567/a-very-simple-and-useful-stopwatch
+# Press any key to stop the watch
+time read -sn1
+
+# Getting help about bash builtins like read, cd, echo, printf, and type
+# (they don't have man pages of their own, and the bash man page is way too long to sift through)
+help read | less
+help cd | less
+
+# See when the last apt-get update was
+stat -c %y /var/lib/apt/periodic/update-success-stamp
+
+# Do speech to text
+# Convert to 16khz 16bit mono wav file
+ffmpeg -i file.mp3 -ar 16000 -ac 1 file.wav
+# Convert the wavefile to text
+pocketsphinx_continuous -infile file.wav > file.txt
+
+# Gnuplot png output
+set term png # or pngcairo
+set output "out.png"
+plot x**2
+set term wxt
+
+# Seeing the changes in a package before updating
+apt-get install apt-listchanges
+sudo dpkg-reconfigure apt-listchanges 
+# See bugs in a package before updating
+apt-get install apt-listbugs
+
+# Use imagemagick to convert png to jpeg
+convert file.png file.jpeg
+# Use imagemagick to clean up a whiteboard picture
+# https://gist.github.com/lelandbatey/8677901
+convert $1 -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 $2
