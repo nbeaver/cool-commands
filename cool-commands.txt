@@ -217,7 +217,7 @@ ping -c 4 google.com #ping 4 times
 lspci | grep -i network
 #03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
 modprobe --list | grep rtl
-sudo modprobe --remove rtl8192ce 
+sudo modprobe --remove rtl8192ce
 sudo modprobe rtl8192ce
 ping -c 4 google.com
 
@@ -246,14 +246,16 @@ grep -r "string" . #recursively search all files for string
 #search man pages
 man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l #returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
 
-git grep -i rhubarb $(git rev-list --all) # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
+# case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
+git grep -i rhubarb $(git rev-list --all)
 
-compgen -ac | grep my-command # search for commands and aliases named 'my-command'. 
+# search for commands and aliases named 'my-command'.
+compgen -ac | grep my-command
 #Note: -a is for aliases, -c is for commands
 
 #Get wireshark working for non-root user
 sudo apt-get install wireshark
-sudo dpkg-reconfigure wireshark-common 
+sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
 gnome-session-quit --logout --no-prompt
 
@@ -356,7 +358,7 @@ tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 tar zxf keepassx-0.4.3.tar.gz # The - is not necessary.
 
 # list contents of a tarred file, i.e. tar archive
-tar -tf myfile.tar 
+tar -tf myfile.tar
 tar --list --file myfile.tar
 
 # untar a tarred file into the working directory
@@ -461,7 +463,7 @@ sudo regionset /dev/dvd4
 #Capture a disc image
 cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
 
-#Execute 'file' on every file below current directory 
+#Execute 'file' on every file below current directory
 find . -exec file '{}' + | less
 
 #Restart the gui for ubuntu
@@ -490,7 +492,7 @@ pulseaudio --start #start it up again as a daemon
 #Debug wifi
 sudo lshw -C network > wifi-card-info.txt
 sudo service network-manager stop
-sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log 
+sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
 #Detach process from gnome-terminal
@@ -511,14 +513,20 @@ unity --reset & disown
 #Generate 4-word passphrase
 shuf --head-count=4 /usr/share/dict/words
 
-# Print document from the command line to a network printer by printer's name
-lpr -P "Brother-HL-4070CDW" doc.pdf
-# See the print queue by printer's name
-lpq -P "Brother-HL-4070CDW"  
 # See running jobs
 lpstat
 # List printers
 lpstat -s
+# Print document from the command line to a network printer by printer's name
+lpr -P "Brother-HL-4070CDW" doc.pdf
+# Print in double-sided
+lpr -p "Brother-HL-4070CDW" -o sides=two-sided-long-edge doc.pdf
+# List options for printer
+lpoptions -p Brother-HL-4070CDW -l
+# Use options with lpr
+lpr -P "Brother-HL-4070CDW" -o PageSize=Letter -o PageRegion=A4 -o Duplex=DuplexNoTumble -o Resolution=1200x1200dpi doc.pdf
+# See the print queue by printer's name
+lpq -P "Brother-HL-4070CDW"
 
 #List avahi/bonjour services like printers on the local area network (LAN)
 avahi-browse --all --verbose --terminate --resolve
@@ -650,7 +658,7 @@ pdftk book.pdf dump_data > info.txt
 #Edit metadata
 vim info.txt
 #Update pdf metadata
-pdftk book.pdf update_info  info.txt output out-book.pdf 
+pdftk book.pdf update_info  info.txt output out-book.pdf
 #Dump all metadata
 for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
 
@@ -670,7 +678,7 @@ gpg -c -o myfile.enc myfile #If you want to specify the output name
 #Decrypt the encrypted file and push it to stdout
 gpg -d myfile.enc
 #Decrypt the encrypted file and save it to a file
-gpg -o myfilenew myfile.enc 
+gpg -o myfilenew myfile.enc
 
 #Get all kinds of data, including disk usage
 vmstat 1
@@ -706,11 +714,11 @@ for f in *.zip; do unzip -v $f; done
 
 #Cracking zip files:
 #Dictionary method
-fcrackzip --use-unzip --verbose --dictionary --init-password /usr/share/dict/words platelet.zip 
-fcrackzip -uvDp /usr/share/dict/words platelet.zip 
+fcrackzip --use-unzip --verbose --dictionary --init-password /usr/share/dict/words platelet.zip
+fcrackzip -uvDp /usr/share/dict/words platelet.zip
 #Brute-force method, no knowledge of password, only setting length limits
 fcrackzip -u -l 3-4 geek.zip
-time fcrackzip -u -l 3-4 geek.zip 
+time fcrackzip -u -l 3-4 geek.zip
 
 
 PASSWORD FOUND!!!!: pw == geek
@@ -720,7 +728,7 @@ user	0m1.916s
 sys	0m2.236s
 
 #Do something for each line of a file
-while read line; do 
+while read line; do
     echo $line # or whaterver you want to do with the $line variable
 done < file.txt
 #On one line
@@ -869,7 +877,7 @@ apt-get build-dep <package-name>
 # If you're having problems building from source:
 auto-apt run ./configure
 
-# Install 
+# Install
 ./install
 
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
@@ -879,7 +887,7 @@ grep -v '^#\|^$'
 cp -r test/.[a-zA-Z0-9]* target
 
 # Find all symbolic links in a folder
-find ~/Dropbox -type l -ls 
+find ~/Dropbox -type l -ls
 
 # Find all symbolic links in a folder to a folder
 find ~/Dropbox/ -lname '*Dropbox*'
@@ -947,7 +955,7 @@ ps u -C duplicity
 zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
 
 # Search for all directories containing 'doc' in /usr/share except the ones in /usr/share/doc
-find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print 
+find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print
 
 # Get an Artist - Song output from an m3u playlist
 cat playlist.m3u | grep EXT | cut -d, -f 2 | less
@@ -1004,7 +1012,7 @@ cat <<< 'HI'
 
 # From here: http://mmb.pcb.ub.es/~carlesfe/unix/tricks.txt
 # let people in your group access folders without messing up file permissions (never do 'chmod g+x * -R'!)
-find . -type d -exec chmod g+x {} \; 
+find . -type d -exec chmod g+x {} \;
 
 # Run a command 5 minutes later
 echo "Done" | at now + 5 minutes
@@ -1089,7 +1097,7 @@ upower --dump | less
 
 # Check video file for errors
 # http://606u.dir.bg/avicheck/
-ffmpeg -v 5 -i file.avi -f null - 
+ffmpeg -v 5 -i file.avi -f null -
 # Double video volume (256 is unchanged)
 # http://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
 ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
@@ -1176,7 +1184,7 @@ nmap -sP 198.37.19.*
 nmap -sn 10.10.10.0/24
 # http://www.linuxforums.org/forum/newbie/51732-see-all-users-currently-lan-2.html
 # These can take a while...
-# TCP scan, assuming network 192.168.1.0/255.255.255.0.  
+# TCP scan, assuming network 192.168.1.0/255.255.255.0.
 nmap -T Aggressive -sT 192.168.1.*
 # ICMP echo request scan
 nmap -T Aggressive -sP 192.168.1.*
@@ -1218,7 +1226,7 @@ echo '1
 # Convert fahrenheit to celsius
 units --terse 'tempF(212)' 'tempC'
 # Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
-units -f '' -f ~/Dropbox/projects/units/my-units.dat 
+units -f '' -f ~/Dropbox/projects/units/my-units.dat
 
 
 # Trying to kill all those blasted error reports from when xscreensave dies.
@@ -1252,7 +1260,7 @@ nmcli
 # Readline wizardry:
 alt-shift-8 # (i.e. M-*) put all the matching completions on the line
 Ctrl-W # delete preceding word
-Alt-D # delete following word 
+Alt-D # delete following word
 Ctrl-U # delete line
 Ctrl-A-K # delete line
 Ctrl-XX # move between EOL and current cursor position
@@ -1264,7 +1272,7 @@ Ctrl-Y # Paste whatever you last deleted
 # See kernel log like dmesg, but much more human readable. Only for this session, though.
 less /var/log/kern.log
 
-# See connections in promiscuous mode and turn on port display. 
+# See connections in promiscuous mode and turn on port display.
 sudo iftop -pP
 sudo iftop -pP -i wlan2
 
@@ -1576,19 +1584,30 @@ rdesktop 123.45.678.910
 # VNC into a machine (Windows or Linux) with a VNC server running (TightVNC in this case)
 vncviewer dhcp195.wh.iit.edu:5900
 
+# VNC into a Linux server
+# First, ssh into the sever and run this (or run it ahead of time)
+x11vnc -display :0
+# Next, run this on the client.
+xvncviewer -via iit@bm1.mr.aps.anl.gov bm1:0
+
+# VNC into a Windows computer by running X over ssh through a linux server,
+# in case e.g. firewall blocks so you can't even ping the Windows machine.
+me@laptop:~$ ssh -X iit@bm1.mr.aps.anl.gov
+me@remote-server:~$ dbus-launch vncviewer 164.54.244.15:5900
+
 # See cron updates and ssmtp status
 less /var/log/syslog
 
 # Identify printer model.
-sudo escputil -d -r /dev/usb/lp0 
+sudo escputil -d -r /dev/usb/lp0
 # Check printer ink levels.
 sudo escputil -i -r /dev/usb/lp0
 # Check printer status (including ink levels).
-sudo escputil -s -r /dev/usb/lp0 
+sudo escputil -s -r /dev/usb/lp0
 # Run nozzle check.
-sudo escputil -n -r /dev/usb/lp0 
+sudo escputil -n -r /dev/usb/lp0
 # Alignment (does not work for me, sadly.)
-sudo escputil -a -r /dev/usb/lp0 
+sudo escputil -a -r /dev/usb/lp0
 
 # Add a ppa (personal package archives)
 sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa
@@ -1601,7 +1620,7 @@ fuser 80/tcp
 lsof -i :80 | grep LISTEN
 
 # Look at process id 2720
-ls -l /proc/2720/exe 
+ls -l /proc/2720/exe
 # lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
 
 # Launch printer stuff from command line
@@ -1615,7 +1634,7 @@ sort --unique myfile.txt --output=myfile.txt
 sort  myfile.txt -u -o myfile.txt
 
 # Eject dvd drive
-eject /dev/dvd4 
+eject /dev/dvd4
 # Close dvd drive (does not work on most laptops)
 eject -t /dev/dvd4
 # Toggle dvd drive (also does not work on most laptops)
@@ -1806,7 +1825,9 @@ emacs -nw
 emacs --no-window-system
 
 # Figure out your current DNS server
-cat /etc/resolv.conf
+cat /etc/resolv.conf | grep nameserver
+# Remove censorship of domains
+nameserver 176.58.120.112
 
 # Make a directory with the format yyyy-mm-dd of today's date
 mkdir $(date -I)
@@ -1846,7 +1867,7 @@ ddate +%.
 weborf --basedir ~/weborf/ --cache ~/Downloads/weborf-cache/ --noexec --mime -d
 
 # See security updates
-apt-get -s dist-upgrade |grep "^Inst" |grep -i securi 
+apt-get -s dist-upgrade |grep "^Inst" |grep -i securi
 
 # Login with mobile shell
 mosh username@remote.computer
@@ -1866,7 +1887,7 @@ fc-list
 xclip -sel clip < ~/.ssh/id_rsa.pub
 
 # How to ditch KDE completely
-sudo apt-get purge kdelibs-bin kdelibs5-data 
+sudo apt-get purge kdelibs-bin kdelibs5-data
 
 # Report a debian bug
 reportbug
@@ -1940,10 +1961,12 @@ set term wxt
 
 # Seeing the changes in a package before updating
 apt-get install apt-listchanges
-sudo dpkg-reconfigure apt-listchanges 
+sudo dpkg-reconfigure apt-listchanges
 # See bugs in a package before updating
 apt-get install apt-listbugs
 
+# Use imagemagick to find out information about several files
+identify *.jpg
 # Use imagemagick to convert png to jpeg
 convert file.png file.jpeg
 # Use imagemagick to clean up a whiteboard picture
