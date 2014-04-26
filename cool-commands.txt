@@ -28,6 +28,13 @@ ls --ignore=*.txt
 
 # Viewing active processes
 top
+# Sorting by memory
+top -o %MEM
+# Interactively
+f
+(navigate to %MEM)
+s
+q
 
 # Changing sound settings
 alsamixer
@@ -781,6 +788,18 @@ dpkg -L handbrake-gtk | grep bin
 /usr/bin
 /usr/bin/ghb
 dpkg --listfiles handbrake-gtk | grep bin
+
+# List the files installed by a .deb file 
+dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
+dpkg --contents
+
+# Extract the files in a .deb package to a specified directory
+dpkg -x /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
+dpkg --extract
+# Extract the files in a .deb package to a specified directory,
+# and list all the files that were extracted (verbose extract)
+dpkg -X /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
+dpkg --vextract
 
 #Make a screencast
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
@@ -1972,3 +1991,7 @@ convert file.png file.jpeg
 # Use imagemagick to clean up a whiteboard picture
 # https://gist.github.com/lelandbatey/8677901
 convert $1 -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 $2
+
+# restart xfce4 panels
+xfce4-panel -r
+
