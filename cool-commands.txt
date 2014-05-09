@@ -289,7 +289,11 @@ user    0m14.533s
 sys 0m0.004s
 #This is what I get on my laptop
 
-chmod +x zab.py #make zap.py executable
+# Make a file executable (defaults to current user)
+chmod +x zab.py
+# Make a file writeable (defaults to current user)
+chmod +w myfile.txt
+chmod u+w myfile.txt
 
 #In python interpretive shell
 globals() locals() vars() dir()
@@ -342,6 +346,13 @@ cat utf8.txt | LC_COLLATE=C grep -n '[^ -~]' --color=always | less -r
 cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' --color=always | less -r
 #send to text file instead of less
 cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' > non-ascii.txt
+# show only non-ascii characters
+perl -pe 's/[[:ascii:]]//g' utf8.txt
+cat utf8.txt | tr -cd '\200-\377'
+# highlight characters that are non-ascii
+grep --perl-regexp '[^[:ascii:]]' --color=always utf8.txt | less --RAW-CONTROL-CHARS
+# highlight characters that are non-ascii and give line number
+grep --perl-regexp '[^[:ascii:]]' --color=always --line-number utf8.txt | less --RAW-CONTROL-CHARS
 
 grep 'it.*it' /usr/share/dict/words | sed '/s/it/IIT/g' | less
 
@@ -572,7 +583,7 @@ wall <enter>
 #Grep wifi connections for passkeys or passwords (uses grep "OR" \|)
 sudo cat /etc/NetworkManager/system-connections/* | grep 'psk=\|password='
 
-#Encrypt file with gpg
+# Encrypt file with gpg (will prompt for passphrase)
 gpg --symmetric super-secret-file.txt
 
 #Generate encypted file with vim
@@ -686,6 +697,10 @@ gpg -c -o myfile.enc myfile #If you want to specify the output name
 gpg -d myfile.enc
 #Decrypt the encrypted file and save it to a file
 gpg -o myfilenew myfile.enc
+
+# Encrypt a tar file with your own public key.
+# Hasn't been verified yet
+tar --preserve-permissions --create --compress --file /etc/cups | gpg --encrypt --recipient 'nathaniel@thinkpad' --output '/home/nathaniel/SpiderOak Hive/etc-backup/cups.tar.gz.enc'
 
 #Get all kinds of data, including disk usage
 vmstat 1
@@ -1129,6 +1144,14 @@ ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 out1.mpg -ss
 
 # Get audio file from video
 ffmpeg -i myvid.mp4 ./out.mp3
+# Get audio from vidoe without re-encoding
+# http://www.commandlinefu.com/commands/view/13359/dump-audio-from-video-without-re-encoding.
+ffmpeg -i file.ext -acodec copy -vn out.ext
+
+# Convert audio file to mp3
+ffmpeg -i in.ext out.mp3
+# Somewhat better method (less loss of quality)
+ffmpeg -v 5 -y -i input.m4a -acodec libmp3lame -ac 2 -ab 192k output.mp3
 
 # See open files in home directory
 lsof /home/nathaniel
@@ -1995,3 +2018,8 @@ convert $1 -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -chann
 # restart xfce4 panels
 xfce4-panel -r
 
+# see status of dropbox daemon
+dropbox status
+
+# Copy contents of subversion repository into current directory
+svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
