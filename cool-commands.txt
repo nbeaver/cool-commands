@@ -314,6 +314,9 @@ rand = random.randint(1000000000,9999999999)
 s = str(rand)
 s[:3] +"-"+ s[3:6] +"-"+ s[6:]
 
+# Profile a python script
+python -m cProfile script.py > profile.log
+
 
 #Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
@@ -403,7 +406,7 @@ fg # move the job back to the foreground
 kill %3 # kill job by jobspec (3, in this case)
 
 #Patching
-diff -u new_file old_file > patch.txt #Generates a patch file that can generate new_file from old_file
+diff -u old_file new_file > patch.txt #Generates a patch file that can generate new_file from old_file
 #To check the patch:
 patch -b old_file #Patches old_file and creates a file called old_file.orig that is unpatched
 vimdiff old_file old_file.orig #compare the patched file to the original file
@@ -808,6 +811,9 @@ dpkg --listfiles handbrake-gtk | grep bin
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
 dpkg --contents
 
+# Download debian package into current directory
+apt-get download mypackage
+
 # Extract the files in a .deb package to a specified directory
 dpkg -x /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
 dpkg --extract
@@ -862,6 +868,10 @@ less -R
 xscreensaver-command -lock
 # Choose display; normally :0.0 unless you have another x server running.
 xscreensaver-command --lock --display :1.0
+# On xfce
+xflock4
+# For gnome
+gnome-screensaver-command --lock
 
 # See all keybindings
 bind -p | less
@@ -933,6 +943,8 @@ find ~/Dropbox -type d -name '*Link*'
 ln --symbolic /path/to/blah.txt link-to-blah.txt
 # Make a symbolic link with spaces in the name.
 ln -s ~/.gnupg/ "Link to .gnupg"
+# Overwrite a symbolic link
+ln --symbolic --force ~/source/ ~/target/overwritten-link
 
 # Change all text files with 'apt-get' in the name to 'package'
 rename 's/apt-get/package/' *.txt
@@ -2023,3 +2035,6 @@ dropbox status
 
 # Copy contents of subversion repository into current directory
 svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
+
+# Set the screen brightness (backlight) from the command light
+xbacklight -set 100
