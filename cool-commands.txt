@@ -442,11 +442,16 @@ echo $(yes hurpaflerp)
 #Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 
-#Rsyncing remote directory contents into current local directory
+# Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
 rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 
-#Search with less case insensitive
+# Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
+rsync --recursive --progress --partial /origin/path /target/path
+# If you care about things like permissions, modification times, and symlinks:
+rsync --recursive --progress --partial --archive /origin/path /target/path
+
+# Search with less case insensitive
 less -i
 #(Or just press -i while less is running)
 
@@ -853,6 +858,9 @@ df #to see mounted partitions
 df -h # to see human readable sizes
 df -T # to see filesystem types
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
+
+# Unmount a fuse filesystem
+fusermount -u /path/to/mount/point
 
 #Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
@@ -1330,6 +1338,9 @@ less /var/log/kern.log
 sudo iftop -pP
 sudo iftop -pP -i wlan2
 
+# See which processes are using the most bandwidth
+sudo nethogs wlan0
+
 # See info pages, but in the 'less' pager. Much nicer.
 info gpg | less
 
@@ -1559,7 +1570,6 @@ history | tail -n2 | head -n1| cut -c 8-
 
 # Rsync is pretty awesome.
 sudo rsync --verbose --progress --archive --compress --rsh ssh --rsync-path="sudo rsync" /var/www/pmwiki nbeaver@chloride.phys.iit.edu:/var/www/
-
 
 # Access stuff like bluetooth settings if you can't remember how to launch it graphically.
 gnome-control-center network
@@ -2038,3 +2048,18 @@ svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
 
 # Set the screen brightness (backlight) from the command light
 xbacklight -set 100
+
+# gnuplot command we typically use at the beamline
+gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
+# Keep up gnuplot with shell after running a script
+gnuplot script.gnuplot -
+
+# Ways to prevent a package from being installed
+Synaptic -> Package -> Lock version.
+sudo apt-mark hold package-name
+echo package-name hold | sudo dpkg --set-selections
+# For aptitude only
+sudo aptitude hold package-name
+
+# Install a specific package version
+sudo apt-get install iceweasel=30.0~b5-2
