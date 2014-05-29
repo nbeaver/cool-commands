@@ -41,7 +41,7 @@ alsamixer
 
 # Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
-speaker-test --device plug:front --channels 2 --test sine --frequency 100 #long version
+speaker-test --device plug:front --channels 2 --test sine --frequency 100 # long version
 
 # Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
@@ -51,9 +51,9 @@ echo !! > my-script.sh
 # Grepping
 grep PHY unofficial-transcript-11-24-11.txt
 grep ALLOCATE COORD *.F90
-grep -Fxv -f DERIVT.F90 MODULE.F90 #subtract first file from second file
-grep -Fx -f DERIVT.F90 MODULE.F90 #intersection of first file and second file
-grep --fixed-strings --line-regexp --invert-match --file=DERIVT.F90 MODULE.F90 #long version
+grep -Fxv -f DERIVT.F90 MODULE.F90 # subtract first file from second file
+grep -Fx -f DERIVT.F90 MODULE.F90 # intersection of first file and second file
+grep --fixed-strings --line-regexp --invert-match --file=DERIVT.F90 MODULE.F90 # long version
 grep --recursive dveff *.f90
 grep '=>' *.f90
 grep --recursive *.mp3 .
@@ -100,7 +100,7 @@ rename 'y/ /_/' * # replace spaces with underscores
 mv filename.{old,new} # Quick file rename
 
 # Using the system dictionary:
-grep -i '^s.*m.*b' /usr/share/dict/words #this is how samba was named
+grep -i '^s.*m.*b' /usr/share/dict/words # this is how samba was named
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
 
 # Debugging segfaults in C:
@@ -120,32 +120,32 @@ gdb -ex 'set logging on' -ex 'run' iceweasel
 
 # Disk usage:
 du |sort --numeric-sort --reverse
-du |sort -nr #quick version
+du |sort -nr # quick version
 du -k --max-depth=1 /home | sort -nr
 
 mkvextract tracks movie5.mkv 2:audio_track.ac3
 ls --almost-all --format=single-column
 sudo chmod -R +rwx .mozilla
-!! #repeat previous command
+!! # repeat previous command
 
 type rr # identify the kind of command rr is
 type -a rr # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
 # For example, type -a ls gives you both /bin/ls and whatever ls is aliased to, as it often is.
-source .bashrc #make bash re-read modified .bashrc file
-. .bashrc #make bash re-read modified .bashrc file
-apt-cache search my-package #search apt packages for 'my-package', case insensitive
-find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' #find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
+source .bashrc # make bash re-read modified .bashrc file
+. .bashrc # make bash re-read modified .bashrc file
+apt-cache search my-package # search apt packages for 'my-package', case insensitive
+find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 sudo chown nathaniel: .xdvirc
 cat precise.txt | grep root > to-chown.txt
-cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: #transfer ownership to nathaniel instead of root
+cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: # transfer ownership to nathaniel instead of root
 
 # Using curl to download from the command line
-curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip #test download speed
-curl --continue-at - --remote-name 'url_for_file' #Download file, automatically with same name and ability to resume download
+curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip # test download speed
+curl --continue-at - --remote-name 'url_for_file' # Download file, automatically with same name and ability to resume download
 # Using wget to download from the command line
-wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img #simpler
-wget --continue 'http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img' #resume a partial download
+wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img # simpler
+wget --continue 'http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img' # resume a partial download
 # How to download a file without nesting it in a bunch of directories
 wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics'
 # Using wget to get a recursive (default to 5 links deep) local copy of a page.
@@ -172,24 +172,24 @@ wget --no-parent --no-host-directories --recursive --level=1 --convert-links --r
 # http://sparc86.wordpress.com/2009/04/08/wget-shows-http-error-403-forbidden/
 wget -U firefox http://www.wideislandview.com/2009/07/recipe-no-fuss-rice-cooker-banana-bread/
 
-echo blacklist mei > /etc/modprobe.d/mei.conf #avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
-#Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
-#Should I run this?
+echo blacklist mei > /etc/modprobe.d/mei.conf # avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
+# Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
+# Should I run this?
 
 
-for f in *.gsp #for every file ending in .gsp
+for f in *.gsp # for every file ending in .gsp
 do
-    echo $f #display the filename
-    hexdump -C $f > "${f%.*}.txt" #make a text hexdump
+    echo $f # display the filename
+    hexdump -C $f > "${f%.*}.txt" # make a text hexdump
 done
 
-#Process control
+# Process control
 ps aux |grep athena
 pstree
 vmstat
 
-ps aux --sort=-%cpu #list processes using most CPU
-ps aux --sort=-%mem #list processes using most memory
+ps aux --sort=-%cpu # list processes using most CPU
+ps aux --sort=-%mem # list processes using most memory
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
 PROCESS STATE CODES
@@ -211,16 +211,16 @@ PROCESS STATE CODES
        +    is in the foreground process group.
 
 
-startx -- :1 #start x session
+startx -- :1 # start x session
 
-ls -lSrh #list biggest files
-ls -l -S --reverse --human-readable #-l = long listing and -S = sort
+ls -lSrh # list biggest files
+ls -l -S --reverse --human-readable # -l = long listing and -S = sort
 ls -v1 # Show files one on each line and in numeric order instead of alphanumeric
 
-lsof #display open files
+lsof # display open files
 
-#Sure ways to restart a wireless network
-ping -c 4 google.com #ping 4 times
+# Sure ways to restart a wireless network
+ping -c 4 google.com # ping 4 times
 lspci | grep -i network
 #03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
 modprobe --list | grep rtl
@@ -228,19 +228,19 @@ sudo modprobe --remove rtl8192ce
 sudo modprobe rtl8192ce
 ping -c 4 google.com
 
-#Another method
+# Another method
 sudo /etc/init.d/networking restart
 
-#First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
-#Restart X server
+# First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
+# Restart X server
 sudo service lightdm restart
-#Magic SysRq key: rebooting when all other options fail
+# Magic SysRq key: rebooting when all other options fail
 hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
 
 
-date --date='2 hours 22 minutes' +%r #The time 2 hours and 22 minutes from now, formatted with AM/PM
+date --date='2 hours 22 minutes' +%r # The time 2 hours and 22 minutes from now, formatted with AM/PM
 date --date='45 days after 9/11/2012' +%r
-#find number of days' difference between two dates
+# find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
 # Standard American date
 date +%m/%d/%Y
@@ -248,19 +248,19 @@ date +%m/%d/%Y
 date --date='next week' +%m/%d/%Y
 date --date='7 days' +%m/%d/%Y
 
-grep -r "string" . #recursively search all files for string
+grep -r "string" . # recursively search all files for string
 
-#search man pages
-man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l #returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+# search man pages
+man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l # returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
 
 # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
 git grep -i rhubarb $(git rev-list --all)
 
 # search for commands and aliases named 'my-command'.
 compgen -ac | grep my-command
-#Note: -a is for aliases, -c is for commands
+# Note: -a is for aliases, -c is for commands
 
-#Get wireshark working for non-root user
+# Get wireshark working for non-root user
 sudo apt-get install wireshark
 sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
@@ -277,17 +277,17 @@ locate *.htm?
 # Udate the locate database
 sudo updatedb
 
-#Make a tree using the Contex Free grammar image generator
+# Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
 
-echo -n '12764787846358441471' | wc --chars #this is a 20-digit prime
-time factor 12764787846358441471 #factoring this will take on the order of a few seconds
+echo -n '12764787846358441471' | wc --chars # this is a 20-digit prime
+time factor 12764787846358441471 # factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
 
 real    0m14.582s
 user    0m14.533s
 sys 0m0.004s
-#This is what I get on my laptop
+# This is what I get on my laptop
 
 # Make a file executable (defaults to current user)
 chmod +x zab.py
@@ -295,7 +295,7 @@ chmod +x zab.py
 chmod +w myfile.txt
 chmod u+w myfile.txt
 
-#In python interpretive shell
+# In python interpretive shell
 globals() locals() vars() dir()
 # Run python, ending with an interactive shell to fiddle with
 python -i myscript.py
@@ -318,36 +318,36 @@ s[:3] +"-"+ s[3:6] +"-"+ s[6:]
 python -m cProfile script.py > profile.log
 
 
-#Create images from LaTeX DVI document
+# Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
 
 sudo pm-suspend # manually sleep
 
 apt-cache showpkg xserver-xorg-input-synaptics
-#Use synaptic to downgrade and lock
+# Use synaptic to downgrade and lock
 sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
-#Add this to prevent upgrades to package
+# Add this to prevent upgrades to package
 // List of packages to not update
 Unattended-Upgrade::Package-Blacklist {
       "xserver-xorg-input-synaptics";
 };
-#sage command
+# sage command
 plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
 VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
 
 
-#Get rid of network popups
+# Get rid of network popups
 killall nm-applet ; nm-applet &
 
 8	9	20	48
-#Fun with brace expansion
+# Fun with brace expansion
 for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
 
-#find Unicode/non-ascii characters in text file by numbered line
+# find Unicode/non-ascii characters in text file by numbered line
 cat utf8.txt | LC_COLLATE=C grep -n '[^ -~]' --color=always | less -r
-#show only the matching characteres
+# show only the matching characteres
 cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' --color=always | less -r
-#send to text file instead of less
+# send to text file instead of less
 cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' > non-ascii.txt
 # show only non-ascii characters
 perl -pe 's/[[:ascii:]]//g' utf8.txt
@@ -361,15 +361,15 @@ grep 'it.*it' /usr/share/dict/words | sed '/s/it/IIT/g' | less
 
 zip -r myfolder.zip myfolder/ # recursively zip a directory, putting the zip file into the current directory
 unzip -l myfile.zip # list contents of zip file
-unzip '*.zip' #unzip all files ending in .zip
+unzip '*.zip' # unzip all files ending in .zip
 unzip myfile.zip -d /path/to/desired/directory
 
 # Latex for adding tengwar stuff (unfinished)
 updmap --enable Map=tengwarscript.map
 
-#ip address for IIT physics office printer 216.47.138.174
+# ip address for IIT physics office printer 216.47.138.174
 
-#decompress and unarchive a bzipped file
+# decompress and unarchive a bzipped file
 tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 
 # decompress and unarchive a gzipped file
@@ -393,29 +393,29 @@ tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
 # Gzip a single file
 gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
 
-cat /bin/cat #mojibake-fy the screen
-reset #fix it
+cat /bin/cat # mojibake-fy the screen
+reset # fix it
 
 # Freeze terminal output
 Ctrl-S
 # Unfreeze terminal output
 Ctrl-Q
 
-Ctrl-Z #get out of pretty much any terminal program and back to the shell
+Ctrl-Z # get out of pretty much any terminal program and back to the shell
 fg # move the job back to the foreground
 kill %3 # kill job by jobspec (3, in this case)
 
-#Patching
-diff -u old_file new_file > patch.txt #Generates a patch file that can generate new_file from old_file
-#To check the patch:
-patch -b old_file #Patches old_file and creates a file called old_file.orig that is unpatched
-vimdiff old_file old_file.orig #compare the patched file to the original file
+# Patching
+diff -u old_file new_file > patch.txt # Generates a patch file that can generate new_file from old_file
+# To check the patch:
+patch -b old_file # Patches old_file and creates a file called old_file.orig that is unpatched
+vimdiff old_file old_file.orig # compare the patched file to the original file
 # To use the patch
 patch < patch.txt
 $ To revert the patch
 patch -R < patch.txt
 
-find ./ -exec file '{}' \; #find out what kind of file all the stuff in the directories below are
+find ./ -exec file '{}' \; # find out what kind of file all the stuff in the directories below are
 
 # Much like any other find exec command, but more efficient
 find . -type f -name "*.deadtime" -exec rm '{}' +
@@ -428,18 +428,18 @@ find . -exec ls '{}' \;
 find . -exec ls '{}' \+
 # ls file1 file2 file3
 
-ssh -D 9999 iit@id1.mr.aps.anl.gov #secure shell into the APS sector 10 insertion device beamline account for IIT
-ssh -D 9999 iit@bm1.mr.aps.anl.gov #secure shell into the APS sector 10 bending magnet beamline account for IIT
-ssh -D 9999 nbeaver@216.47.138.69  #secure shell into desktop at physics office
+ssh -D 9999 iit@id1.mr.aps.anl.gov # secure shell into the APS sector 10 insertion device beamline account for IIT
+ssh -D 9999 iit@bm1.mr.aps.anl.gov # secure shell into the APS sector 10 bending magnet beamline account for IIT
+ssh -D 9999 nbeaver@216.47.138.69  # secure shell into desktop at physics office
 
-#in python, save interactive history in current directory:
+# in python, save interactive history in current directory:
 import readline
 readline.write_history_file("my_history.txt")
 
-#instant memory leak!
+# instant memory leak!
 echo $(yes hurpaflerp)
 
-#Check ip address to see if it responds, then load the video
+# Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 
 # Rsyncing remote directory contents into current local directory
@@ -461,7 +461,7 @@ sudo lshw -C network
 # See connected networky stuff like browsers
 lsof -i -P +c 0 +M
 
-#Check battery state/power level
+# Check battery state/power level
 cat /proc/acpi/battery/BAT0/state
 # 5387 mAh is 100%
 # 3087 mAh is 58%
@@ -483,16 +483,16 @@ cat /proc/diskstats
 # Get general dump of hardware info
 lshw
 
-#Get a new DVD drive to work
+# Get a new DVD drive to work
 sudo regionset /dev/dvd4
 
-#Capture a disc image
+# Capture a disc image
 cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
 
-#Execute 'file' on every file below current directory
+# Execute 'file' on every file below current directory
 find . -exec file '{}' + | less
 
-#Restart the gui for ubuntu
+# Restart the gui for ubuntu
 unity-2d-shell --reset
 
 # Show numeric gateway ip address
@@ -502,7 +502,7 @@ netstat -rn
 # Show gateway name
 route
 
-#How to start a new flashbake directory:
+# How to start a new flashbake directory:
 #1. Initialize the git repository in the relevant directory.
 git init
 #2. Make a .flashbake file.
@@ -511,32 +511,32 @@ echo "*.txt" > .flashbake
 #4. Add a cronjob like this:
 */15 * * * * /usr/local/bin/flashbake ~/Dropbox/writings/ 5 2> ~/Dropbox/flashbake-status.txt
 
-#Restart sound daemon, e.g. when flash has choppy audio
+# Restart sound daemon, e.g. when flash has choppy audio
 pulseaudio --kill
-pulseaudio --start #start it up again as a daemon
+pulseaudio --start # start it up again as a daemon
 
-#Debug wifi
+# Debug wifi
 sudo lshw -C network > wifi-card-info.txt
 sudo service network-manager stop
 sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
-#Detach process from gnome-terminal
-Ctrl-Z #Access shell prompt
-bg     #Put job in background
-#Note job number, or use
+# Detach process from gnome-terminal
+Ctrl-Z # Access shell prompt
+bg     # Put job in background
+# Note job number, or use
 jobs
-disown -h %1 #Detach job 1 from current terminal
+disown -h %1 # Detach job 1 from current terminal
 
-#Restart compiz from a terminal emulator
+# Restart compiz from a terminal emulator
 # Note: Disown defaults to %1, so make sure you don't have any other jobs.
 # bash: warning: deleting stopped job 1 with process group
 DISPLAY=:0 compiz --replace & disown
-#If that doesn't work...
+# If that doesn't work...
 unity --reset & disown
 
 
-#Generate 4-word passphrase
+# Generate 4-word passphrase
 shuf --head-count=4 /usr/share/dict/words
 
 # See running jobs
@@ -554,7 +554,7 @@ lpr -P "Brother-HL-4070CDW" -o PageSize=Letter -o PageRegion=A4 -o Duplex=Duplex
 # See the print queue by printer's name
 lpq -P "Brother-HL-4070CDW"
 
-#List avahi/bonjour services like printers on the local area network (LAN)
+# List avahi/bonjour services like printers on the local area network (LAN)
 avahi-browse --all --verbose --terminate --resolve
 sudo arp-scan --localnet | less
 sudo arp-scan --interface eth3 --localnet | less
@@ -568,39 +568,39 @@ ifconfig eth0
 # Note Bcast address. Now ping it:
 ping -b -c 3 -i 20 $BROADCASE_ADDRESS
 
-#Chat using netcat
-#On computer #1
+# Chat using netcat
+# On computer #1
 nc -l 55555
-#On computer #2, where $IP is computer #1's ip address
+# On computer #2, where $IP is computer #1's ip address
 nc $IP 55555
 
-#After sshing in, any of these
+# After sshing in, any of these
 users
 who
 w
-#will tell you who is logged in.
-#Also try
+# will tell you who is logged in.
+# Also try
 last
-#to see who was logged in previously.
-#To message user nbeaver, enter
+# to see who was logged in previously.
+# To message user nbeaver, enter
 write nbeaver <enter>
-#Type message. They can write you back, too.
+# Type message. They can write you back, too.
 wall <enter>
-#Type message, Ctrl-D
+# Type message, Ctrl-D
 
-#Grep wifi connections for passkeys or passwords (uses grep "OR" \|)
+# Grep wifi connections for passkeys or passwords (uses grep "OR" \|)
 sudo cat /etc/NetworkManager/system-connections/* | grep 'psk=\|password='
 
 # Encrypt file with gpg (will prompt for passphrase)
 gpg --symmetric super-secret-file.txt
 
-#Generate encypted file with vim
+# Generate encypted file with vim
 vim -x encrypted-file.txt
 
-#Start editing at bottom of file with vim
+# Start editing at bottom of file with vim
 vim + myfile.txt
 
-#Edit stdin in vim
+# Edit stdin in vim
 vim -
 
 # On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
@@ -628,14 +628,14 @@ Alt-Shift-,
 # Move to end of history
 Alt-Shift-.
 # Bash history modifiers (bang commands) http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
-!! #execute last command
-!-1 #execute last command
-!!:1 #first argument of the last command
-!1 #first argument of the last command
-!!:$ #last argument of preceding commnad
-!$ #last argument of preceding commnad
-!gzip #execute most recent gzip command
-!?etc.gz #Like Ctrl-R, runs most recent command matching 'etc.gz'
+!! # execute last command
+!-1 # execute last command
+!!:1 # first argument of the last command
+!1 # first argument of the last command
+!!:$ # last argument of preceding commnad
+!$ # last argument of preceding commnad
+!gzip # execute most recent gzip command
+!?etc.gz # Like Ctrl-R, runs most recent command matching 'etc.gz'
 
 # Remove spaces and duplicate lines
 cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
@@ -644,76 +644,76 @@ sudo grep -r helper /var/log/
 # Latex build for Bibtex
 pdflatex -synctex=1 -interaction=nonstopmode %.tex|bibtex %.aux|pdflatex -synctex=1 -interaction=nonstopmode %.tex|evince %.pdf
 
-#Generate combined file with name of file included
+# Generate combined file with name of file included
 tail --lines=+1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
 
-#Use awk to give column 2, space, column 1, tab, then the last column
+# Use awk to give column 2, space, column 1, tab, then the last column
 awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | uniq > iit-name-and-email.txt
 
-#Kill escalation
-kill 21213 #sends SIGTERM (like Ctrl-C) to process 21213
-kill -15 21213 #sends SIGTERM (like Ctrl-C) to process 21213
-kill -2 21213 #send SIGINT to process 21213
-kill -1 21213 #send SIGHUP to process 21213
-kill -3 21213 #send SIGQUIT (like Ctrl-\) to process 21213; will dump core
-kill -9 21213 #sends unblockable KILL signal to kernel
+# Kill escalation
+kill 21213 # sends SIGTERM (like Ctrl-C) to process 21213
+kill -15 21213 # sends SIGTERM (like Ctrl-C) to process 21213
+kill -2 21213 # send SIGINT to process 21213
+kill -1 21213 # send SIGHUP to process 21213
+kill -3 21213 # send SIGQUIT (like Ctrl-\) to process 21213; will dump core
+kill -9 21213 # sends unblockable KILL signal to kernel
 
-#Kill a process, wait a second, then see if it's still running
+# Kill a process, wait a second, then see if it's still running
 kill -3 4782 && sleep 1 && ps aux | grep 4782
 
-#Find connected program
+# Find connected program
 netstat -tulanp | less
-netstat --tcp --udp --listening --all --numeric --program | less #long version
+netstat --tcp --udp --listening --all --numeric --program | less # long version
 # List open ports
 netstat -pln
 # See list of things that are listening remotely
 netstat -tnlp | grep -v 127.0.0 | grep -v ::1:
 
-#Disk usage of current directory (total only)
+# Disk usage of current directory (total only)
 du -sh
 du --summarize --human-readable
-#Director/file taking up the most space
+# Director/file taking up the most space
 du -hsx * | sort -rh | head -10
 du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head --lines=10
 
-#Adding metadata to pdfs with pdftk
-#Add an info dictionary if there isn't one already (harmless)
+# Adding metadata to pdfs with pdftk
+# Add an info dictionary if there isn't one already (harmless)
 pdftk book.pdf cat output book.pdf
-#Extract metadata
+# Extract metadata
 pdftk book.pdf dump_data > info.txt
-#Edit metadata
+# Edit metadata
 vim info.txt
-#Update pdf metadata
+# Update pdf metadata
 pdftk book.pdf update_info  info.txt output out-book.pdf
-#Dump all metadata
+# Dump all metadata
 for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
 
-#Copy all files in a remote director to this computer
+# Copy all files in a remote director to this computer
 scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
 
-#Run redshift with location near Chicago
+# Run redshift with location near Chicago
 redshift -l 41:-87
-#Improved accuracy and run in the background:
+# Improved accuracy and run in the background:
 nohup redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v & disown
 
-#Using gpg for encryption
-gpg -c myfile.txt #Generates myfile.txt.gpg
-#Be ready to provide a passphrase
-gpg -c -o myfile.enc myfile #If you want to specify the output name
-#Don't forget to erase the original file!
-#Decrypt the encrypted file and push it to stdout
+# Using gpg for encryption
+gpg -c myfile.txt # Generates myfile.txt.gpg
+# Be ready to provide a passphrase
+gpg -c -o myfile.enc myfile # If you want to specify the output name
+# Don't forget to erase the original file!
+# Decrypt the encrypted file and push it to stdout
 gpg -d myfile.enc
-#Decrypt the encrypted file and save it to a file
+# Decrypt the encrypted file and save it to a file
 gpg -o myfilenew myfile.enc
 
 # Encrypt a tar file with your own public key.
 # Hasn't been verified yet
 tar --preserve-permissions --create --compress --file /etc/cups | gpg --encrypt --recipient 'nathaniel@thinkpad' --output '/home/nathaniel/SpiderOak Hive/etc-backup/cups.tar.gz.enc'
 
-#Get all kinds of data, including disk usage
+# Get all kinds of data, including disk usage
 vmstat 1
 
-#Rename all file ending in Unknown.pdf and strip the ' - Unknown' part of their name
+# Rename all file ending in Unknown.pdf and strip the ' - Unknown' part of their name
 for f in *Unknown.pdf; do mv "$f" ${f% - Unknown.pdf}.pdf; done
 
 # Avoiding the '^[[A' or '^[[B' effect when trying to get previous command
@@ -724,10 +724,10 @@ rlwrap math
 # Save a logfile of output (including echoed input)
 rlwrap -l mylog.txt math
 
-#Text to speech
+# Text to speech
 echo 'Hello, world!' | espeak --stdin
 
-#List to your computer say "Ping!" every 2 seconds
+# List to your computer say "Ping!" every 2 seconds
 ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
 
 # Check network connectivity for dropped packets
@@ -736,17 +736,17 @@ ping -f -i 1 8.8.8.8
 mtr -t
 # Press 'p' in mtr to pause.
 
-#Generate random alphanumeric password
+# Generate random alphanumeric password
 strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo
 
-#Get information about zip files in current directory
+# Get information about zip files in current directory
 for f in *.zip; do unzip -v $f; done
 
-#Cracking zip files:
-#Dictionary method
+# Cracking zip files:
+# Dictionary method
 fcrackzip --use-unzip --verbose --dictionary --init-password /usr/share/dict/words platelet.zip
 fcrackzip -uvDp /usr/share/dict/words platelet.zip
-#Brute-force method, no knowledge of password, only setting length limits
+# Brute-force method, no knowledge of password, only setting length limits
 fcrackzip -u -l 3-4 geek.zip
 time fcrackzip -u -l 3-4 geek.zip
 
@@ -757,11 +757,11 @@ real	0m49.633s
 user	0m1.916s
 sys	0m2.236s
 
-#Do something for each line of a file
+# Do something for each line of a file
 while read line; do
     echo $line # or whaterver you want to do with the $line variable
 done < file.txt
-#On one line
+# On one line
 while read line; do echo -e "$line\n"; done < file.txt
 
 # Run redshift in the background so that the terminal can be closed
@@ -794,12 +794,12 @@ apt-cache policy gnash
 dpkg --list "*gnash*"
 dpkg -l "*gnash*"
 
-#Get description of package
+# Get description of package
 aptitude show gnash
 dpkg --status gnash
 dpkg -s gnash
 
-#Find out corresponding package to given command (what package a command "belongs" to)
+# Find out corresponding package to given command (what package a command "belongs" to)
 dpkg -S $(which gnash)
 dpkg --search $(which gnash)
 
@@ -827,14 +827,14 @@ dpkg --extract
 dpkg -X /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
 dpkg --vextract
 
-#Make a screencast
+# Make a screencast
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
 
-#See programs using the internet
+# See programs using the internet
 lsof -i -P | less
 
-#Compile with the gfortran compiler
+# Compile with the gfortran compiler
 gfortran myprogram.f95 -o myprogram
 
 # Show kernel information (e.g. 64-bit vs 32-bit)
@@ -843,18 +843,18 @@ uname --all
 # Show cpu information (e.g. 64-bit vs 32-bit)
 lscpu
 
-#Try to fix wifi
+# Try to fix wifi
 sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
 
-#Matrix-like command. Totally useless.
+# Matrix-like command. Totally useless.
 cat /dev/urandom | hexdump
 
-#Get EXIF metadata for an image, including duplicate and unknown tags, sorted by group (for family 1).
+# Get EXIF metadata for an image, including duplicate and unknown tags, sorted by group (for family 1).
 exiftool -a -u -g1 IMG_3689.JPG
 exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
-#Unmount partitions and detach disk
-df #to see mounted partitions
+# Unmount partitions and detach disk
+df # to see mounted partitions
 df -h # to see human readable sizes
 df -T # to see filesystem types
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
@@ -862,17 +862,17 @@ sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisk
 # Unmount a fuse filesystem
 fusermount -u /path/to/mount/point
 
-#Get list of recently installed packages
+# Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
 
-#Add something to your $PATH, a colon-separated list of directories
+# Add something to your $PATH, a colon-separated list of directories
 export PATH=$PATH:$HOME/my-path
 
-#View colored output in less
+# View colored output in less
 less --RAW-CONTROL-CHARS
 less -R
 
-#Suspend to screensaver and lock screen
+# Suspend to screensaver and lock screen
 xscreensaver-command -lock
 # Choose display; normally :0.0 unless you have another x server running.
 xscreensaver-command --lock --display :1.0
@@ -920,7 +920,7 @@ python -m http.server 8000
 
 # If you want to know which packages are available, use one of these. Does not require root priveleges.
 apt-get --simulate install list_of_packages
-aptitude --simulate install list_of_packages #this one also tells you how much space it will require
+aptitude --simulate install list_of_packages # this one also tells you how much space it will require
 
 # If you want to get the source code for a package, run this. It does not require root priveleges.
 apt-get source <package-name>
@@ -967,7 +967,7 @@ umount /media/SMALLBEANS
 mv */* ./
 
 # Move files in current directory to parent directory
-#Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
+# Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
 mv * .[^.]* ..
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
@@ -1290,7 +1290,6 @@ units --terse 'tempF(212)' 'tempC'
 # Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
 units -f '' -f ~/Dropbox/projects/units/my-units.dat
 
-
 # Trying to kill all those blasted error reports from when xscreensave dies.
 killall apport-gtk
 # Well, that got rid of the bug reporting windows. But what about those tray notifications that say,
@@ -1349,10 +1348,10 @@ host 216.47.138.69
 # 69.138.47.216.in-addr.arpa domain name pointer chloride.phys.iit.edu.
 
 nslookup 216.47.138.69
-#Server:		127.0.0.1
-#Address:	127.0.0.1#53
+# Server:		127.0.0.1
+# Address:	127.0.0.1#53
 #
-#69.138.47.216.in-addr.arpa	name = chloride.phys.iit.edu.
+# 69.138.47.216.in-addr.arpa	name = chloride.phys.iit.edu.
 nslookup debian.org
 
 # Slightly more detailed
@@ -1425,7 +1424,7 @@ rm -- -
 rm -- *
 
 # Kill an unresponsive SSH session
-#http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
+# http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
 <Enter> ~ .
 
 # Escape latex special characters (reserved characters)
@@ -1447,7 +1446,7 @@ mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
 w3m http://www.aps.anl.gov/aod/blops/status/srStatus.html | grep "Operations Status"
 
 # Insert all possible completions (readline completion trick)
-<Alt><Shift>8 #i.e. M-*
+<Alt><Shift>8 # i.e. M-*
 
 # More readline stuff
 C-x C-u # undo
@@ -2063,3 +2062,10 @@ sudo aptitude hold package-name
 
 # Install a specific package version
 sudo apt-get install iceweasel=30.0~b5-2
+
+# See installed linux kernel package
+apt-cache policy linux-headers-$(uname -r)
+
+# Get a new ip address via DHCP.
+sudo dhclient -r eth0
+# http://serverfault.com/questions/42799/how-to-force-linux-to-reacquire-a-new-ip-address-from-the-dhcp-server
