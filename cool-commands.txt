@@ -450,6 +450,10 @@ rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
 rsync --recursive --progress --partial /origin/path /target/path
 # If you care about things like permissions, modification times, and symlinks:
 rsync --recursive --progress --partial --archive /origin/path /target/path
+# If you want to see the differences between all the files and how much data was transferred.
+rsync --itemize-changes --verbose --recursive --progress --partial --archive /origin/path /target/path
+# If you are e.g. copying large files and want to use a checksum rather than the (much faster) heuristic of size and modification time.
+rsync --checksum /path/1/ubuntu-14.04-server-amd64.iso /path/2/ubuntu-14.04-server-amd64.iso
 
 # Search with less case insensitive
 less -i
@@ -1643,6 +1647,12 @@ unset HISTFILE
 
 # Remote desktop into a Windows machine
 rdesktop 123.45.678.910
+# Remote desktop into a Windows machine, autofill user and graphically prompt for password
+rdesktop -u nbeaver 123.45.678.910
+# Remote desktop into a Windows machine, autofill user and prompt for password from command line
+rdesktop -u nbeaver -p - 123.45.678.910
+# Remote desktop with FreeRDP, a remote desktop program with more features
+xfreerdp -u nbeaver 123.45.678.910
 
 # VNC into a machine (Windows or Linux) with a VNC server running (TightVNC in this case)
 vncviewer dhcp195.wh.iit.edu:5900
@@ -2069,3 +2079,14 @@ apt-cache policy linux-headers-$(uname -r)
 # Get a new ip address via DHCP.
 sudo dhclient -r eth0
 # http://serverfault.com/questions/42799/how-to-force-linux-to-reacquire-a-new-ip-address-from-the-dhcp-server
+
+# Check if a LaTeX package is installed
+kpsewhich tengwarscript.sty
+# Local LaTeX folder
+kpsewhich -var-value TEXMFHOME
+# LaTeX paths
+kpsexpand '$TEXMF'
+
+# Run as sudo with a graphical password entry rather than typing password into terminal.
+# (Useful when launching a graphical program without the ability to type into a terminal.)
+gksudo synaptic
