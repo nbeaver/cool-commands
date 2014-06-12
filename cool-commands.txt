@@ -313,6 +313,8 @@ rand = random.randint(1000000000,9999999999)
 # Put the hyphens in
 s = str(rand)
 s[:3] +"-"+ s[3:6] +"-"+ s[6:]
+# print docstring
+print file.__doc__
 
 # Profile a python script
 python -m cProfile script.py > profile.log
@@ -416,6 +418,7 @@ $ To revert the patch
 patch -R < patch.txt
 
 find ./ -exec file '{}' \; # find out what kind of file all the stuff in the directories below are
+find ./ -type l ! -exec test -r {} \; -print # find broken symlinks in directories below (test -r sees if the file is readable)
 
 # Much like any other find exec command, but more efficient
 find . -type f -name "*.deadtime" -exec rm '{}' +
@@ -1274,6 +1277,12 @@ xprop WM_CLASS
 ps -p 1400
 grep -ir 'discrepancy' /var/log | less
 
+# Determine more info about a window
+xwininfo
+
+# Show display you're using (e.g. :0.0)
+xdpyinfo | grep 'name of display:'
+
 # Suspend the bash shell
 suspend
 # Oh my goodness! How do I get it back?
@@ -1656,6 +1665,9 @@ xfreerdp -u nbeaver 123.45.678.910
 
 # VNC into a machine (Windows or Linux) with a VNC server running (TightVNC in this case)
 vncviewer dhcp195.wh.iit.edu:5900
+# Note that you have to right-click to scroll up or left.
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=617724
+# https://bugs.launchpad.net/ubuntu/+source/tightvnc/+bug/111039
 
 # VNC into a Linux server
 # First, ssh into the sever and run this (or run it ahead of time)
@@ -2090,3 +2102,78 @@ kpsexpand '$TEXMF'
 # Run as sudo with a graphical password entry rather than typing password into terminal.
 # (Useful when launching a graphical program without the ability to type into a terminal.)
 gksudo synaptic
+
+# Set default browser
+update-alternatives --config x-www-browser
+
+# Open manpage html page in chromium browser.
+man --html=/usr/bin/chromium man
+# Open manpage html page in default browser.
+man --html=x-www-browser man
+
+# Convert Excel file (xls) to CSV
+ssconvert -O 'separator=;' my-spreadsheet.xls out.csv
+
+# Convert all docx to pdf with libreoffice from the command line
+libreoffice --headless --convert-to pdf *.docx
+
+# Show ascii keycodes; press Ctrl-D to end.
+showkey -a
+showkey --ascii
+# Similar to just running
+cat
+# and looking at output
+# Show keycodes, including when key is released. Wait ten seconds for it to end.
+# Must be run in a virtual tty, not a graphical terminal, otherwise it will say:
+# "Couldn't get a file descriptor referring to the console"
+showkey
+
+# Disable IPv6
+# http://superuser.com/questions/575684/how-to-disable-ipv6-on-a-specific-interface-in-linux
+# https://wiki.debian.org/DebianIPv6
+# http://mindref.blogspot.com/2010/12/debian-disable-ipv6_22.html
+# First, comment out /etc/hosts ipv6 stuff
+# Then do
+use-ipv6=no
+# in /etc/avahi/avahi-daemon.conf
+# Next, in /etc/sysctl.conf
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+net.ipv6.conf.eth0.disable_ipv6 = 1
+# Restart stuff.
+sudo sysctl -p
+# To check what's using IPv6
+sudo netstat -tunlp | grep p6
+# More certain way that requires reboot.
+echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist
+# Reboot and check
+cat /proc/net/if_inet6
+modprobe ipv6
+lsmod | grep ipv6
+# Run this also
+# http://wiki.centos.org/FAQ/CentOS5#head-47912ebdae3b5ac10ff76053ef057c366b421dc4
+touch /etc/modprobe.d/disable-ipv6.conf
+echo "install ipv6 /bin/true" >> /etc/modprobe.d/disable-ipv6.conf 
+# Also
+sudo vim /etc/netconfig
+# comment out lines starting with:
+udp6
+tcp6
+# also this
+sudo vim /etc/default/grub
+
+GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 quiet"
+# and this
+# http://www.evsmisc.info/linux/mind-reference-how-to-disable-ipv6-in-debian.html
+# another way to check
+# http://ubuntu-tutorials.com/2008/01/12/disabling-ssh-connections-on-ipv6/
+
+# to check it actually disabled
+dmesg | grep -i ipv6
+lsmod | grep -i ipv6
+
+sudo sysctl -w net.ipv6.conf.eth0.autoconf=0
+
+# Add google's public gpg keys for installing their software
+wget -q -O - http://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
