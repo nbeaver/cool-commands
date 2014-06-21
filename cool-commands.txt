@@ -240,6 +240,7 @@ hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
 
 date --date='2 hours 22 minutes' +%r # The time 2 hours and 22 minutes from now, formatted with AM/PM
 date --date='45 days after 9/11/2012' +%r
+date -d "April 19, 2014 + 12 weeks"
 # find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
 # Standard American date
@@ -1376,6 +1377,10 @@ host senfter.debian.org
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 
+# See the ARP (Address Resolution Protocol) table.
+arp
+/usr/sbin/arp
+
 # See available network interfaces, e.g. wlan, eth
 ip link show
 netstat -i
@@ -2177,3 +2182,7 @@ sudo sysctl -w net.ipv6.conf.eth0.autoconf=0
 
 # Add google's public gpg keys for installing their software
 wget -q -O - http://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
+# Change your MAC address (i.e. hardware address)
+sudo macchanger --mac 12:34:56:78:91:01 eth0
+# Note that this won't change your IP address until you disconnect and reconnect.
