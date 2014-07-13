@@ -1347,6 +1347,11 @@ Ctrl-Y # Paste whatever you last deleted
 # See kernel log like dmesg, but much more human readable. Only for this session, though.
 less /var/log/kern.log
 
+# See which processes are using disk, i.e. doing I/O.
+sudo iotop --only
+# Can also use htop, which does not require root.
+htop
+
 # See connections in promiscuous mode and turn on port display.
 sudo iftop -pP
 sudo iftop -pP -i wlan2
@@ -1543,6 +1548,13 @@ sudo -v
 # Find out what you can do if you have sudo priveleges
 sudo -l
 
+# Find out what your hostname is.
+hostname
+uname -n
+# Find out more.
+hostname -f
+dnsdomainname
+
 # Find words in the dictionary starting with certain letters
 look xa
 
@@ -1684,6 +1696,7 @@ xvncviewer -via iit@bm1.mr.aps.anl.gov bm1:0
 # in case e.g. firewall blocks so you can't even ping the Windows machine.
 me@laptop:~$ ssh -X iit@bm1.mr.aps.anl.gov
 me@remote-server:~$ dbus-launch vncviewer 164.54.244.15:5900
+me@remote-server:~$ rdesktop -u PTStat -f 164.54.244.15
 
 # See cron updates and ssmtp status
 less /var/log/syslog
@@ -2186,3 +2199,5 @@ wget -q -O - http://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
 # Change your MAC address (i.e. hardware address)
 sudo macchanger --mac 12:34:56:78:91:01 eth0
 # Note that this won't change your IP address until you disconnect and reconnect.
+
+# TODO: learn how to recover deleted files on a Linux filesystem.
