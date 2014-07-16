@@ -798,7 +798,12 @@ bash
 
 # Find out whether a package is installed or not.
 # Also tells you the version and whether it's installed from a ppa.
-apt-cache policy gnash
+# Also tells you if you have an old package and could install a newer candidate with apt-get upgrade.
+apt-cache policy gnash browser-plugin-gnash
+apt-cache policy ".*gnash.*"
+
+# Gives much of the same info as policy (version, architecture) but also shows if e.g. config files are still installed.
+# Does not show if there is a newer package available or not.
 dpkg --list "*gnash*"
 dpkg -l "*gnash*"
 
