@@ -342,9 +342,13 @@ VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
 # Get rid of network popups
 killall nm-applet ; nm-applet &
 
-8	9	20	48
+# Brace expansion for sequeces/series/ranges of integers/numbers counting up
+echo {1..9}
+# With leading zeroes
+echo {01..16}
 # Fun with brace expansion
 for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
+
 
 # find Unicode/non-ascii characters in text file by numbered line
 cat utf8.txt | LC_COLLATE=C grep -n '[^ -~]' --color=always | less -r
@@ -523,11 +527,17 @@ echo "*.txt" > .flashbake
 pulseaudio --kill
 pulseaudio --start # start it up again as a daemon
 
-# Debug wifi
+# Debugging wifi.
+# Get information about wifi adapter, including driver version and logical name (e.g. wlan0).
 sudo lshw -C network > wifi-card-info.txt
+# Get log of network manager.
 sudo service network-manager stop
 sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
+# Better way of logging network manager.
+journalctl -fu NetworkManager
+# Look in kernel log.
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
+
 
 # Detach process from gnome-terminal
 Ctrl-Z # Access shell prompt
@@ -1387,6 +1397,10 @@ host senfter.debian.org
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 
+# Find out upload and download speed.
+# Based on speedtest.net.
+speedtest-cli
+
 # See the ARP (Address Resolution Protocol) table.
 arp
 /usr/sbin/arp
@@ -1705,6 +1719,9 @@ me@remote-server:~$ rdesktop -u PTStat -f 164.54.244.15
 
 # See cron updates and ssmtp status
 less /var/log/syslog
+
+# See attached USB devices
+lsusb
 
 # Identify printer model.
 sudo escputil -d -r /dev/usb/lp0
@@ -2054,6 +2071,10 @@ help cd | less
 
 # See when the last apt-get update was
 stat -c %y /var/lib/apt/periodic/update-success-stamp
+# more reliable check of date/time of last update
+stat -c %y /var/cache/apt/pkgcache.bin
+# or even
+stat /var/cache/apt/
 
 # Do speech to text
 # Convert to 16khz 16bit mono wav file
