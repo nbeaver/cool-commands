@@ -403,11 +403,6 @@ gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
 cat /bin/cat # mojibake-fy the screen
 reset # fix it
 
-# Freeze terminal output
-Ctrl-S
-# Unfreeze terminal output
-Ctrl-Q
-
 Ctrl-Z # get out of pretty much any terminal program and back to the shell
 fg # move the job back to the foreground
 kill %3 # kill job by jobspec (3, in this case)
@@ -483,11 +478,16 @@ cat /proc/acpi/battery/BAT0/state
 cat /proc/cpuinfo
 less /proc/cpuinfo
 
-# Check hard drive info
-cat /proc/scsi/scsi
-sudo hdparm -I /dev/sda
+# Show disk logical name (e.g. /dev/sda), model number, vendor, serial, and size.
 sudo lshw -class disk
-smartctrl -a /dev/sda
+# Show disk model number, serial number, firmware revision, configuration, rpm ("nominal rotation rate"), and enabled features.
+sudo hdparm -I /dev/sda
+# Show disk model number, serial number, firmware revision, size, and SMART disk health data.
+sudo smartctl -a /dev/sda
+
+# Show how much RAM there is.
+sudo dmidecode --type memory | grep -i size
+# Ram form factor
 
 # Check hard drive partitions
 cat /proc/diskstats
@@ -535,8 +535,10 @@ sudo service network-manager stop
 sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
 # Better way of logging network manager.
 journalctl -fu NetworkManager
-# Look in kernel log.
+# Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
+
+grep 'rtl8192\|wlan' | 
 
 
 # Detach process from gnome-terminal
@@ -671,7 +673,7 @@ awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | u
 # Kill escalation
 kill 21213 # sends SIGTERM (like Ctrl-C) to process 21213
 kill -15 21213 # sends SIGTERM (like Ctrl-C) to process 21213
-kill -2 21213 # send SIGINT to process 21213
+kill -2 21213 # send SIGINT to process 21213 (
 kill -1 21213 # send SIGHUP to process 21213
 kill -3 21213 # send SIGQUIT (like Ctrl-\) to process 21213; will dump core
 kill -9 21213 # sends unblockable KILL signal to kernel
@@ -825,6 +827,14 @@ dpkg -s gnash
 # Find out corresponding package to given command (what package a command "belongs" to)
 dpkg -S $(which gnash)
 dpkg --search $(which gnash)
+# May take a long time to do the disk access, though.
+    $ time dpkg -S /usr/sbin/NetworkManager 
+    network-manager: /usr/sbin/NetworkManager
+    
+    real	0m54.106s
+    user	0m0.564s
+    sys	0m0.268s
+
 
 # Guess the executable or command associated with a package.
 # This actually lists all the files installed, so we need to grep out the executables.
@@ -1075,7 +1085,16 @@ ssh -X nbeaver@rontgen.phys.iit.edu
 # Execute a graphical program over SSH (in this case, gedit)
 dbus-launch gedit
 
-# See disk activity without being root!
+# One way to check iowait,
+# although this isn't very useful on multicore systems.
+# http://www.linuxquestions.org/questions/linux-server-73/what-is-iowait-exactly-623450/
+mpstat
+
+# See disk activity without being root.
+# Another way to check iowait.
+iostat
+# Show with extended statistics in kilobytes per second with device utilization info and omit devices unused,
+# repeating every second.
 iostat -xkdz 1
 
 # Show mounted drives in near little table
@@ -1240,6 +1259,10 @@ man chattr > 1; man chmod > 2; diff -u 1 2 | less
 # Watch a file for changes
 tail -f myfile.log
 less +F myfile.log
+# Pause the output using the shell.
+Ctrl-S
+# Resume the output.
+Ctrl-Q
 
 # Open file using $EDITOR or $VISUAL in less:
 v
@@ -1344,9 +1367,6 @@ grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})' file.html | so
 # Open that connection editor that normally you click on the wifi icon to access.
 nm-connection-editor
 
-# Do network connections from the command line
-nmcli
-
 # Readline wizardry:
 alt-shift-8 # (i.e. M-*) put all the matching completions on the line
 Ctrl-W # delete preceding word
@@ -1358,9 +1378,6 @@ Ctrl-Shift-- # Undo
 Ctrl-X Ctrl-U # Undo
 # There really isn't a redo command.
 Ctrl-Y # Paste whatever you last deleted
-
-# See kernel log like dmesg, but much more human readable. Only for this session, though.
-less /var/log/kern.log
 
 # See which processes are using disk, i.e. doing I/O.
 sudo iotop --only
@@ -1455,10 +1472,19 @@ TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +'%A, %B %e, %r'
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
 
+# Show network connections from the command line
+nmcli device status
+# Disconnect from eth0
+nmcli device disconnect eth0
+
 # List available WiFi access points.
 nmcli dev wifi
 # Sort available wifi access points by signal strength, strongest at the top
+# Have to start with first field, then go 93 characters out, sort numerically, and reverse so largest is at the top.
 nmcli dev wifi | sort -k1.93nr
+# More robust, cutting out the * at the beginning that marks the current connection and then going to the 6th field,
+# which is the signal strength percentage.
+nmcli dev wifi | cut -c4- | sort -k6nr | less
 
 # Remove files with dashes, e.g. a file called '-'
 rm -- -
