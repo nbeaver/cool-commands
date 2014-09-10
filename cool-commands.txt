@@ -73,6 +73,8 @@ find | grep NBMAX *.F90
 
 # View error messages in less by redirecting stderr to stdout
 bash compile.sh 2>&1 | less
+bash compile.sh 2>&1 >/dev/null | less
+# http://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
 # Send stderr to text file
 bash env.sh 2> err_log.txt
 # Send stdout and stderr to text file
@@ -230,6 +232,7 @@ ping -c 4 google.com
 
 # Another method
 sudo /etc/init.d/networking restart
+sudo /etc/init.d/network-manager restart
 
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
@@ -277,6 +280,7 @@ locate -b phys*
 locate *.htm?
 # Udate the locate database
 sudo updatedb
+# TODO: find out when the last time the database was (successfully) updated.
 
 # Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
@@ -448,6 +452,11 @@ ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/
 # Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
 rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
+# Use --archive to keep timestamps the same and --partial to keep partially transferred files and --compress to use less bandwidth.
+# Also use ssh for secure transfer.
+rsync --archive --recursive --verbose --partial --compress --progress --rsh=ssh iit@id1.mr.aps.anl.gov:/home/iit/2014-07-18/ /home/nathaniel/Dropbox/15_Summer_2014/XAFS/2014-07-18/
+# If you're not sure what you're doing is the right thing, use --dry-run.
+rsync --archive --recursive --verbose --partial --compress --progress --dry-run --rsh=ssh iit@id1.mr.aps.anl.gov:/home/iit/2014-07-18/ /home/nathaniel/Dropbox/15_Summer_2014/XAFS/2014-07-18/
 
 # Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
 rsync --recursive --progress --partial /origin/path /target/path
@@ -468,11 +477,22 @@ sudo lshw -C network
 # See connected networky stuff like browsers
 lsof -i -P +c 0 +M
 
+# See information about battery, power, etc.
+upower --dump | less
 # Check battery state/power level
-cat /proc/acpi/battery/BAT0/state
+acpi    # shows battery info by default.
+acpi -b # show battery specifically.
+cat /proc/acpi/battery/BAT0/state # deprecated.
 # 5387 mAh is 100%
 # 3087 mAh is 58%
 # 7900 mWh is 14%, so full capacity should be about 56000 mWh
+# See more detailed information about battery life.
+upower -i /org/freedesktop/UPower/devices/battery_BAT0
+acpi -V
+gnome-power-manager
+
+# Restart upowerd
+sudo killall upowerd && sudo /usr/lib/upower/upowerd & disown
 
 # Check processor/cpu/chip information
 cat /proc/cpuinfo
@@ -533,7 +553,7 @@ sudo lshw -C network > wifi-card-info.txt
 # Get log of network manager.
 sudo service network-manager stop
 sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
-# Better way of logging network manager.
+# Better way of logging network manager, if you use systemd.
 journalctl -fu NetworkManager
 # Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
@@ -714,7 +734,11 @@ scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/D
 # Run redshift with location near Chicago
 redshift -l 41:-87
 # Improved accuracy and run in the background:
-nohup redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v & disown
+nohup redshift -l manual:41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v & disown
+# Note: don't let this conflict with the ~/.config/redshift.conf file.
+# Note: this will produce a nohup.out file. If you don't like it, use it this way:
+nohup redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v  2>/dev/null 1>/dev/null & disown
+# http://stackoverflow.com/questions/10408816/how-to-use-unix-command-nohup-without-nohup-out
 
 # Using gpg for encryption
 gpg -c myfile.txt # Generates myfile.txt.gpg
@@ -848,6 +872,9 @@ dpkg --listfiles handbrake-gtk | grep bin
 # List the files installed by a .deb file 
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
 dpkg --contents
+
+# Install a .deb file.
+dpkg -i example-package.deb
 
 # Download debian package into current directory
 apt-get download mypackage
@@ -1188,8 +1215,6 @@ ALT-.
 # All arguments of previous command
 !*
 
-# See information about battery, power, etc.
-upower --dump | less
 
 # Check video file for errors
 # http://606u.dir.bg/avicheck/
@@ -1259,7 +1284,7 @@ man chattr > 1; man chmod > 2; diff -u 1 2 | less
 # Watch a file for changes
 tail -f myfile.log
 less +F myfile.log
-# Pause the output using the shell.
+# Pause/freeze/halt/stop the terminal output using the shell.
 Ctrl-S
 # Resume the output.
 Ctrl-Q
@@ -1574,6 +1599,8 @@ apt-cache rdepends gcc
 apt-cache --installed rdepends gcc
 # Do it recursively
 apt-cache --installed --recurse rdepends gcc
+# Do it recursively and choose which kinds of dependencies to show.
+apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances ipython-notebook | grep apache2 | less
 
 
 lspci -nnk | grep -A3 "Network controller"
@@ -1821,6 +1848,10 @@ locate --count /home/nathaniel/*/Makefile
 
 # use the recoll command from the terminal
 recoll -t oatmeal | less -S
+# Search for exact phrase.
+recoll -t '"moved permanently"'
+# Useful for timing queries.
+time recoll -t '"moved permanently"'
 
 # See ten newest processes
 ps k-start_time
@@ -1967,6 +1998,7 @@ pgrep -x bash
 sudo apt-get update -V
 # get changelog (requires internet connection)
 apt-get changelog git
+# TODO: does this require you do apt-get first?
 
 # See output
 annotate-output
@@ -2056,6 +2088,10 @@ reportbug --mutt
 # Notes on data entry to LibreOffice Calc
 Ctrl-Shift-P toggle superscript
 Ctrl-Shift-B toggle subscript
+# Finding the rightmost and bottommost row/column containing data.
+Ctrl-End
+# Moves to A1 cell. (Not leftmost and topmost, which is kind of inconsistent.)
+Ctrl-Home
 
 # Entering unicode on Linux
 # Insert ℃ (degrees Celsius)
@@ -2253,3 +2289,49 @@ sudo macchanger --mac 12:34:56:78:91:01 eth0
 # Note that this won't change your IP address until you disconnect and reconnect.
 
 # TODO: learn how to recover deleted files on a Linux filesystem.
+# TODO: running a script on startup, shutdown, wake from suspend, etc.
+http://www.linuxquestions.org/questions/slackware-14/how-to-run-a-script-on-wake-up-from-sleep-state-940311/
+    When the computer wakes up from hibernate or suspend all scripts in
+    /etc/pm/sleep.d are called in reversed order with the argument "thaw" or "resume".
+    
+    Just put something like
+    Code:
+    #!/bin/sh
+    case "$1" in
+        thaw|resume)
+            yourscript.sh
+            ;;
+    esac
+    in /etc/pm/sleep.d and you should be fine.
+
+For more information see man pm-action.
+
+
+# open a file; desktop-independent command
+xdg-open
+# equivalent desktop-specific commands:
+gnome-open
+kde-open
+exo-open
+
+# See what syscalls a program makes, what files it reads, 
+strace echo "Hello."
+# Attach strace to a running process. Useful for e.g. seeing if a process is respoding,
+# and sending kill signals and seeing if it gets them.
+strace -p 2792
+# Put the strace log in a file.
+strace -o /tmp/strace.log ls
+# See profiling information (what is this process spending time doing?)
+strace -c /bin/foo
+
+# http://www.cyberciti.biz/tips/linux-strace-command-examples.html
+# http://www.hokstad.com/5-simple-ways-to-troubleshoot-using-strace
+
+# Using wine.
+wine program.exe
+# Debugging wine.
+winedbg program.exe
+# Uninstalling wine software.
+wine uninstaller
+
+TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
