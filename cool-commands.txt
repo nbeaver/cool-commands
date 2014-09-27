@@ -278,9 +278,15 @@ locate *.cif
 locate -b phys*
 # Locate using the ? for one or zero unknown letter, * for many unknown letters
 locate *.htm?
-# Udate the locate database
+# Restrict locate to a single path
+locate --count /home/nathaniel/*/Makefile
+
+# Update the locate database
 sudo updatedb
-# TODO: find out when the last time the database was (successfully) updated.
+# Find out when the last time the database was (successfully) updated by checking the database file modification date.
+stat -c %y /var/lib/mlocate/mlocate.db
+# Find out when the last time the database was queried.
+stat -c %x /var/lib/mlocate/mlocate.db
 
 # Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
@@ -1344,6 +1350,9 @@ grep -ir 'discrepancy' /var/log | less
 # Determine more info about a window
 xwininfo
 
+# focus an application based on name, e.g. banshee
+wmctrl -a banshee
+
 # Show display you're using (e.g. :0.0)
 xdpyinfo | grep 'name of display:'
 
@@ -1442,6 +1451,12 @@ sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 # Find out upload and download speed.
 # Based on speedtest.net.
 speedtest-cli
+
+# Alernative method, using the router.
+# http://firstin-lastout.com/2013/07/how-to-test-wifi-speed/
+iperf -s -u -i1
+iperf -c 192.168.2.1 -u -i1 -l 1300 -b 100m -t 600
+# Replace 192.168.2.1 with router ip address.
 
 # See the ARP (Address Resolution Protocol) table.
 arp
@@ -1843,8 +1858,6 @@ gcc -Wall -o "testing" "testing.c" # compile into 'testing' binary and show warn
 gcc -Wall -o "testing" "testing.c" -lm # compile with math.h
 gcc -Wall -o "testing" "testing.c" --llapack # compile with lapack
 
-# Restrict locate to a single path
-locate --count /home/nathaniel/*/Makefile
 
 # use the recoll command from the terminal
 recoll -t oatmeal | less -S
@@ -2163,6 +2176,12 @@ convert file.png file.jpeg
 # Use imagemagick to clean up a whiteboard picture
 # https://gist.github.com/lelandbatey/8677901
 convert $1 -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 $2
+# Use imagemagick to get the first page of pdf and turn it into a png.
+convert file.pdf[0] file.png
+# Add a white background to first page of pdf instead of being transparent.
+convert -background white -flatten file.pdf[0] file.png
+# http://stackoverflow.com/questions/22994313/imagemagick-convert-pdf-with-transparency-to-jpg
+# http://tex.stackexchange.com/questions/64505/how-to-make-each-pdf-page-of-a-beamer-output-have-an-opaque-background-when-it-i
 
 # restart xfce4 panels
 xfce4-panel -r
@@ -2335,3 +2354,7 @@ winedbg program.exe
 wine uninstaller
 
 TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
+TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
+
+# URL for tracking a UPS package:
+http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
