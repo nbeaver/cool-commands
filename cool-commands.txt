@@ -1470,6 +1470,8 @@ netstat -i
 # Find out your ip address
 ifconfig
 ip addr show
+# Using moreutils
+ifdata -pa eth0
 
 # See what an interface can do, e.g. if wakeonlan is enabled
 ethtool eth3
@@ -2358,3 +2360,6 @@ TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo
 
 # URL for tracking a UPS package:
 http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
+
+# Edit piped data with your favorite text editor.
+vipe
