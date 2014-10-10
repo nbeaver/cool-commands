@@ -101,6 +101,9 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 rename 'y/ /_/' * # replace spaces with underscores
 mv filename.{old,new} # Quick file rename
 
+# Rename files by removing spaces entirely.
+rename 's/ //g' *
+
 # Using the system dictionary:
 grep -i '^s.*m.*b' /usr/share/dict/words # this is how samba was named
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
@@ -287,6 +290,7 @@ sudo updatedb
 stat -c %y /var/lib/mlocate/mlocate.db
 # Find out when the last time the database was queried.
 stat -c %x /var/lib/mlocate/mlocate.db
+# TODO: write a command that shows how long its been (in days) since the database was updated.
 
 # Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
@@ -930,6 +934,7 @@ fusermount -u /path/to/mount/point
 
 # Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
+# TODO: get list of recently updated packages that works offline.
 
 # Add something to your $PATH, a colon-separated list of directories
 export PATH=$PATH:$HOME/my-path
@@ -2363,3 +2368,14 @@ http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
 
 # Edit piped data with your favorite text editor.
 vipe
+
+# Determine probable character encoding of a text document.
+chardet myfile
+
+# Get the keyboard layout.
+setxkbmap -query
+# example output:
+# rules:      evdev
+# model:      pc105
+# layout:     us
+
