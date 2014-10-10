@@ -2379,3 +2379,7 @@ setxkbmap -query
 # model:      pc105
 # layout:     us
 
+# List all files two levels deep.
+tree -L 2 -a
+# Pass to less, with color.
+tree -L 2 -a -C | less -R
