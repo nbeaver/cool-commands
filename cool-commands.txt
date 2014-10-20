@@ -273,6 +273,10 @@ sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
 gnome-session-quit --logout --no-prompt
 
+# Add current user to the dialout group.
+sudo gpasswd -a $USER dialout
+sudo usermod -a -G dialout $USER
+
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
 # Locate all files ending with '.cif'
@@ -1915,6 +1919,9 @@ unicode U+2557
 unicode -d 9559
 # Look it up by octal
 unicode -o 22527
+# Find all symbols with a description including 'dot' but not 'letter' using regular expressions.
+unicode --max 1000 --regex '^(?=.*dot)(?!.*letter).*'
+# source: http://stackoverflow.com/questions/8240765/is-there-a-regex-to-match-a-string-that-contains-a-but-does-not-contain-b
 # Using `ga` in vim gives hex, decimal, and octal, useful for searching unicode(1).
 # Using `g8` in vim gives UTF-8 representation, not useful for searching unicde (1).
 
