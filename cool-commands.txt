@@ -430,6 +430,7 @@ diff -u old_file new_file > patch.txt # Generates a patch file that can generate
 # To check the patch:
 patch -b old_file # Patches old_file and creates a file called old_file.orig that is unpatched
 vimdiff old_file old_file.orig # compare the patched file to the original file
+# Warning: gvimdiff is much easier on the eyes; terminals and vim's diffing highlighting tends to clash.
 # To use the patch
 patch < patch.txt
 $ To revert the patch
@@ -872,6 +873,8 @@ dpkg --search $(which gnash)
     real	0m54.106s
     user	0m0.564s
     sys	0m0.268s
+# Same search, but also include uninstalled packages.
+apt-file search $(which gnash)
 
 
 # Guess the executable or command associated with a package.
@@ -2402,3 +2405,14 @@ setxkbmap -query
 tree -L 2 -a
 # Pass to less, with color.
 tree -L 2 -a -C | less -R
+
+# See which users there are.
+users
+# See which groups you are in.
+groups
+# See which groups other people are in.
+groups other_username
+# Does same thing, but more thoroughly.
+id $USER
+# or just
+id
