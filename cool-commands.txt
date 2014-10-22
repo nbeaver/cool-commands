@@ -2371,6 +2371,8 @@ strace -p 2792
 strace -o /tmp/strace.log ls
 # See profiling information (what is this process spending time doing?)
 strace -c /bin/foo
+# Pipe stderr to stdout so you can use less.
+strace foo 2>&1 | less
 
 # http://www.cyberciti.biz/tips/linux-strace-command-examples.html
 # http://www.hokstad.com/5-simple-ways-to-troubleshoot-using-strace
