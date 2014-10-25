@@ -382,7 +382,8 @@ grep --perl-regexp '[^[:ascii:]]' --color=always utf8.txt | less --RAW-CONTROL-C
 # highlight characters that are non-ascii and give line number
 grep --perl-regexp '[^[:ascii:]]' --color=always --line-number utf8.txt | less --RAW-CONTROL-CHARS
 
-grep 'it.*it' /usr/share/dict/words | sed '/s/it/IIT/g' | less
+# Making fun of IIT's marketing strategy.
+grep 'it.*it' /usr/share/dict/words | sed 's/it/IIT/g' | less
 
 zip -r myfolder.zip myfolder/ # recursively zip a directory, putting the zip file into the current directory
 unzip -l myfile.zip # list contents of zip file
@@ -1982,6 +1983,10 @@ cat -A myfile.txt
 vnstat -i wlan2
 # See it updated every 2 seconds (by default)
 watch vnstat -i wlan2
+# Watch a rapidly changing text file.
+watch cat idxstatus.txt
+# Note that this is often better than tail --follow,
+# especially if the file is being truncated rapidly.
 
 # Process files with spaces in the filenames
 IFS=$'\n'
@@ -2335,6 +2340,7 @@ wget -q -O - http://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
 # Change your MAC address (i.e. hardware address)
 sudo macchanger --mac 12:34:56:78:91:01 eth0
 # Note that this won't change your IP address until you disconnect and reconnect.
+sudo macchanger --another wlan0
 
 # TODO: learn how to recover deleted files on a Linux filesystem.
 # TODO: running a script on startup, shutdown, wake from suspend, etc.
