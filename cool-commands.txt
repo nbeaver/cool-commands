@@ -1756,6 +1756,15 @@ ls -a | grep '^\.'
 
 # Graphically change timezone
 time-admin
+# From the command-line
+sudo dpkg-reconfigure tzdata
+
+# See current timezone
+timedatectl status
+# List timezones
+timedatectl list-timezones
+# Set timezone with systemd.
+timedatectl set-timezone America/New_York
 
 # Combine/merge/join/concatenate pdf files together
 pdfjoin 1.pdf 2.pdf  # creates a 2-join.pdf file with both 1 and 2.
