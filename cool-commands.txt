@@ -176,6 +176,8 @@ wget --no-parent --no-host-directories --recursive --level=1 --convert-links --r
 # Download from obnoxious user-agent filtering sites
 # http://sparc86.wordpress.com/2009/04/08/wget-shows-http-error-403-forbidden/
 wget -U firefox http://www.wideislandview.com/2009/07/recipe-no-fuss-rice-cooker-banana-bread/
+# Get some lecture notes
+/usr/bin/wget --no-verbose --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --directory-prefix=/home/nathaniel/Dropbox/14_Spring_2014/optics-PHYS-412/lectures/mirror http://bernhard-adams.com/IIT-phy412/
 
 echo blacklist mei > /etc/modprobe.d/mei.conf # avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 # Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
@@ -784,11 +786,32 @@ rlwrap math
 # Save a logfile of output (including echoed input)
 rlwrap -l mylog.txt math
 
+# Show how the terminal interprets keypresses.
+cat -v
+# E.g.
+# up arrow = ^[[A
+# down arrow = ^[[B
+# left arrow = ^[[D
+# right arrow = ^[[C
+# F1 = ^[OP
+# F4 = ^[OS
+# F5 = ^[[15~
+# F7 = ^[[18~
+# Home = ^[OH
+# End = ^[OF
+# Insert = ^[[2~
+# Delete = ^[[3~
+# PgUp = ^[[5~
+# PgDn = ^[[6~
+# Escape = ^[
+
 # Text to speech
 echo 'Hello, world!' | espeak --stdin
 
 # List to your computer say "Ping!" every 2 seconds
 ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
+# Inspired by a story from the author of the ping utility, Mike Muuss.
+# http://ftp.arl.mil/mike/ping.html
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -1761,6 +1784,9 @@ sudo dpkg-reconfigure tzdata
 
 # See current timezone
 timedatectl status
+cat /etc/timezone
+date +%Z
+
 # List timezones
 timedatectl list-timezones
 # Set timezone with systemd.
@@ -2433,3 +2459,26 @@ groups other_username
 id $USER
 # or just
 id
+
+# Finding which binary a command goes to, e.g. vim.
+which vim
+# Find all the vims.
+which -a vim
+# Follow links recursively.
+namei /usr/bin/vim
+# Example output.
+    $ namei $(which vim)
+    f: /usr/bin/vim
+     d /
+     d usr
+     d bin
+     l vim -> /etc/alternatives/vim
+       d /
+       d etc
+       d alternatives
+       l vim -> /usr/bin/vim.gtk
+         d /
+         d usr
+         d bin
+         - vim.gtk
+
