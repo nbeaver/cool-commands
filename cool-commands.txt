@@ -2482,3 +2482,7 @@ namei /usr/bin/vim
          d bin
          - vim.gtk
 
+# Capture webcam image
+streamer -c /dev/video0 -o out.jpeg
+# Since it usually defaults to whatever webcam is attached, this usually works, too.
+streamer -o out.jpeg
