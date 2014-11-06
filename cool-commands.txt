@@ -136,27 +136,42 @@ sudo chmod -R +rwx .mozilla
 type rr # identify the kind of command rr is
 type -a rr # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
 # For example, type -a ls gives you both /bin/ls and whatever ls is aliased to, as it often is.
+
 source .bashrc # make bash re-read modified .bashrc file
 . .bashrc # make bash re-read modified .bashrc file
+
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
+
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
+
+# transfer ownership to nathaniel instead of root
 sudo chown nathaniel: .xdvirc
+# Had to do this when copying over files from old install.
 cat precise.txt | grep root > to-chown.txt
-cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel: # transfer ownership to nathaniel instead of root
+cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel:
 
 # Using curl to download from the command line
 curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip # test download speed
 curl --continue-at - --remote-name 'url_for_file' # Download file, automatically with same name and ability to resume download
+
 # Using wget to download from the command line
 wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img # simpler
 wget --continue 'http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img' # resume a partial download
+
 # How to download a file without nesting it in a bunch of directories
 wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics'
+
 # Using wget to get a recursive (default to 5 links deep) local copy of a page.
 wget --no-host-directories --recursive --convert-links --page-requisites 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
+
 # Use wget to check for broken links in an html file
 cat file.html | wget --no-check-certificate --spider -nv -F -i -
+
+# Use wget to check for broken links in a remote webpage.
+wget --spider  -o wget.log  -e robots=off --wait 1 -r -p http://www.example.com
+# http://www.commandlinefu.com/commands/view/8234/check-broken-links-using-wget-as-a-spider
+
 # Download a local copy of the weather into a specified directory
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
 wget --page-requisites --convert-links --directory-prefix '~/not_backed_up/weather-reports/chicago-weather/' 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
@@ -441,6 +456,7 @@ patch -R < patch.txt
 
 find ./ -exec file '{}' \; # find out what kind of file all the stuff in the directories below are
 find ./ -type l ! -exec test -r {} \; -print # find broken symlinks in directories below (test -r sees if the file is readable)
+find ./ -print -exec recollindex -i '{}' \; # index all files in a directory with recoll
 
 # Much like any other find exec command, but more efficient
 find . -type f -name "*.deadtime" -exec rm '{}' +
@@ -2486,3 +2502,10 @@ namei /usr/bin/vim
 streamer -c /dev/video0 -o out.jpeg
 # Since it usually defaults to whatever webcam is attached, this usually works, too.
 streamer -o out.jpeg
+
+# Live edit reStructuredText and Markdown files.
+retext file.rst
+
+# Zim shortcuts.
+Ctrl-D # insert date.
+Ctrl-J # jump to page.
