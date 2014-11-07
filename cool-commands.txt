@@ -23,6 +23,13 @@ find . -name *.html
 # Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
 
+# Find all files with certain permissions.
+find . -perm 777
+find . -perm -g+s
+# http://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
+# http://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
+
+
 # View only files not ending in '.txt'
 ls --ignore=*.txt
 
@@ -1134,6 +1141,10 @@ cat playlist.m3u | grep EXT | cut -d, -f 2 | less
 
 # Find out which shell session you're using
 ps -p $$
+
+# Find out the parent process id of a process.
+ps auxf | grep SpiderOak
+ps -f 29478
 
 # Compress and tar a directory called 'meansum'
 tar -czvf meansum.tgz meansum/
