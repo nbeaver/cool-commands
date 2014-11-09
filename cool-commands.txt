@@ -1893,6 +1893,9 @@ lsof -i :80 | grep LISTEN
 ls -l /proc/2720/exe
 # lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
 
+# See what files it has open.
+ls -l /proc/2720/fd
+
 # Launch printer stuff from command line
 system-config-printer
 
@@ -2189,6 +2192,7 @@ Ctrl-Shift-B toggle subscript
 Ctrl-End
 # Moves to A1 cell. (Not leftmost and topmost, which is kind of inconsistent.)
 Ctrl-Home
+# Can autofill a column with Ctrl-D or Edit → Fill.
 
 # Entering unicode on Linux
 # Insert ℃ (degrees Celsius)
@@ -2297,7 +2301,7 @@ gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
 gnuplot script.gnuplot -
 
 # Ways to prevent a package from being installed
-Synaptic -> Package -> Lock version.
+Synaptic → Package → Lock version.
 sudo apt-mark hold package-name
 echo package-name hold | sudo dpkg --set-selections
 # For aptitude only
@@ -2520,3 +2524,7 @@ retext file.rst
 # Zim shortcuts.
 Ctrl-D # insert date.
 Ctrl-J # jump to page.
+
+# TODO: figure out order of commands for:
+sudo nohup time nice
+http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
