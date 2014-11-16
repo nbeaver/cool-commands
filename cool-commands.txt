@@ -1,3 +1,4 @@
+#! /usr/bin/env bash
 # Wireless access points
 sudo iwlist scanning|less
 
@@ -29,6 +30,8 @@ find . -perm -g+s
 # http://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # http://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 
+# Find all files over a certain size (500MB in this case.)
+find . -size +500M
 
 # View only files not ending in '.txt'
 ls --ignore=*.txt
@@ -182,22 +185,36 @@ wget --spider  -o wget.log  -e robots=off --wait 1 -r -p http://www.example.com
 # Download a local copy of the weather into a specified directory
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
 wget --page-requisites --convert-links --directory-prefix '~/not_backed_up/weather-reports/chicago-weather/' 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
+
 # Choose output for wget
 wget --no-host-directories 'http://www.google.com/calendar/ical/nbeaver%40hawk.iit.edu/private-487dd85b5f1553be9c2e1b4a1e29ae7f/basic.ics' --output-document ~/Dropbox/UbuntuBackup/basic.ics
+
 # Get local copy of website
 wget -E -H -k -K -p -e robots=off 'https://www.iit.edu/'
 wget --adjust-extension --span-hosts --convert-links --backup-converted --page-requisites --execute robots=off 'https://www.iit.edu/'
+
 # Check to see if the website is up beyond using something like ping.
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.com/miegakure/
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
+
+# Just the HTTP status code and URL.
+curl --silent --write-out "%{http_code} %{url_effective}\\n" --location "http://www.reddit.com/r/obscurantism" --output /dev/null
+# http://beerpla.net/2010/06/10/how-to-display-just-the-http-response-code-in-cli-curl/
+
+# Just the HTTP status code.
+curl --silent --write-out "%{http_code}\\n" --location "http://www.reddit.com/r/obscurantism" -o /dev/null
+
 # No redirects
 curl --head --silent "http://www.reddit.com/r/obscurantism"
 wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
+
 # Download just the first level of linked files, and don't re-download them if they haven't been updated
 wget --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --timestamping http://bernhard-adams.com/IIT-phy412/
+
 # Download from obnoxious user-agent filtering sites
 # http://sparc86.wordpress.com/2009/04/08/wget-shows-http-error-403-forbidden/
 wget -U firefox http://www.wideislandview.com/2009/07/recipe-no-fuss-rice-cooker-banana-bread/
+
 # Get some lecture notes
 /usr/bin/wget --no-verbose --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --directory-prefix=/home/nathaniel/Dropbox/14_Spring_2014/optics-PHYS-412/lectures/mirror http://bernhard-adams.com/IIT-phy412/
 
@@ -549,6 +566,7 @@ sudo smartctl -a /dev/sda
 # Show how much RAM there is.
 sudo dmidecode --type memory | grep -i size
 # Ram form factor
+sudo dmidecode --type memory
 
 # Check hard drive partitions
 cat /proc/diskstats
@@ -654,6 +672,9 @@ ping -b -c 3 -i 20 $BROADCASE_ADDRESS
 nc -l 55555
 # On computer #2, where $IP is computer #1's ip address
 nc $IP 55555
+
+# See what your browser is doing.
+nc -l -p 8000 -v
 
 # After sshing in, any of these
 users
@@ -968,7 +989,7 @@ uname --all
 lscpu
 
 # Try to fix wifi
-sudo echo "SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
+sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
 
 # Matrix-like command. Totally useless.
 cat /dev/urandom | hexdump
@@ -988,6 +1009,7 @@ fusermount -u /path/to/mount/point
 
 # Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
+
 # TODO: get list of recently updated packages that works offline.
 
 # Add something to your $PATH, a colon-separated list of directories
@@ -1749,6 +1771,9 @@ tr -d '\n'
 # Get the last entry in history
 history | tail -n2 | head -n1| cut -c 8-
 
+# Get the 2nd line of a bunch of files.
+awk 'FNR==2' * > out.txt
+
 # Rsync is pretty awesome.
 sudo rsync --verbose --progress --archive --compress --rsh ssh --rsync-path="sudo rsync" /var/www/pmwiki nbeaver@chloride.phys.iit.edu:/var/www/
 
@@ -2008,13 +2033,13 @@ zcat file.gz
 zless file.gz
 
 # One way to re-run a process in gdb:
-1. Look up the process with ps.
+# 1. Look up the process with ps.
 ps aux | grep comsol
 1000     24466  0.0  0.0   2236   660 pts/9    S+   12:45   0:00 /bin/sh /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/comsol
 1000     24497  106  3.8 820832 152864 pts/9   Sl+  12:45   0:12 /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
-2. Paste the corresponding command after gdb --args.
+# 2. Paste the corresponding command after gdb --args.
 gdb --args /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
-3. Trouble is, anything set up by wrapper scripts won't work...
+# 3. Trouble is, anything set up by wrapper scripts won't work...
 
 # Probably a better way to run a process in gdb.
 1. Run the process.
@@ -2052,6 +2077,9 @@ watch vnstat -i wlan2
 watch cat idxstatus.txt
 # Note that this is often better than tail --follow,
 # especially if the file is being truncated rapidly.
+
+# watch a piped command
+watch 'ps aux | grep mycommand'
 
 # Process files with spaces in the filenames
 IFS=$'\n'
@@ -2528,3 +2556,8 @@ Ctrl-J # jump to page.
 # TODO: figure out order of commands for:
 sudo nohup time nice
 http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
+
+# Show a spinning icosahedron.
+ico -faces -sleep 0.05
+
+#TODO: find a command that lists installed packages that are available in debian unstable, but not debian stable.
