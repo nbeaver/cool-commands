@@ -102,6 +102,10 @@ for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 rename -nv 's/$/.doc/' Ch*
 rename -v 's/$/.doc/' Ch*
 
+# Rename all files ending with .csv so that they end with .dat instead.
+# Also handles names with spaces and weird names like my.csv.file.csv properly.
+rename -nv 's/\.csv$/\.dat/' *.csv
+
 # Rename files so that Cu becomes C
 rename -nv 's/Cu/C/' Te_Na2Cu2Te.*
 rename 's/Cu/C/' Te_Na2Cu2Te.*
@@ -152,7 +156,21 @@ source .bashrc # make bash re-read modified .bashrc file
 
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
 
-find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';' # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
+# find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
+find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
+# find all git repositories and run `git fsck` on them, saving the output to a log file.
+find '/home/nathaniel/SpiderOak Hive/' -name '.git' -print -execdir git fsck \; &> log.txt
+# Don't do it like this:
+find '/home/nathaniel/SpiderOak Hive/' -name '.git' -print -execdir "git fsck" \; &> log.txt
+# or you will get error messages like these:
+# find: `/usr/bin/git fsck ./': No such file or directory
+
+# Find all files not in .git/ and run `wc -l` on them.
+find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
+# -o means 'or', so either prune .git or if they are files (not directories) run wc -l filename on them.
+# Same, but skip .zim as well.
+find . -path ./.git -prune -o -path ./.zim -prune -o -type f -exec 'wc' '-l' '{}' \;
+
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 
 # transfer ownership to nathaniel instead of root
@@ -2075,6 +2093,8 @@ vnstat -i wlan2
 watch vnstat -i wlan2
 # Watch a rapidly changing text file.
 watch cat idxstatus.txt
+# See the date changing (primitive clock)
+watch date
 # Note that this is often better than tail --follow,
 # especially if the file is being truncated rapidly.
 
@@ -2087,6 +2107,10 @@ for file in *.txt ; do
     # commands on $file here
 done
 # Another option is to use find with --exec flag
+
+# Do a one-liner, e.g. from the command line.
+# In this case, append a newline to each file.
+for f in *; do echo -e '\n' > "$f"; done
 
 # find duplicate files (assuming that identical file size means they're the same)
 duff *
@@ -2561,3 +2585,10 @@ http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
 ico -faces -sleep 0.05
 
 #TODO: find a command that lists installed packages that are available in debian unstable, but not debian stable.
+
+# Debug SpiderOak.
+# Takes a long time.
+SpiderOak --destroy-shelved-x
+SpiderOak --repair
+
+# TODO: figure out how to watch(1) aliases and shell functions.
