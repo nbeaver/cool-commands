@@ -332,9 +332,17 @@ sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
 gnome-session-quit --logout --no-prompt
 
+# Check if current user is in a group like dialout or lpadmin.
+id $USER
+grep dialout /etc/group | grep $USER
+grep lpadmin /etc/group | grep $USER
+
 # Add current user to the dialout group.
 sudo gpasswd -a $USER dialout
 sudo usermod -a -G dialout $USER
+
+# Add current user to those permitted to print.
+sudo usermod -a -G lpadmin $USER
 
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
@@ -496,9 +504,14 @@ patch < patch.txt
 $ To revert the patch
 patch -R < patch.txt
 
-find ./ -exec file '{}' \; # find out what kind of file all the stuff in the directories below are
-find ./ -type l ! -exec test -r {} \; -print # find broken symlinks in directories below (test -r sees if the file is readable)
-find ./ -print -exec recollindex -i '{}' \; # index all files in a directory with recoll
+# find out what kind of file all the stuff in the directories below are
+find . -type f -exec file '{}' \;
+
+# find broken symlinks in directories below (test -r sees if the file is readable)
+find ./ -type l ! -exec test -r {} \; -print
+
+# index all files in a directory with recoll
+find ./ -print -exec recollindex -i '{}' \;
 
 # Much like any other find exec command, but more efficient
 find . -type f -name "*.deadtime" -exec rm '{}' +
@@ -635,7 +648,7 @@ journalctl -fu NetworkManager
 # Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
-grep 'rtl8192\|wlan' | 
+grep 'rtl8192\|wlan' |
 
 
 # Detach process from gnome-terminal
@@ -953,7 +966,7 @@ dpkg -s gnash
 dpkg -S $(which gnash)
 dpkg --search $(which gnash)
 # May take a long time to do the disk access, though.
-    $ time dpkg -S /usr/sbin/NetworkManager 
+    $ time dpkg -S /usr/sbin/NetworkManager
     network-manager: /usr/sbin/NetworkManager
     
     real	0m54.106s
@@ -972,7 +985,7 @@ dpkg -L handbrake-gtk | grep bin
 /usr/bin/ghb
 dpkg --listfiles handbrake-gtk | grep bin
 
-# List the files installed by a .deb file 
+# List the files installed by a .deb file
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
 dpkg --contents
 
@@ -2344,7 +2357,7 @@ dropbox status
 # Copy contents of subversion repository into current directory
 svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
 
-# Set the screen brightness (backlight) from the command light
+# Set the screen brightness (backlight) from the command line
 xbacklight -set 100
 
 # gnuplot command we typically use at the beamline
@@ -2431,7 +2444,7 @@ lsmod | grep ipv6
 # Run this also
 # http://wiki.centos.org/FAQ/CentOS5#head-47912ebdae3b5ac10ff76053ef057c366b421dc4
 touch /etc/modprobe.d/disable-ipv6.conf
-echo "install ipv6 /bin/true" >> /etc/modprobe.d/disable-ipv6.conf 
+echo "install ipv6 /bin/true" >> /etc/modprobe.d/disable-ipv6.conf
 # Also
 sudo vim /etc/netconfig
 # comment out lines starting with:
@@ -2486,7 +2499,7 @@ gnome-open
 kde-open
 exo-open
 
-# See what syscalls a program makes, what files it reads, 
+# See what syscalls a program makes, what files it reads, and so on.
 strace echo "Hello."
 # Attach strace to a running process. Useful for e.g. seeing if a process is respoding,
 # and sending kill signals and seeing if it gets them.
@@ -2592,3 +2605,8 @@ SpiderOak --destroy-shelved-x
 SpiderOak --repair
 
 # TODO: figure out how to watch(1) aliases and shell functions.
+
+# Convert hexadecimal to decimal
+python:
+int("78",16)
+int("0x78",16)
