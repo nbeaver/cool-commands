@@ -2610,3 +2610,29 @@ SpiderOak --repair
 python:
 int("78",16)
 int("0x78",16)
+
+# Capture screenshot.
+scrot
+# Capture a window.
+scrot --focused
+scrot -u
+# Capture a window after a delay of two seconds.
+scrot --focused --delay 2
+scrot -u -d 2
+# Select size of screenshot with mouse.
+scrot --select
+scrot -s
+
+# Diagnose inotify problems.
+sysctl fs.inotify.max_user_watches
+cat /proc/sys/fs/inotify/max_user_watches
+cat /proc/sys/fs/inotify/max_user_instances
+cat /proc/sys/fs/inotify/max_queued_events
+
+# https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
+# Increase number of watches temporarily.
+sudo sysctl fs.inotify.max_user_watches=524288
+sudo sysctl -p
+# Increase number of watches permanently.
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
