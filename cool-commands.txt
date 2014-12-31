@@ -461,6 +461,11 @@ unzip myfile.zip -d /path/to/desired/directory
 updmap --enable Map=tengwarscript.map
 
 # ip address for IIT physics office printer 216.47.138.174
+# How to add a new network printer:
+system-config-printer
+# Use IPP (Internet Printing Protocol) if possible.
+# LPD, SMB, AppSocket/JetDirect also ok, but have reduced functionality.
+# http://askubuntu.com/questions/401119/should-i-set-up-my-cups-printing-to-use-ipp-lpd-or-url
 
 # decompress and unarchive a bzipped file
 tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
@@ -2100,16 +2105,24 @@ texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G 
 # See all non-printing characters in a text file
 cat -A myfile.txt
 
-# See wifi network usage
-vnstat -i wlan2
+# See wifi network usage,
+# including how much you've downloaded,
+# if e.g. you have data caps on your internet.
+vnstat -i wlan1
 # See it updated every 2 seconds (by default)
-watch vnstat -i wlan2
+watch vnstat -i wlan0
+# See graphical display.
+vnstati -d -s -i wlan1 -o - | display
+vnstati --days --summary --iface wlan1 --output - | display
+
+
 # Watch a rapidly changing text file.
 watch cat idxstatus.txt
 # See the date changing (primitive clock)
 watch date
 # Note that this is often better than tail --follow,
 # especially if the file is being truncated rapidly.
+
 
 # watch a piped command
 watch 'ps aux | grep mycommand'
@@ -2322,6 +2335,18 @@ sudo dpkg-reconfigure apt-listchanges
 # See bugs in a package before updating
 apt-get install apt-listbugs
 
+# Un-pin fixed packages automatically.
+# First, backup the pinned packages.
+cp /etc/apt/preferences.d/apt-listbugs ~/tmp/
+# Next, write to the file.
+# We have to use tee to have the permissions to write to the file.
+# http://stackoverflow.com/questions/16573888/redirect-output-to-a-file-permission-denied
+/usr/share/apt-listbugs/aptcleanup | sudo tee /etc/apt/preferences.d/apt-listbugs
+# Note that this will take a long time, almost thirty seconds in my case.
+# real	0m22.681s
+# user	0m11.024s
+# sys	0m1.664s
+
 # Use imagemagick to find out information about several files
 identify *.jpg
 
@@ -2374,6 +2399,9 @@ sudo aptitude hold package-name
 
 # Install a specific package version
 sudo apt-get install iceweasel=30.0~b5-2
+
+# Install a package from a specific distribution.
+apt-get -t squeeze-backports install freecad
 
 # See installed linux kernel package
 apt-cache policy linux-headers-$(uname -r)
@@ -2636,3 +2664,29 @@ sudo sysctl -p
 # Increase number of watches permanently.
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
+
+#TODO: figure out this gzip error
+# gzip: MoO2 syn2 2014-11-14.elid: unknown suffix -- ignored
+
+python3 /usr/share/doc/python-acoustid/examples/aidmatch.py myfile.ogg myfile.mp3
+# Example:
+# $ python3 /usr/share/doc/python-acoustid/examples/aidmatch.py 01.\ Dominium\ Maris\ Baltici.ogg
+# Sabaton - Dominium maris Baltici
+# http://musicbrainz.org/recording/1473c9e0-bf39-4c96-8c46-b692df220873
+# Score: 92%
+
+fpcalc myfile.ogg
+# $ time fpcalc 01.\ Dominium\ Maris\ Baltici.ogg
+# FILE=01. Dominium Maris Baltici.ogg
+# DURATION=29
+# FINGERPRINT=AQAA2FqiJUmmLAE--AWOwO_QO0EPy0R49IHPI0fPQ36M8IV_HD7-CL3RH_6R7Bnyo8cfAT6BP_gH-GFx_PA74MeR8DTS6_jxXUJ_tMd7pO-Q_LiOHz9--DgS5PjxCLWoEn0Nhyrh5AhP6HgPPQ8uBR-FM9AuEmGINyJO_LhoEc3FBE-m4x_SI-GJo-eD5klxHt-BhEdeHA_8w8eFQEaqH__wBz78Iz-Sa4XVA9_x4_CLAz4qiseNIw_0KC9yckH1wEll4dnxNERJ4seRXEmOXCtR3cFV4UXyI20UGbW-oMcZPMqMH8kTpD9uTrhyXMcLHzmSC__w4_mA-_BzfLqQ9wpUH7eAL4QuiMcb_MH1oTIRJzi-4zwe41KI7zgTKUL5TUPD5MfJDN_w45cQ6_gioi9EffiRnnhg1DfuGOGLhoxy6EM4hsd1-PhxC36NC-cFW0Qy_cgn_EtRMjrCjC1eQSdCi_iH48ePMFQKlRsAschSyloBvACCAQSWBEoJRYQUlhkhIDNAPKKcEcIAZowQiCEDFEJKQIaAFNYZooERDAHCmGNKMWIBQQI5JcAAhhEnBHXiGAEOkIAZAxRDiCGEtFhyOUi6UIoYi6AxgRojmRRCMSMoMkYYhZAV4kGBmDIKACYMIcogqbBDCsCikCDMCSYAIQghhSgSkjEhggGAA6SUMwA4JAwhCgkhmHEMIQU
+# 
+# real	0m0.171s
+# user	0m0.144s
+# sys	0m0.024s
+
+# Resize virtualbox hard drive to 50 GB = 50 * 1024 MB = 51200 MB.
+VBoxManage modifyhd Win7.vdi --resize 51200
+# http://jonmifsud.com/blog/increase-virtualbox-disk-size/
+# http://stackoverflow.com/questions/1688690/how-can-i-easily-add-storage-to-a-virtualbox-machine-with-xp-installed
+
