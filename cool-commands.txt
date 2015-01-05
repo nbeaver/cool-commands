@@ -973,7 +973,7 @@ dpkg --search $(which gnash)
 # May take a long time to do the disk access, though.
     $ time dpkg -S /usr/sbin/NetworkManager
     network-manager: /usr/sbin/NetworkManager
-    
+
     real	0m54.106s
     user	0m0.564s
     sys	0m0.268s
@@ -1711,13 +1711,13 @@ it@bm1:~$ write katsoudas pts/10
 Hello, Razib!
 iit@bm1:~$ who am i
 iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
-iit@bm1:~$ 
+iit@bm1:~$
 Message from katsoudas@bm1 on pts/10 at 21:18 ...
 Is this some kind of joke
 EOF
 iit@bm1:~$ ps aux | grep ssh
 # Blah blah blah...
-iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5  
+iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5
 # That's me!
 
 # Display which tty you are on
@@ -1750,7 +1750,7 @@ lspci -nnk | grep -A3 "Network controller"
 iit@bm1:~$ finger iit
 Login: iit            			Name: IIT General Usage Account
 Directory: /home/iit                	Shell: /bin/bash
-Office: IIT - MRCAT, 630.252.1710 - 
+Office: IIT - MRCAT, 630.252.1710 -
 On since Tue Jun 18 18:35 (CDT) on pts/0 from 107-210-253-34.lightspeed.cicril.sbcglobal.net
 No mail.
 No Plan.
@@ -2509,7 +2509,7 @@ sudo macchanger --another wlan0
 http://www.linuxquestions.org/questions/slackware-14/how-to-run-a-script-on-wake-up-from-sleep-state-940311/
     When the computer wakes up from hibernate or suspend all scripts in
     /etc/pm/sleep.d are called in reversed order with the argument "thaw" or "resume".
-    
+
     Just put something like
     Code:
     #!/bin/sh
@@ -2683,7 +2683,7 @@ fpcalc myfile.ogg
 # FILE=01. Dominium Maris Baltici.ogg
 # DURATION=29
 # FINGERPRINT=AQAA2FqiJUmmLAE--AWOwO_QO0EPy0R49IHPI0fPQ36M8IV_HD7-CL3RH_6R7Bnyo8cfAT6BP_gH-GFx_PA74MeR8DTS6_jxXUJ_tMd7pO-Q_LiOHz9--DgS5PjxCLWoEn0Nhyrh5AhP6HgPPQ8uBR-FM9AuEmGINyJO_LhoEc3FBE-m4x_SI-GJo-eD5klxHt-BhEdeHA_8w8eFQEaqH__wBz78Iz-Sa4XVA9_x4_CLAz4qiseNIw_0KC9yckH1wEll4dnxNERJ4seRXEmOXCtR3cFV4UXyI20UGbW-oMcZPMqMH8kTpD9uTrhyXMcLHzmSC__w4_mA-_BzfLqQ9wpUH7eAL4QuiMcb_MH1oTIRJzi-4zwe41KI7zgTKUL5TUPD5MfJDN_w45cQ6_gioi9EffiRnnhg1DfuGOGLhoxy6EM4hsd1-PhxC36NC-cFW0Qy_cgn_EtRMjrCjC1eQSdCi_iH48ePMFQKlRsAschSyloBvACCAQSWBEoJRYQUlhkhIDNAPKKcEcIAZowQiCEDFEJKQIaAFNYZooERDAHCmGNKMWIBQQI5JcAAhhEnBHXiGAEOkIAZAxRDiCGEtFhyOUi6UIoYi6AxgRojmRRCMSMoMkYYhZAV4kGBmDIKACYMIcogqbBDCsCikCDMCSYAIQghhSgSkjEhggGAA6SUMwA4JAwhCgkhmHEMIQU
-# 
+#
 # real	0m0.171s
 # user	0m0.144s
 # sys	0m0.024s
@@ -2703,3 +2703,34 @@ whohas warsow
 sudo aptitude install --schedule-only wings3d wmctrl
 # Now that the internet is back, install the packages.
 sudo aptitude install
+
+# How to use zssh.
+# First, install it on both machines.
+# Then, log into the remote machine from the local machine.
+$ zssh nbeaver@chloride.phys.iit.edu
+# Find the file and send it.
+nbeaver@chloride:~$ sz cron.log
+# Now press Ctrl-Space to get the zssh> prompt and type pwd to make sure you're in the right directory.
+    �B00000000000000
+    zssh > pwd
+# Now type rz to receive the file.
+    zssh > rz
+    Receiving: cron.log
+    Bytes received:   11752/  11752   BPS:891652
+
+    Transfer complete
+
+
+# Getting hardware information in /proc/acpi or /sys/class via the acpitool command.
+# For exam
+$ acpitool --battery
+  Battery #1     : present
+    Remaining capacity : 69830 mWh, 99.64%
+    Design capacity    : 71280 mWh
+    Last full capacity : 70080 mWh, 98.32% of design capacity
+    Capacity loss      : 1.684%
+    Present rate       : 0 mW
+    Charging state     : Unknown
+    Battery type       : Li-ion
+    Model number       : 42T4763
+    Serial number      : <snip>
