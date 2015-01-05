@@ -1130,11 +1130,14 @@ find ~/Dropbox/ -lname '*Dropbox*'
 # Find all directories with a name including 'Link'. These are suspicious characters Dropbox has dereferenced into directories instead of symbolic links.
 find ~/Dropbox -type d -name '*Link*'
 
-# Make a symbolic link in current directory
-ln --symbolic /path/to/blah.txt link-to-blah.txt
-# Make a symbolic link with spaces in the name.
-ln -s ~/.gnupg/ "Link to .gnupg"
-# Overwrite a symbolic link
+# Make a symbolic link at ~/bin/expgui to a file called "expgui" in current directory.
+# Properly handles spaces in path to current directory by quoting.
+ln --symbolic "$PWD/expgui" ~/bin/expgui
+ln --symbolic "$(pwd)/expgui" ~/bin/expgui
+
+# Make a symbolic link with spaces in the name of the link.
+ln -s ~/.gnupg/ "~/symbolic links/Link to .gnupg"
+# Overwrite a symbolic link using --force flag.
 ln --symbolic --force ~/source/ ~/target/overwritten-link
 
 # Change all text files with 'apt-get' in the name to 'package'
@@ -2690,3 +2693,13 @@ VBoxManage modifyhd Win7.vdi --resize 51200
 # http://jonmifsud.com/blog/increase-virtualbox-disk-size/
 # http://stackoverflow.com/questions/1688690/how-can-i-easily-add-storage-to-a-virtualbox-machine-with-xp-installed
 
+# Enable multiarch, specifically i386 packages.
+sudo dpkg --add-architecture i386
+
+# See which distros have a package, e.g. warsow.
+whohas warsow
+
+# Queue up packages to install offline.
+sudo aptitude install --schedule-only wings3d wmctrl
+# Now that the internet is back, install the packages.
+sudo aptitude install
