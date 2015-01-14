@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 # Wireless access points
-sudo iwlist scanning|less
+sudo iwlist scanning | less
 
 # Connecting to s-video out, changing display resolution, connecting to projector or external display
 xrandr
@@ -138,8 +138,8 @@ info args
 gdb -ex 'set logging on' -ex 'run' iceweasel
 
 # Disk usage:
-du |sort --numeric-sort --reverse
-du |sort -nr # quick version
+du | sort --numeric-sort --reverse
+du | sort -nr # quick version
 du -k --max-depth=1 /home | sort -nr
 
 mkvextract tracks movie5.mkv 2:audio_track.ac3
@@ -286,11 +286,16 @@ lsof # display open files
 # Sure ways to restart a wireless network
 ping -c 4 google.com # ping 4 times
 lspci | grep -i network
-#03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
-modprobe --list | grep rtl
+# 03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8188CE 802.11b/g/n WiFi Adapter (rev 01)
+# or
+# 03:00.0 Network controller: Intel Corporation Centrino Wireless-N 1000 [Condor Peak]
+lsmod | grep rtl
+# or iwlwifi
+kmod list | grep rtl
 sudo modprobe --remove rtl8192ce
 sudo modprobe rtl8192ce
 ping -c 4 google.com
+
 
 # Another method
 sudo /etc/init.d/networking restart
@@ -391,6 +396,10 @@ dir(object)
 help(object.method)
 # Get help on a package
 help(numpy)
+# Get help on opening files.
+help(open)
+help(file)
+print file.__doc__
 # To drop into an interactive shell from a script:
 import code
 code.interact(local=locals())
@@ -401,6 +410,12 @@ s = str(rand)
 s[:3] +"-"+ s[3:6] +"-"+ s[6:]
 # print docstring
 print file.__doc__
+# print in scientific notation
+print "%e" % 2**32
+print '{:e}'.format(2**32)
+# python3 version
+print("%e" % 2**32)
+print('{:e}'.format(2**32))
 
 # Profile a python script
 python -m cProfile script.py > profile.log
@@ -506,7 +521,7 @@ vimdiff old_file old_file.orig # compare the patched file to the original file
 # Warning: gvimdiff is much easier on the eyes; terminals and vim's diffing highlighting tends to clash.
 # To use the patch
 patch < patch.txt
-$ To revert the patch
+# To revert the patch
 patch -R < patch.txt
 
 # find out what kind of file all the stuff in the directories below are
@@ -690,7 +705,9 @@ lpr -P "Brother-HL-4070CDW" -o PageSize=Letter -o PageRegion=A4 -o Duplex=Duplex
 lpq -P "Brother-HL-4070CDW"
 
 # List avahi/bonjour services like printers on the local area network (LAN)
+# Need avahi-utils
 avahi-browse --all --verbose --terminate --resolve
+# Need arp-scan package
 sudo arp-scan --localnet | less
 sudo arp-scan --interface eth3 --localnet | less
 # When avahi-daemon sucks up 100% cpu
@@ -892,6 +909,8 @@ echo 'Hello, world!' | espeak --stdin
 ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
 # Inspired by a story from the author of the ping utility, Mike Muuss.
 # http://ftp.arl.mil/mike/ping.html
+# Similar command:
+ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -1202,9 +1221,13 @@ cat playlist.m3u | grep EXT | cut -d, -f 2 | less
 
 # Find out which shell session you're using
 ps -p $$
+# Find out the process of the shell.
+echo $$
+# Same as above except for subshells.
+echo $BASHPID
 
 # Find out the parent process id of a process.
-ps auxf | grep SpiderOak
+pgrep SpiderOak
 ps -f 29478
 
 # Compress and tar a directory called 'meansum'
@@ -1213,6 +1236,9 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 
 # The reddit disapproval face
 ಠ_ಠ
+# Requires debian package fonts-knda
+# U+0CA0 KANNADA LETTER TTHA
+# UTF-8: e0 b2 a0  UTF-16BE: 0ca0  Decimal: &#3232;
 
 # Show full path of a file with ls
 ls -d $PWD/*
@@ -1317,9 +1343,12 @@ xset b off
 setterm -blength 0
 # Check if the beep is on or not
 xset q | grep bell
-# another way to turn off the system bell
+# These will still make it possible for the beep to go off,
+# e.g. for other users or at the login screen.
+# A more thorough way to turn off the system bell:
 rmmod pcspkr
 # making it permanent
+sudo su
 echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
 
 # From http://overapi.com/linux/
@@ -1378,6 +1407,12 @@ less -p ghemical /var/log/dpkg.log
 
 # Start less at the bottom of a file
 less +G /var/log/dpkg.log
+# Unnecessary use of cat.
+cat /var/log/dpkg.log | less
+# See a file in reverse line number.
+tac /var/log/dpkg.log | less
+# See a file in reverse columns, but same line order.
+rev /var/log/dpkg.log | less
 
 # Determine iso resolution, codec, etc:
 ffmpeg -i image.iso
@@ -1483,7 +1518,7 @@ xdpyinfo | grep 'name of display:'
 # Suspend the bash shell
 suspend
 # Oh my goodness! How do I get it back?
-ps aux | grep bash
+ps aux | grep bash | less
 # We want this one:
 1000     11004  0.0  0.1  10172  6552 pts/2    Ts+  15:01   0:00 /bin/bash
 # 'kill' the process (actually bring it back to life):
@@ -2250,6 +2285,15 @@ fc-list
 # Copy SSH public key to clipboard
 xclip -sel clip < ~/.ssh/id_rsa.pub
 
+# After copying an image to the clipboard,
+# save it to a file with xclip.
+xclip -selection clipboard -t image/png -o > out.png
+# Requires xclip 81 or later.
+# Sometimes works with image/jpeg (acroread snapshots), sometimes not (gnuplot wxt).
+# Have not seen it work with image/tiff yet.
+# http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
+# http://ubuntuforums.org/showthread.php?t=1335075
+
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
 
@@ -2274,6 +2318,12 @@ Ctrl-End
 # Moves to A1 cell. (Not leftmost and topmost, which is kind of inconsistent.)
 Ctrl-Home
 # Can autofill a column with Ctrl-D or Edit → Fill.
+
+# Copy over data, but not formulas:
+# Paste special, deselect formulas.
+# Can be in a different tab,
+# but keep it in same spreadsheet.
+# Then copy it over to a different spreadsheet.
 
 # Entering unicode on Linux
 # Insert ℃ (degrees Celsius)
@@ -2309,9 +2359,13 @@ time read
 time read -sn1
 
 # Getting help about bash builtins like read, cd, echo, printf, and type
-# (they don't have man pages of their own, and the bash man page is way too long to sift through)
+# They don't have man pages of their own, and the bash man page is way too long to sift through.
+# If you're already in a bash shell:
 help read | less
 help cd | less
+# Otherwise:
+bash -c "help read" | less
+bash -c "help cd" | less
 
 # See when the last apt-get update was
 stat -c %y /var/lib/apt/periodic/update-success-stamp
@@ -2707,7 +2761,7 @@ sudo aptitude install
 # How to use zssh.
 # First, install it on both machines.
 # Then, log into the remote machine from the local machine.
-$ zssh nbeaver@chloride.phys.iit.edu
+zssh nbeaver@chloride.phys.iit.edu
 # Find the file and send it.
 nbeaver@chloride:~$ sz cron.log
 # Now press Ctrl-Space to get the zssh> prompt and type pwd to make sure you're in the right directory.
@@ -2723,14 +2777,55 @@ nbeaver@chloride:~$ sz cron.log
 
 # Getting hardware information in /proc/acpi or /sys/class via the acpitool command.
 # For exam
-$ acpitool --battery
-  Battery #1     : present
-    Remaining capacity : 69830 mWh, 99.64%
-    Design capacity    : 71280 mWh
-    Last full capacity : 70080 mWh, 98.32% of design capacity
-    Capacity loss      : 1.684%
-    Present rate       : 0 mW
-    Charging state     : Unknown
-    Battery type       : Li-ion
-    Model number       : 42T4763
-    Serial number      : <snip>
+acpitool --battery
+#  Battery #1     : present
+#    Remaining capacity : 69830 mWh, 99.64%
+#    Design capacity    : 71280 mWh
+#    Last full capacity : 70080 mWh, 98.32% of design capacity
+#    Capacity loss      : 1.684%
+#    Present rate       : 0 mW
+#    Charging state     : Unknown
+#    Battery type       : Li-ion
+#    Model number       : 42T4763
+#    Serial number      : <snip>
+
+# Run the C++ interpreter, ROOT (cint)
+root -l
+# requires root-system package.
+
+# Read from user, populating with "blah blah blah" as a start.
+read -i "blah blah blah" -e
+
+# Only in xfce 4.10. :(
+xfce4-mime-settings
+
+# Shell script to enable kernel modules for sensors, e.g. hard drive temperature, cpu temperature, and fan speeds.
+sudo sensors-detect
+# First, install these packages, though:
+sudo apt-get install lm-sensors hddtemp
+# Then run this command
+sensors
+# acpitz-virtual-0
+# Adapter: Virtual device
+# temp1:        +78.0°C  (crit = +83.0°C)
+#
+# thinkpad-isa-0000
+# Adapter: ISA adapter
+# fan1:        3921 RPM
+#
+# coretemp-isa-0000
+# Adapter: ISA adapter
+# Physical id 0:  +78.0°C  (high = +80.0°C, crit = +85.0°C)
+# Core 0:         +78.0°C  (high = +80.0°C, crit = +85.0°C)
+# Core 1:         +74.0°C  (high = +80.0°C, crit = +85.0°C)
+# Or this command
+sudo hddtemp /dev/sda
+# More info:
+# http://www.lucidtips.com/2009/06/06/monitor-cpu-and-hard-drive-temperatures-on-ubuntu-linux/
+
+#TODO: how to install --install-suggests packages after the package is already installed.
+# http://askubuntu.com/questions/556753/how-to-install-suggests-on-an-already-installed-package
+
+# Stream Google text-to-speech.
+mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=Hello, world!"
+# http://www.reddit.com/r/linux/comments/1xcdtk/the_generally_helpful_bashrc_alias_thread/cfa4p21
