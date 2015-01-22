@@ -114,6 +114,9 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
 mv filename.{old,new} # Quick file rename
+# Similarly, can make a copy of a copy to work on the live.k
+cp filename.{,.old}
+# http://www.shell-fu.org/lister.php?id=46
 
 # Rename files by removing spaces entirely.
 rename 's/ //g' *
@@ -156,6 +159,12 @@ source .bashrc # make bash re-read modified .bashrc file
 
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
 
+# Similar thing for all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
+dcontrol warsow | less
+# Show the release for the package package.
+dcontrol --show-suite warsow | less
+
+
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
 # find all git repositories and run `git fsck` on them, saving the output to a log file.
@@ -192,6 +201,11 @@ wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calend
 
 # Using wget to get a recursive (default to 5 links deep) local copy of a page.
 wget --no-host-directories --recursive --convert-links --page-requisites 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
+
+# Use wget, but reject some URLs/files from download.
+wget --recursive "http://groovebackup.com/?lang=en" --reject index.html?lang=de,index.html?lang=dk,index.html?lang=en,logout
+# http://stackoverflow.com/questions/10712344/mirror-http-website-excluding-certain-files
+# http://stackoverflow.com/questions/12704197/wget-reject-still-downloads-file
 
 # Use wget to check for broken links in an html file
 cat file.html | wget --no-check-certificate --spider -nv -F -i -
@@ -335,16 +349,30 @@ compgen -ac | grep my-command
 sudo apt-get install wireshark
 sudo dpkg-reconfigure wireshark-common
 sudo usermod --append --groups wireshark $USER
+# Now log out and log back in again.
 gnome-session-quit --logout --no-prompt
 
 # Check if current user is in a group like dialout or lpadmin.
-id $USER
+id | grep dialout
+id | grep lpadmin
 grep dialout /etc/group | grep $USER
 grep lpadmin /etc/group | grep $USER
 
-# Add current user to the dialout group.
-sudo gpasswd -a $USER dialout
-sudo usermod -a -G dialout $USER
+# dialout is necessary for running e.g. Cura for 3d printing,
+# lpadmin is necessary for adding new printers,
+# and wireshark is necessary for non-root users to run wireshark.
+
+# Add yourself to the `dialout' group.
+sudo gpasswd --add $USER dialout
+# Add yourself to the groups `lpadmin' and `wireshark'.
+sudo usermod --append --groups dialout,wireshark $USER
+# Note that if you are the user doing this,
+# it won't take effect until you logout and log back in again.
+# http://unix.stackexchange.com/questions/96343/how-to-take-effect-usermod-command-without-logout-and-login
+# http://superuser.com/questions/272061/reload-a-linux-users-group-assignments-without-logging-out
+# http://blog.edwards-research.com/2010/10/linux-refresh-group-membership-without-logging-out/
+exec su -l $USER
+newgrp dialout
 
 # Add current user to those permitted to print.
 sudo usermod -a -G lpadmin $USER
@@ -416,9 +444,11 @@ print '{:e}'.format(2**32)
 # python3 version
 print("%e" % 2**32)
 print('{:e}'.format(2**32))
+reduce(lambda x, y: x*y, [1, 2, 3, 4, 5])
 
 # Profile a python script
 python -m cProfile script.py > profile.log
+
 
 
 # Create images from LaTeX DVI document
@@ -996,9 +1026,38 @@ dpkg --search $(which gnash)
     real	0m54.106s
     user	0m0.564s
     sys	0m0.268s
+# Same search, but much faster.
+dlocate /usr/share/dict/words
+dlocate libc.so.6
+
+    $ time dpkg -S /usr/share/dict/words
+    diversion by dictionaries-common from: /usr/share/dict/words
+    diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
+    dictionaries-common, wamerican: /usr/share/dict/words
+    
+    real	0m0.395s
+    user	0m0.300s
+    sys	0m0.088s
+    $ time dlocate /usr/share/dict/words
+    wamerican: /usr/share/dict/words
+    dictionaries-common: /usr/share/dict/words
+    diversion by dictionaries-common from: /usr/share/dict/words
+    diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
+    
+    real	0m0.054s
+    user	0m0.016s
+    sys	0m0.016s
 # Same search, but also include uninstalled packages.
 apt-file search $(which gnash)
+apt-file search libc.so.6
 
+    $ time apt-file search /usr/share/dict/words
+    dictionaries-common: /usr/share/dict/words
+    wamerican: /usr/share/dict/words
+    
+    real	0m2.820s
+    user	0m2.812s
+    sys	0m0.228s
 
 # Guess the executable or command associated with a package.
 # This actually lists all the files installed, so we need to grep out the executables.
@@ -1088,6 +1147,15 @@ bind -p | less
 
 # List a user's crontab
 crontab -u username -l | less
+# List your crontab
+crontab -u $USER -l | less
+
+# List your incrontab
+incrontab -u $USER -l
+# if you get this:
+# user 'nathaniel' is not allowed to use incron
+sudo vim /etc/incron.allow
+
 
 # This is apparently how to solve your XFCE problems
 rm -rf ~/.cache/sessions
@@ -1350,6 +1418,12 @@ rmmod pcspkr
 # making it permanent
 sudo su
 echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+# alternately, without becoming superuser:
+echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf
+# I came up with this myself, but I guess I wasn't the first.
+# http://pushl.hatenablog.com/entry/2012/12/22/035018
+# silent version:
+echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf > /dev/null
 
 # From http://overapi.com/linux/
 # Run cmd1 then cmd2
@@ -1373,7 +1447,6 @@ echo $PATH
 ALT-.
 # All arguments of previous command
 !*
-
 
 # Check video file for errors
 # http://606u.dir.bg/avicheck/
@@ -1449,6 +1522,7 @@ man chattr > 1; man chmod > 2; diff -u 1 2 | less
 # Watch a file for changes
 tail -f myfile.log
 less +F myfile.log
+
 # Pause/freeze/halt/stop the terminal output using the shell.
 Ctrl-S
 # Resume the output.
@@ -1511,6 +1585,7 @@ xwininfo
 
 # focus an application based on name, e.g. banshee
 wmctrl -a banshee
+
 
 # Show display you're using (e.g. :0.0)
 xdpyinfo | grep 'name of display:'
@@ -1777,7 +1852,9 @@ apt-cache --installed rdepends gcc
 apt-cache --installed --recurse rdepends gcc
 # Do it recursively and choose which kinds of dependencies to show.
 apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances ipython-notebook | grep apache2 | less
-
+# Show why a package is installed.
+aptitude why apache2
+aptitude why coreutils
 
 lspci -nnk | grep -A3 "Network controller"
 
@@ -1885,6 +1962,7 @@ du --summarize ~/* | sort -nr | less
 sudo rtcwake -m mem -s 60
 # Don't suspend, just shchedule a wakeup 60 seconds later
 sudo rtcwake -m no -s 60
+# requires util-linux package
 
 # If your package manager gives you trouble, don't bother swearing, just reinstall!
 sudo apt-get --reinstall --purge install flashplugin-installer
@@ -2318,6 +2396,7 @@ Ctrl-End
 # Moves to A1 cell. (Not leftmost and topmost, which is kind of inconsistent.)
 Ctrl-Home
 # Can autofill a column with Ctrl-D or Edit → Fill.
+# Edit a cell with F2.
 
 # Copy over data, but not formulas:
 # Paste special, deselect formulas.
@@ -2795,11 +2874,14 @@ root -l
 
 # Read from user, populating with "blah blah blah" as a start.
 read -i "blah blah blah" -e
+# Read from user, giving a prompt.
+read -p '$ ' -i "blah blah blah" -e
 
 # Only in xfce 4.10. :(
 xfce4-mime-settings
 
-# Shell script to enable kernel modules for sensors, e.g. hard drive temperature, cpu temperature, and fan speeds.
+# Shell script to enable kernel modules for sensors,
+# e.g. hard drive temperature, cpu temperature, and fan speeds.
 sudo sensors-detect
 # First, install these packages, though:
 sudo apt-get install lm-sensors hddtemp
@@ -2822,6 +2904,8 @@ sensors
 sudo hddtemp /dev/sda
 # More info:
 # http://www.lucidtips.com/2009/06/06/monitor-cpu-and-hard-drive-temperatures-on-ubuntu-linux/
+# Hard drive temperature may not be associated with failure rates:
+# https://www.backblaze.com/blog/hard-drive-temperature-does-it-matter/
 
 #TODO: how to install --install-suggests packages after the package is already installed.
 # http://askubuntu.com/questions/556753/how-to-install-suggests-on-an-already-installed-package
@@ -2829,3 +2913,57 @@ sudo hddtemp /dev/sda
 # Stream Google text-to-speech.
 mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=Hello, world!"
 # http://www.reddit.com/r/linux/comments/1xcdtk/the_generally_helpful_bashrc_alias_thread/cfa4p21
+
+# Use md5 hash to verify integrity of a file.
+md5sum debian-live-7.6.0-amd64-xfce-desktop.iso
+
+# Download a file while running the checksum.
+# http://unix.stackexchange.com/questions/19049/obtaining-md5-during-wget/19054#19054
+wget -O - http://commons.wikimedia.org/wiki/File:Ippolito1.jpg | tee Ippolito1.jpg | md5sum
+# 570f9617245979be3c5219c73b577230  -
+
+# TODO: use `watch` on functions?
+
+# Use the /usr/bin/dict system dictionary to look up some tricky words.
+dict sinecure
+dict factotum
+dict synecdoche
+dict scrofulous
+# Surprisingly good for physics terminology.
+dict 'ab initio'
+dict adiabatic
+dict astatine
+dict fugacity
+dict 'magnetic moment'
+# A few missing, however.
+dict virial
+dict equipartition
+dict commutator
+dict permittivity
+
+# Installing skype on Debian
+# https://wiki.debian.org/skype
+# ~/src/shell/install-scripts/skype/install-skype.sh
+
+# See how bash does tab completion for a command, e.g. vim:
+complete -p vim
+# Show a list of all possible completions.
+complete -p
+# Adjust completion for a command, in this case 'follow'
+complete -c which follow
+# https://www.debian-administration.org/article/316/An_introduction_to_bash_completion_part_1
+# http://tldp.org/LDP/abs/html/tabexpansion.html
+# The completion scripts are here:
+# /usr/share/bash-completion/bash_completion
+# /etc/bash_completion.d/
+
+# Open bugpage for a package in the debian sensible-browser
+bts bugs horae
+
+# Use gnome indexing software.
+tracker-search
+
+# See all the packages implemented in the Lisp programming language.
+debtags search "implemented-in::lisp"
+axi-cache search --all implemented-in::lisp
+
