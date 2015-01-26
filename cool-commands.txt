@@ -90,6 +90,9 @@ bash env.sh 2> err_log.txt
 # Send stdout and stderr to text file
 bash env.sh &> full_log.txt
 
+# If you want to pipe stdout and stderr together:
+command >/dev/null |& grep "something"
+
 # Return all lines containing "kim_api" (case insensitive) and ending with .f90
 grep -ir "kim_api" . --include=*.f90
 
@@ -719,6 +722,13 @@ unity --reset & disown
 # Generate 4-word passphrase
 shuf --head-count=4 /usr/share/dict/words
 
+# if you install dictionaries-common,
+# you may need to run
+sudo dpkg-reconfigure dictionaries-common
+# or
+sudo select-default-wordlist
+# to make sure /usr/share/dict/words isn't a broken symlink pointing to /etc/dictionaries-common/words
+
 # See running jobs
 lpstat
 # List printers
@@ -1067,6 +1077,10 @@ dpkg -L handbrake-gtk | grep bin
 /usr/bin
 /usr/bin/ghb
 dpkg --listfiles handbrake-gtk | grep bin
+
+# If you want to get really fancy, you can search in the .desktop file to see what gets executed.
+grep "Exec" $(dpkg -L handbrake-gtk | grep desktop)
+# Warning: this will hang if there are no .desktop files associated with the package.
 
 # List the files installed by a .deb file
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
@@ -1516,7 +1530,8 @@ cat Sn_Ni3Sn4_nano_02-21-2013.002 | tail -n +18 | column -t | less
 # Run through a bunch of text files like cat, but with the filenames visible
 tail --lines=+1 *.txt | less
 
-# Diff two man pages by running one into stdout and the other to stderr. (Not named pipes, as far as I can tell.)
+# Diff two man pages by running one into stdout and the other to stderr.
+# (Not the same as named pipes, as far as I can tell.)
 man chattr > 1; man chmod > 2; diff -u 1 2 | less
 
 # Watch a file for changes
@@ -2374,6 +2389,9 @@ xclip -selection clipboard -t image/png -o > out.png
 
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
+# Note: purge will note remove files in /home/, only files in /etc/.
+# "Configuration files residing in ~ are not usually affected by this command."
+# https://help.ubuntu.com/community/AptGet/Howto
 
 # Report a debian bug
 reportbug
@@ -2538,6 +2556,8 @@ sudo apt-get install iceweasel=30.0~b5-2
 
 # Install a package from a specific distribution.
 apt-get -t squeeze-backports install freecad
+# The -t can go afterward, too.
+apt-get install -t wheezy-backports pcmanfm
 
 # See installed linux kernel package
 apt-cache policy linux-headers-$(uname -r)
@@ -2788,10 +2808,19 @@ scrot --select
 scrot -s
 
 # Diagnose inotify problems.
+# If you can run
+tail -f any-file.txt
+# then your inotify is not exhausted.
+# Look at these for the limits:
 sysctl fs.inotify.max_user_watches
 cat /proc/sys/fs/inotify/max_user_watches
 cat /proc/sys/fs/inotify/max_user_instances
 cat /proc/sys/fs/inotify/max_queued_events
+
+# http://unix.stackexchange.com/questions/15509/whos-consuming-my-inotify-resources
+# See what processes are doing it.
+find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print | less
+ps -p $(find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print 2> /dev/null | sed -e 's/^\/proc\/\([0-9]*\)\/.*/\1/') | less
 
 # https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
 # Increase number of watches temporarily.
