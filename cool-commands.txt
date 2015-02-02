@@ -126,7 +126,17 @@ rename 's/ //g' *
 
 # Using the system dictionary:
 grep -i '^s.*m.*b' /usr/share/dict/words # this is how samba was named
+
+# Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
+
+# words that end in "gry"
+grep -i '.*gry$' /usr/share/dict/words
+# For the record, here's what I got:
+# angry
+# demagogry
+# hungry
+
 
 # Debugging segfaults in C:
 printf("Line %d reached.\n",__LINE__);//debug
@@ -149,7 +159,9 @@ du | sort -nr # quick version
 du -k --max-depth=1 /home | sort -nr
 
 mkvextract tracks movie5.mkv 2:audio_track.ac3
+
 ls --almost-all --format=single-column
+
 sudo chmod -R +rwx .mozilla
 !! # repeat previous command
 
@@ -162,11 +174,16 @@ source .bashrc # make bash re-read modified .bashrc file
 
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
 
+# For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
+apt-cache search --names-only '^gnash$'
+
+# Find package descriptions that are longer than 4000 characters.
+apt-cache search '.{4000,}'
+
 # Similar thing for all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
 dcontrol warsow | less
 # Show the release for the package package.
 dcontrol --show-suite warsow | less
-
 
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
@@ -416,6 +433,8 @@ chmod +x zab.py
 # Make a file writeable (defaults to current user)
 chmod +w myfile.txt
 chmod u+w myfile.txt
+# Make file read-only.
+chmod -w myfile.txt
 
 # In python interpretive shell
 globals() locals() vars() dir()
@@ -448,6 +467,11 @@ print '{:e}'.format(2**32)
 print("%e" % 2**32)
 print('{:e}'.format(2**32))
 reduce(lambda x, y: x*y, [1, 2, 3, 4, 5])
+
+# Very hard to get help on * operator, e.g.
+# print(*mylist)
+
+builtins.int.bit_length()
 
 # Profile a python script
 python -m cProfile script.py > profile.log
@@ -1183,8 +1207,6 @@ find . -depth|rename 's/\ /_/g'
 # Extract embedded images from a pdf and dump them into the current directory
 pdfimages -j mypdf ./
 
-# For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
-apt-cache search --names-only '^gnash$'
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
@@ -1308,9 +1330,19 @@ echo $$
 # Same as above except for subshells.
 echo $BASHPID
 
-# Find out the parent process id of a process.
-pgrep SpiderOak
+# Show full-format listing, including parent process id of a process (PPID).
 ps -f 29478
+# Show full-format listing if all you know is part of the name.
+ps -f $(pgrep SpiderOak)
+# Note: this searches by invoked name,
+# not actual executable, so if you ran "editor myfile.txt",
+# you have to run
+pgrep editor
+# not "pgrep vim" or "pgrep emacs".
+# Similarly,
+pgrep x-www-browser
+# not "pgrep firefox" or "pgrep chromium".
+# Unfortunately, only the proc/$PID/exe can tell you that.
 
 # Compress and tar a directory called 'meansum'
 tar -czvf meansum.tgz meansum/
@@ -1393,11 +1425,11 @@ echo  "DISPLAY=$DISPLAY xmessage Go to bed\!" | at 22:30
 # Editing text file 'in place' (i.e. without having to make the temp file on your own)
 # http://unix.stackexchange.com/questions/11067/is-there-a-way-to-modify-a-file-in-place
 # Remove all lines containing foo:
-sed -i '/foo/d' myfile
+sed --in-place '/foo/d' myfile
 # Keep all lines containing foo:
-sed -i '/foo/!d' myfile
+sed --in-place '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
-sed -i.bak -e 's/hello/jello/' hello.txt
+sed --in-place=.bak --expression='s/hello/jello/' hello.txt
 
 # SSH without a password (using ssh keys). You only need to do this once.
 ssh-keygen -t rsa
@@ -1613,6 +1645,7 @@ ps aux | grep bash | less
 1000     11004  0.0  0.1  10172  6552 pts/2    Ts+  15:01   0:00 /bin/bash
 # 'kill' the process (actually bring it back to life):
 kill -SIGCONT 11004
+# Maybe `kill(1)` should be called `signal(1)` instead.
 
 # Output multiline strings
 echo -e '1\n2'
@@ -1740,6 +1773,8 @@ sudo init 0
 sudo halt
 # Rebooting
 sudo shutdown -r now
+# If you are SSH'd into the machine,
+# you will be prompted for the hostname.
 
 # See what the time is anywhere in the world, interactively.
 tzselect
@@ -2081,7 +2116,7 @@ netstat -tulpn | grep :80
 fuser 80/tcp
 lsof -i :80 | grep LISTEN
 
-# Look at process id 2720
+# Look at executable running process id 2720
 ls -l /proc/2720/exe
 # lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
 
@@ -2704,9 +2739,11 @@ wine program.exe
 winedbg program.exe
 # Uninstalling wine software.
 wine uninstaller
+# Using winetricks to install VB6 runtime.
+wintricks vb6run
 
-TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
-TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
+#TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
+#TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
 
 # URL for tracking a UPS package:
 http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
@@ -2958,6 +2995,7 @@ dict sinecure
 dict factotum
 dict synecdoche
 dict scrofulous
+dict 'sine qua non'
 # Surprisingly good for physics terminology.
 dict 'ab initio'
 dict adiabatic
@@ -2995,4 +3033,3 @@ tracker-search
 # See all the packages implemented in the Lisp programming language.
 debtags search "implemented-in::lisp"
 axi-cache search --all implemented-in::lisp
-
