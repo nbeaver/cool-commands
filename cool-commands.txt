@@ -74,9 +74,13 @@ grep --recursive "kim-str" .
 time grep "hi"
 ls /usr/bin | grep "csound"
 nano | ls | grep "ann"
-# Grepping raw strings without regular expressions
+# Grepping literal, raw strings without having to escape everything.
 grep -F
 grep --fixed-strings
+
+grep -rF '[*'
+# instead of
+grep -r '\[\*'
 git diff --word-diff | grep -F '[-[ ]-]{+[*]+}'
 
 find | grep NBMAX *.F90
@@ -145,6 +149,7 @@ print*,__FILE__,__LINE__
 
 # GNU debugger (gdb) basics
 gdb ./vc_forces_numer_deriv
+set logging on
 r
 bt
 frame 2
@@ -879,6 +884,7 @@ kill -9 21213 # sends unblockable KILL signal to kernel
 
 # Kill a process, wait a second, then see if it's still running
 kill -3 4782 && sleep 1 && ps aux | grep 4782
+kill 3105; sleep 1; ps -p 3105
 
 # Find connected program
 netstat -tulanp | less
@@ -1954,14 +1960,30 @@ echo "Hi" | xsel -b
 echo "Hi" | xsel
 # Clear xsel clipboard
 xsel -c -p; xsel -c -s; xsel -c -b;
-kill 3105; sleep 1; ps -p 3105
+
 
 # Copy working directory to clipboard
-pwd | tr -d '\n' | xsel -b
+pwd | xsel -b
 # Copy working directory to clipboard, no trailing newline
 pwd | tr -d '\n' | xsel -b
 # Alternative method; shell-dependent (non-portable)
 echo -n $(pwd) | xsel -b
+
+# Copy a file to the clipboard.
+cat file.txt | xsel -b
+xclip file.txt
+
+# Copy SSH public key to clipboard with xclip.
+xclip -sel clip < ~/.ssh/id_rsa.pub
+
+# After copying an image to the clipboard,
+# save it to a file with xclip.
+xclip -selection clipboard -t image/png -o > out.png
+# Requires xclip 81 or later.
+# Sometimes works with image/jpeg (acroread snapshots), sometimes not (gnuplot wxt).
+# Have not seen it work with image/tiff yet.
+# http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
+# http://ubuntuforums.org/showthread.php?t=1335075
 
 # Lookup information about a website or ip address
 whois iit.edu
@@ -2251,6 +2273,19 @@ ps aux | grep comsol
 3. Attach gdb to the process by process id (may need to be root).
 sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher 503
 4. Once in gdb, press c to continue execution of program.
+# Another way to attach to a running process.
+gdb -p 503
+
+# Debugging a python process with gdb.
+# https://wiki.python.org/moin/DebuggingWithGdb
+sudo apt-get install gdb python2.7-dbg
+gdb python <pid of running process>
+(gdb) py-bt
+(gdb) info threads
+(gdb) py-list
+(gdb) thread apply all py-list
+(gdb) pystack
+(gdb) pystackv
 
 # Filter out control sequences like backspace, return, etc.
 cat myfile.txt | col -b > filtered.txt
@@ -2410,17 +2445,6 @@ wdiff -3 a.txt b.txt
 # List all fonts
 fc-list
 
-# Copy SSH public key to clipboard
-xclip -sel clip < ~/.ssh/id_rsa.pub
-
-# After copying an image to the clipboard,
-# save it to a file with xclip.
-xclip -selection clipboard -t image/png -o > out.png
-# Requires xclip 81 or later.
-# Sometimes works with image/jpeg (acroread snapshots), sometimes not (gnuplot wxt).
-# Have not seen it work with image/tiff yet.
-# http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
-# http://ubuntuforums.org/showthread.php?t=1335075
 
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
@@ -3024,7 +3048,7 @@ complete -c which follow
 # /usr/share/bash-completion/bash_completion
 # /etc/bash_completion.d/
 
-# Open bugpage for a package in the debian sensible-browser
+# Open bugpage for a package in the debian sensible-browser.
 bts bugs horae
 
 # Use gnome indexing software.
@@ -3033,3 +3057,6 @@ tracker-search
 # See all the packages implemented in the Lisp programming language.
 debtags search "implemented-in::lisp"
 axi-cache search --all implemented-in::lisp
+
+# Get useful debugging info from /proc/ pseudo-filesystem.
+tail --lines=+1 /proc/27870/{status,syscall,sched,io,limits,maps} > proc-info.txt
