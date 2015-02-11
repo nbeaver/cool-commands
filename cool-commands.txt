@@ -81,6 +81,7 @@ grep --fixed-strings
 grep -rF '[*'
 # instead of
 grep -r '\[\*'
+
 git diff --word-diff | grep -F '[-[ ]-]{+[*]+}'
 
 find | grep NBMAX *.F90
@@ -96,6 +97,10 @@ bash env.sh &> full_log.txt
 
 # If you want to pipe stdout and stderr together:
 command >/dev/null |& grep "something"
+# For example:
+wget --timeout=3 --tries=1 --spider --no-check-certificate http://google.com |& grep 'HTTP request'
+# Shorter version:
+wget --spider http://google.com |& grep 'HTTP request\|Location:'
 
 # Return all lines containing "kim_api" (case insensitive) and ending with .f90
 grep -ir "kim_api" . --include=*.f90
@@ -185,9 +190,10 @@ apt-cache search --names-only '^gnash$'
 # Find package descriptions that are longer than 4000 characters.
 apt-cache search '.{4000,}'
 
-# Similar thing for all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
+# Search for a package in all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
 dcontrol warsow | less
-# Show the release for the package package.
+
+# Show the release for the package.
 dcontrol --show-suite warsow | less
 
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
@@ -361,7 +367,8 @@ date --date='7 days' +%m/%d/%Y
 grep -r "string" . # recursively search all files for string
 
 # search man pages
-man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l # returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l
+# returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
 
 # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
 git grep -i rhubarb $(git rev-list --all)
@@ -586,13 +593,17 @@ patch < patch.txt
 # To revert the patch
 patch -R < patch.txt
 
-# find out what kind of file all the stuff in the directories below are
-find . -type f -exec file '{}' \;
+# Find out what kind of files are in the current directory and its subdirectories.
+find . -type f -exec file '{}' \; | less
+# Reference: man find or https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
 
-# find broken symlinks in directories below (test -r sees if the file is readable)
+# Execute /usr/bin/file on every file below current directory
+find . -exec file '{}' + | less
+
+# Find broken symlinks in directories below (test -r sees if the file is readable)
 find ./ -type l ! -exec test -r {} \; -print
 
-# index all files in a directory with recoll
+# Index all files in a directory with recoll
 find ./ -print -exec recollindex -i '{}' \;
 
 # Much like any other find exec command, but more efficient
@@ -692,9 +703,6 @@ sudo regionset /dev/dvd4
 
 # Capture a disc image
 cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
-
-# Execute 'file' on every file below current directory
-find . -exec file '{}' + | less
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -1031,8 +1039,8 @@ echo $0
 
 # Change the default shell to bash if your username is nbeaver
 chsh --shell /bin/bash nbeaver
-# Or, using which:
-chsh --shell $(which bash) nbeaver
+# Or, more automatically:
+chsh --shell $(which bash) $USER
 # Note that chsh will only work if you are in /etc/passwd.
 # Otherwise you will have to edit .profile and add this.
 export SHELL=/bin/bash
@@ -1194,6 +1202,12 @@ crontab -u username -l | less
 # List your crontab
 crontab -u $USER -l | less
 
+# Temporarily stopping /usr/sbin/cron process.
+sudo /etc/init.d/cron stop
+# Restart it.
+sudo /etc/init.d/cron start
+# TODO: why is this not called crond?
+
 # List your incrontab
 incrontab -u $USER -l
 # if you get this:
@@ -1212,7 +1226,6 @@ find . -depth|rename 's/\ /_/g'
 
 # Extract embedded images from a pdf and dump them into the current directory
 pdfimages -j mypdf ./
-
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
@@ -1372,8 +1385,10 @@ pdffonts *.pdf
 # Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
 pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 
-# Get return (error) value of last command
+# Get return (error) value of last command.
 echo $?
+# Get return (error) values of all commands from last pipeline.
+echo ${PIPESTATUS[@]}
 
 # Annoying KDE problems
 # https://bugs.kde.org/show_bug.cgi?id=120421
@@ -1586,6 +1601,7 @@ v
 
 # Diff gzipped files (diffuse is my favorite graphical diff at the moment).
 diffuse <(zcat file1.gzip) <(zcat file2.gzip)
+# Uses process substitution.
 
 # IRC chat command to register nickname
 /msg NickServ register [password] email@email-provider.com
@@ -1829,8 +1845,11 @@ rm -- *
 
 # Escape latex special characters (reserved characters)
 echo "55% increase" | pandoc -t latex
+# 55\% increase
 echo '~ # $ % ^ & _ { } < > \ |' | pandoc -t latex
+# \textasciitilde{} \# \$ \% \^{} \& \_ \{ \} \textless{} \textgreater{} ~\textbar{}
 echo '~ # $ % ^ & _ { } < > \ |' | pandoc -t latex --listings
+# \textasciitilde{} \# \$ \% \^{} \& \_ \{ \} \textless{} \textgreater{} ~\textbar{}
 
 # Convert files using pandoc, e.g. markdown to latex
 pandoc -f markdown -t latex myfile.markdown  > myfile.tex
@@ -1839,6 +1858,7 @@ pandoc -f markdown -t latex myfile.markdown  > myfile.tex
 shopt extglob
 # Turn them on
 shopt -s extglob
+
 # Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
 mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
 
@@ -1992,7 +2012,10 @@ whois iit.edu
 tr -d '\n'
 
 # Get the last entry in history
-history | tail -n2 | head -n1| cut -c 8-
+history |
+	tail -n2 | # Get last two entries.
+	head -n1 | # Get second to last entry, since this command will be the last entry.
+	cut -c 8-  # The first 8 characters of the history file are the command number, e.g. "42893  ls"
 
 # Get the 2nd line of a bunch of files.
 awk 'FNR==2' * > out.txt
@@ -2393,6 +2416,10 @@ nameserver 176.58.120.112
 
 # Make a directory with the format yyyy-mm-dd of today's date
 mkdir $(date -I)
+# Note: -I is deprecated.
+# https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
+# This does the same thing, but takes much longer to type:
+mkdir $(date +"%Y-%m-%d")
 
 # Make a popup message
 gdialog --msgbox "Test"
@@ -2805,6 +2832,18 @@ id
 which vim
 # Find all the vims.
 which -a vim
+# Note: it is important to find out if your shell actually uses the binary.
+# For example,
+which echo
+# returns "/bin/echo", but
+type echo
+# returns "echo is a shell builtin".
+# The echo(1) manpage mentions this:
+#     NOTE:  your shell may have its own version of echo, which usually supersedes
+#     the version described here.  Please refer to your shell's documentation for
+#     details about the options it supports.
+# http://askubuntu.com/questions/27355/how-do-i-get-help-for-echo-or-other-bash-commands
+
 # Follow links recursively.
 namei /usr/bin/vim
 # Example output.
@@ -3060,3 +3099,7 @@ axi-cache search --all implemented-in::lisp
 
 # Get useful debugging info from /proc/ pseudo-filesystem.
 tail --lines=+1 /proc/27870/{status,syscall,sched,io,limits,maps} > proc-info.txt
+
+# Time of last reboot.
+who -b
+last reboot
