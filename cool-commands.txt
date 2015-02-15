@@ -104,6 +104,7 @@ wget --spider http://google.com |& grep 'HTTP request\|Location:'
 
 # Return all lines containing "kim_api" (case insensitive) and ending with .f90
 grep -ir "kim_api" . --include=*.f90
+grep -ir 'discrepancy' /var/log/messages | less
 
 # Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
@@ -125,16 +126,16 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
+
 mv filename.{old,new} # Quick file rename
-# Similarly, can make a copy of a copy to work on the live.k
+
+# Similarly, can make a copy of a copy to work on the live.
 cp filename.{,.old}
 # http://www.shell-fu.org/lister.php?id=46
 
-# Rename files by removing spaces entirely.
-rename 's/ //g' *
-
 # Using the system dictionary:
-grep -i '^s.*m.*b' /usr/share/dict/words # this is how samba was named
+grep -i '^s.*m.*b' /usr/share/dict/words
+# this is how samba was named: TODO: source
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
@@ -146,9 +147,8 @@ grep -i '.*gry$' /usr/share/dict/words
 # demagogry
 # hungry
 
-
 # Debugging segfaults in C:
-printf("Line %d reached.\n",__LINE__);//debug
+printf("Line %d reached.\n",__LINE__); /* debug */
 # Debugging segfaults in Fortran:
 print*,__FILE__,__LINE__
 
@@ -168,8 +168,10 @@ du | sort --numeric-sort --reverse
 du | sort -nr # quick version
 du -k --max-depth=1 /home | sort -nr
 
+# Extract audio tracks from an mkv file.
 mkvextract tracks movie5.mkv 2:audio_track.ac3
 
+# Show list of all files except . and .. in a single column.
 ls --almost-all --format=single-column
 
 sudo chmod -R +rwx .mozilla
@@ -630,6 +632,8 @@ echo $(yes hurpaflerp)
 
 # Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
+# Even better, spider the actual file before streaming it.
+wget --spider https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 
 # Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
@@ -984,7 +988,7 @@ cat -v
 echo 'Hello, world!' | espeak --stdin
 
 # List to your computer say "Ping!" every 2 seconds
-ping -i 2 google.com | sed -u 's/.*/ping/' | espeak
+ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 # Inspired by a story from the author of the ping utility, Mike Muuss.
 # http://ftp.arl.mil/mike/ping.html
 # Similar command:
@@ -996,7 +1000,7 @@ ping -f -i 1 8.8.8.8
 mtr -t
 # Press 'p' in mtr to pause.
 
-# Generate random alphanumeric password
+# Generate random 30 character alphanumeric password
 strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo
 
 # Get information about zip files in current directory
@@ -1010,12 +1014,11 @@ fcrackzip -uvDp /usr/share/dict/words platelet.zip
 fcrackzip -u -l 3-4 geek.zip
 time fcrackzip -u -l 3-4 geek.zip
 
-
-PASSWORD FOUND!!!!: pw == geek
-
-real	0m49.633s
-user	0m1.916s
-sys	0m2.236s
+# PASSWORD FOUND!!!!: pw == geek
+# 
+# real	0m49.633s
+# user	0m1.916s
+# sys	0m2.236s
 
 # Do something for each line of a file
 while read line; do
@@ -1031,13 +1034,12 @@ nohup redshift -l 41:87 & disown
 # Allow everyone to read a file
 sudo chmod a+r file
 
-# Find out what shell you're using
-# This is what the default shell is supposed to be
+# The default shell:
 echo $SHELL
-# This is the actual shell you're running inside (name of the running process)
+# The actual shell you're running inside (name of the running process):
 echo $0
 
-# Change the default shell to bash if your username is nbeaver
+# Change the login shell to bash if your username is nbeaver.
 chsh --shell /bin/bash nbeaver
 # Or, more automatically:
 chsh --shell $(which bash) $USER
@@ -1068,44 +1070,44 @@ dpkg -s gnash
 dpkg -S $(which gnash)
 dpkg --search $(which gnash)
 # May take a long time to do the disk access, though.
-    $ time dpkg -S /usr/sbin/NetworkManager
-    network-manager: /usr/sbin/NetworkManager
+#   $ time dpkg -S /usr/sbin/NetworkManager
+#   network-manager: /usr/sbin/NetworkManager
 
-    real	0m54.106s
-    user	0m0.564s
-    sys	0m0.268s
+#   real	0m54.106s
+#   user	0m0.564s
+#   sys	0m0.268s
 # Same search, but much faster.
 dlocate /usr/share/dict/words
 dlocate libc.so.6
 
-    $ time dpkg -S /usr/share/dict/words
-    diversion by dictionaries-common from: /usr/share/dict/words
-    diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
-    dictionaries-common, wamerican: /usr/share/dict/words
-    
-    real	0m0.395s
-    user	0m0.300s
-    sys	0m0.088s
-    $ time dlocate /usr/share/dict/words
-    wamerican: /usr/share/dict/words
-    dictionaries-common: /usr/share/dict/words
-    diversion by dictionaries-common from: /usr/share/dict/words
-    diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
-    
-    real	0m0.054s
-    user	0m0.016s
-    sys	0m0.016s
+#   $ time dpkg -S /usr/share/dict/words
+#   diversion by dictionaries-common from: /usr/share/dict/words
+#   diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
+#   dictionaries-common, wamerican: /usr/share/dict/words
+#   
+#   real	0m0.395s
+#   user	0m0.300s
+#   sys	0m0.088s
+#   $ time dlocate /usr/share/dict/words
+#   wamerican: /usr/share/dict/words
+#   dictionaries-common: /usr/share/dict/words
+#   diversion by dictionaries-common from: /usr/share/dict/words
+#   diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
+#   
+#   real	0m0.054s
+#   user	0m0.016s
+#   sys	0m0.016s
 # Same search, but also include uninstalled packages.
 apt-file search $(which gnash)
 apt-file search libc.so.6
 
-    $ time apt-file search /usr/share/dict/words
-    dictionaries-common: /usr/share/dict/words
-    wamerican: /usr/share/dict/words
-    
-    real	0m2.820s
-    user	0m2.812s
-    sys	0m0.228s
+#   $ time apt-file search /usr/share/dict/words
+#   dictionaries-common: /usr/share/dict/words
+#   wamerican: /usr/share/dict/words
+#   
+#   real	0m2.820s
+#   user	0m2.812s
+#   sys	0m0.228s
 
 # Guess the executable or command associated with a package.
 # This actually lists all the files installed, so we need to grep out the executables.
@@ -1221,8 +1223,11 @@ rm -rf ~/.cache/sessions
 # Change all spaces in file names into underscores
 rename 's/\ /_/g' *
 
+# Rename files by removing spaces entirely.
+rename 's/ //g' *
+
 # Change all spaces in file names into underscores, even files with weird names
-find . -depth|rename 's/\ /_/g'
+find . -depth | rename 's/\ /_/g'
 
 # Extract embedded images from a pdf and dump them into the current directory
 pdfimages -j mypdf ./
@@ -1261,7 +1266,7 @@ auto-apt run ./configure
 grep -v '^#\|^$'
 
 # Copy hidden files (dotfiles)
-cp -r test/.[a-zA-Z0-9]* target
+cp -r test/.[a-zA-Z0-9]* target_directory
 
 # Find all symbolic links in a folder
 find ~/Dropbox -type l -ls
@@ -1330,11 +1335,13 @@ iwconfig  wlan0 essid 'fermilevel'
 iwconfig  wlan0 key 1234567890
 ifconfig  wlan0 192.168.1.2
 
-# Search for a particular process by name
+# Search for a particular process by name.
 ps u -C duplicity
 
-# Recently installed packages
+# Recently installed packages.
 zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
+# Full list of recently installed packages.
+zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort -r | less
 
 # Search for all directories containing 'doc' in /usr/share except the ones in /usr/share/doc
 find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print
@@ -1379,7 +1386,7 @@ ls -d $PWD/*
 # Use a text file as a command line argument
 w3m $(<temp.txt)
 
-# Get the fonts used by a pdf; useful to determine if it's ocr'ed or not.
+# Get the fonts used by a pdf; useful to determine if it's OCR'ed or not.
 pdffonts *.pdf
 
 # Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
@@ -1414,6 +1421,10 @@ iostat
 # Show with extended statistics in kilobytes per second with device utilization info and omit devices unused,
 # repeating every second.
 iostat -xkdz 1
+# -x     Display extended statistics.
+# -k     Display statistics in kilobytes per second.
+# -d     Display the device utilization report.
+# -z     Tell iostat to omit output for any devices for which there was no activity during the sample period.
 
 # Show mounted drives in near little table
 mount | column -t
@@ -1434,6 +1445,7 @@ echo "Done" | at now + 5 minutes
 at now + 5 minutes
 warning: commands will be executed using /bin/sh
 at> echo "Done"
+# Use Ctrl-D to finish.
 at> <EOT>
 # See 'at' commands
 atq
@@ -1447,7 +1459,7 @@ echo  "DISPLAY=$DISPLAY xmessage Go to bed\!" | at 22:30
 # http://unix.stackexchange.com/questions/11067/is-there-a-way-to-modify-a-file-in-place
 # Remove all lines containing foo:
 sed --in-place '/foo/d' myfile
-# Keep all lines containing foo:
+# Keep all lines containing foo but remove the lines that don't:
 sed --in-place '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
 sed --in-place=.bak --expression='s/hello/jello/' hello.txt
@@ -1540,7 +1552,8 @@ ffmpeg -i in.ext out.mp3
 ffmpeg -v 5 -y -i input.m4a -acodec libmp3lame -ac 2 -ab 192k output.mp3
 
 # See open files in home directory
-lsof /home/nathaniel
+lsof ~
+lsof $HOME
 
 # Start less at the first instance of a pattern
 less -p ghemical /var/log/dpkg.log
@@ -1647,14 +1660,12 @@ xprop _NET_WM_PID
 xprop WM_CLASS
 # Search for the process number, e.g. 1400
 ps -p 1400
-grep -ir 'discrepancy' /var/log | less
 
 # Determine more info about a window
 xwininfo
 
 # focus an application based on name, e.g. banshee
 wmctrl -a banshee
-
 
 # Show display you're using (e.g. :0.0)
 xdpyinfo | grep 'name of display:'
@@ -1691,18 +1702,19 @@ sudo service apport stop # Didn't help.
 sudo rm /var/crash/* # This works!
 sudo vim /etc/default/apport # This might be even better if the error reporting continues to be annoying.
 
-# Using your very own text editor even if someone's VISUAL is set to something else and you don't want to mess it up.
+# Using your very own text editor even if someone's VISUAL is set to something else
+# and you don't want to change it.
 env VISUAL=pico crontab -e
 
 # Find symlinks to a file. From http://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
-find -L /haystack -xtype l -samefile /target
+find -L /haystack -xtype l -samefile name-of-file
 
 # Get a listed of sorted email addresses from a text file. From http://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
 cat raw.txt | egrep -o "[^[:space:]]+@[^[:space:]]+" | tr -d "<,>" | sort > sorted-email-list.txt
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
 grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})' file.html | sort | uniq > sorted-email-list.txt
 
-# Open that connection editor that normally you click on the wifi icon to access.
+# Open that network manager connection editor that normally you click on the wifi icon to access.
 nm-connection-editor
 
 # Readline wizardry:
@@ -1760,7 +1772,7 @@ speedtest-cli
 # http://firstin-lastout.com/2013/07/how-to-test-wifi-speed/
 iperf -s -u -i1
 iperf -c 192.168.2.1 -u -i1 -l 1300 -b 100m -t 600
-# Replace 192.168.2.1 with router ip address.
+# Replace 192.168.2.1 with router ip address from route -n.
 
 # See the ARP (Address Resolution Protocol) table.
 arp
@@ -3103,3 +3115,5 @@ tail --lines=+1 /proc/27870/{status,syscall,sched,io,limits,maps} > proc-info.tx
 # Time of last reboot.
 who -b
 last reboot
+
+# TODO: command that crops png images if the background is all the same color, leaving only a small border.
