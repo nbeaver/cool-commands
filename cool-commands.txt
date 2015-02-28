@@ -6,6 +6,7 @@ sudo iwlist scanning | less
 xrandr
 # Reset screen resolution if another program goofs it up
 xrandr -s 1600x900
+xrand --size 1600x900
 # http://forums.debian.net/viewtopic.php?f=10&t=40955
 # Automatically turn on a second screen
 xrandr --output VGA --auto
@@ -52,6 +53,7 @@ alsamixer
 # Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
 speaker-test --device plug:front --channels 2 --test sine --frequency 100 # long version
+# You have to pause other sound playback for this to work.
 
 # Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
@@ -96,7 +98,7 @@ bash env.sh 2> err_log.txt
 bash env.sh &> full_log.txt
 
 # If you want to pipe stdout and stderr together:
-command >/dev/null |& grep "something"
+command > /dev/null |& grep "something"
 # For example:
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://google.com |& grep 'HTTP request'
 # Shorter version:
@@ -113,6 +115,7 @@ for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 
 # Rename all files starting with Ch so that they now end with .doc.
 rename -nv 's/$/.doc/' Ch*
+rename --no-act --verbose 's/$/.doc/' Ch*
 rename -v 's/$/.doc/' Ch*
 
 # Rename all files ending with .csv so that they end with .dat instead.
@@ -127,7 +130,7 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
 
-mv filename.{old,new} # Quick file rename
+mv filename.{old,new} # Quick file rename using brace expansion
 
 # Similarly, can make a copy of a copy to work on the live.
 cp filename.{,.old}
@@ -997,7 +1000,7 @@ ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
 # Observe where the packets are being dropped at the same time
-mtr -t
+mtr -t 8.8.8.8
 # Press 'p' in mtr to pause.
 
 # Generate random 30 character alphanumeric password
@@ -1177,6 +1180,8 @@ fusermount -u /path/to/mount/point
 
 # Get list of recently installed packages
 zcat --force /var/log/dpkg.log* | grep "\ install\ " | sort --reverse | less
+# Get a list of recently removed packages.
+zcat --force /var/log/dpkg.log* | grep "\ remove\ " | sort --reverse | less
 
 # TODO: get list of recently updated packages that works offline.
 
@@ -1432,8 +1437,20 @@ mount | column -t
 # Kill stopped jobs
 kill $(jobs -p)
 
-# Use a string as if it were a file
+# Use a string as if it were a file. Note that it add a newline at the end.
 cat <<< 'HI'
+md5sum <<< 'This is only a test.'
+cksum <<< 'This is only a test.'
+# Give length in bytes and CRC-32 checksum. http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/cksum.c
+# Although this is not necessary because these commands can read stdin, too.
+printf  'HI\n' | cat
+printf 'This is only a test.\n' | md5sum
+printf 'This is only a test.\n' | cksum
+# Python version.
+import(binascii)
+binascii.crc32
+import hashlib
+hashlib.
 
 # From here: http://mmb.pcb.ub.es/~carlesfe/unix/tricks.txt
 # let people in your group access folders without messing up file permissions (never do 'chmod g+x * -R'!)
@@ -1688,6 +1705,9 @@ echo '1
 
 # Convert fahrenheit to celsius
 units --terse 'tempF(212)' 'tempC'
+# This also works.
+printf 'tempF(212)\ntempC' | units -q
+
 # Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
 units -f '' -f ~/Dropbox/projects/units/my-units.dat
 
@@ -2337,6 +2357,8 @@ lsb_release -a
 
 # See one-letter macros definitions for LaTeX.
 texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G H I J K L M N O P Q R S T U V X Y Z
+# See the definition of the AA macro (for Angstroms).
+texdef AA
 
 # See all non-printing characters in a text file
 cat -A myfile.txt
@@ -2520,7 +2542,7 @@ Ctrl-Home
 # but keep it in same spreadsheet.
 # Then copy it over to a different spreadsheet.
 
-# Entering unicode on Linux
+# Entering unicode on Linux.
 # Insert ℃ (degrees Celsius)
 Ctrl-Shift-U 2103 <Enter>
 # Insert ° (degree symbol)
@@ -2641,6 +2663,8 @@ xbacklight -set 100
 gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
 # Keep up gnuplot with shell after running a script
 gnuplot script.gnuplot -
+# gnuplot command with just part of the file:
+gnuplot> plot "smy.001" every ::0::136 u 1:(log($2/$3)) w lp
 
 # Ways to prevent a package from being installed
 Synaptic → Package → Lock version.
@@ -3085,7 +3109,7 @@ dict permittivity
 
 # Installing skype on Debian
 # https://wiki.debian.org/skype
-# ~/src/shell/install-scripts/skype/install-skype.sh
+# ~/src/shell/utils/install-scripts/skype/install-skype.sh
 
 # See how bash does tab completion for a command, e.g. vim:
 complete -p vim
@@ -3117,3 +3141,9 @@ who -b
 last reboot
 
 # TODO: command that crops png images if the background is all the same color, leaving only a small border.
+
+# Find approximate matches to man pages.
+man $(whichman whicman)
+
+# Convert filetypes.
+iconv --from-code=ISO_8859-1 --to-code=UTF-8 latin-1.txt > utf-8.txt
