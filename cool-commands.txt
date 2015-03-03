@@ -96,6 +96,9 @@ bash compile.sh 2>&1 >/dev/null | less
 bash env.sh 2> err_log.txt
 # Send stdout and stderr to text file
 bash env.sh &> full_log.txt
+bash env.sh > full_log.txt 2>&1
+# This won't work.
+bash env.sh 2>&1 > full_log.txt
 
 # If you want to pipe stdout and stderr together:
 command > /dev/null |& grep "something"
@@ -2675,6 +2678,8 @@ sudo aptitude hold package-name
 
 # Install a specific package version
 sudo apt-get install iceweasel=30.0~b5-2
+sudo apt-get install recoll=1.17.3-2
+# e.g. "The following packages will be DOWNGRADED:"
 
 # Install a package from a specific distribution.
 apt-get -t squeeze-backports install freecad
@@ -2710,8 +2715,26 @@ man --html=x-www-browser man
 # Convert Excel file (xls) to CSV
 ssconvert -O 'separator=;' my-spreadsheet.xls out.csv
 
-# Convert all docx to pdf with libreoffice from the command line
-libreoffice --headless --convert-to pdf *.docx
+# Convert ODS to CSV.
+ssconvert --export-type=Gnumeric_Excel:xlsx2 in.ods out.xlsx
+
+# Convert all docx to pdf with LibreOffice from the command line
+soffice --convert-to pdf *.docx  --headless
+# "libreoffice is a shell script that sets up the environment and passes the command line arguments to the soffice.bin binary."
+# Note: other instances of LibreOffice must be closed. https://bugs.documentfoundation.org/show_bug.cgi?id=37531
+
+# Convert ODS (OpenDocument spreadsheet) file to Excel XLSX.
+soffice --convert-to xlsx mixture-target-mass.ods --headless
+# http://ask.libreoffice.org/en/question/2641/convert-to-command-line-parameter/
+# http://cgit.freedesktop.org/libreoffice/core/tree/filter/source/config/fragments/filters
+# Note: other instances of LibreOffice must be closed. https://bugs.documentfoundation.org/show_bug.cgi?id=37531
+
+# See output formats from unoconv(1).
+unoconv --show |& grep Excel
+unoconv --format ods --show |& less
+
+# Convert from ODS to Excel XLS.
+unoconv --format=xls --output=out.xls in.ods
 
 # Show ascii keycodes; press Ctrl-D to end.
 showkey -a
@@ -3147,3 +3170,26 @@ man $(whichman whicman)
 
 # Convert filetypes.
 iconv --from-code=ISO_8859-1 --to-code=UTF-8 latin-1.txt > utf-8.txt
+
+# See all available versions for a packages.
+rmadison recoll
+rmadison iceweasel
+aptitude versions recoll
+# https://unix.stackexchange.com/questions/39261/how-to-see-package-version-without-install
+
+# https://superuser.com/questions/132346/find-packages-installed-from-a-certain-repository-with-aptitude
+# List all origins for packages.
+apt-cache policy | sed -n 's/.*o=\([^,]\+\).*/\1/p' | uniq
+
+# List packages from an origin other than Debian.
+aptitude search "?installed?not(?origin(Debian))"
+
+# List installed backports to wheezy.
+aptitude search '?narrow(?installed,?archive(wheezy-backports))'
+# List installed packages not from stable branch.
+aptitude search "?narrow(?installed,?not(?archive(stable)))"
+# Show package name and candidate version.
+aptitude search -F "%p %V" "?narrow(?installed,?not(?archive(stable)))"
+# Show package name, candidate version, priority, section, and current state.
+aptitude search -F "%p %V %P %s %C" "?narrow(?installed,?not(?archive(stable)))" | less
+# http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s04s01.html
