@@ -133,6 +133,9 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
 
+# Rename folders starting with 2014 so that they start with 2015 instead.
+rename  's/2014/2015/' 2014*
+
 mv filename.{old,new} # Quick file rename using brace expansion
 
 # Similarly, can make a copy of a copy to work on the live.
@@ -252,6 +255,9 @@ cat file.html | wget --no-check-certificate --spider -nv -F -i -
 # Use wget to check for broken links in a remote webpage.
 wget --spider  -o wget.log  -e robots=off --wait 1 -r -p http://www.example.com
 # http://www.commandlinefu.com/commands/view/8234/check-broken-links-using-wget-as-a-spider
+wget --spider --execute robots=off --wait 1 --no-verbose --page-requisites https://en.wikipedia.org/wiki/Command-line_interface |& less
+# Note: this will take a while.
+# Note: this will only find broken internal links; it will not spider outward to check the external ones.
 
 # Download a local copy of the weather into a specified directory
 wget -p --convert-links -P ~/not_backed_up/weather-reports/chicago-weather/ 'http://forecast.weather.gov/MapClick.php?lat=41.8403395&lon=-87.61370110000001&site=all&smap=1&searchresult=Chicago%2C%20IL%2060616%2C%20USA'
@@ -304,6 +310,8 @@ done
 ps aux |grep athena
 pstree
 vmstat
+
+pstree -H $(pgrep athena) | less
 
 ps aux --sort=-%cpu # list processes using most CPU
 ps aux --sort=-%mem # list processes using most memory
@@ -997,8 +1005,9 @@ echo 'Hello, world!' | espeak --stdin
 ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 # Inspired by a story from the author of the ping utility, Mike Muuss.
 # http://ftp.arl.mil/mike/ping.html
-# Similar command:
+# Ping google.com instead, and use Mac OS X 'say' command:
 ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
+# https://news.ycombinator.com/item?id=8861819
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -2546,18 +2555,12 @@ Ctrl-Home
 # Then copy it over to a different spreadsheet.
 
 # Entering unicode on Linux.
-# Insert ℃ (degrees Celsius)
-Ctrl-Shift-U 2103 <Enter>
-# Insert ° (degree symbol)
-Ctrl-Shift-U b0 <Enter>
-# Insert α (alpha)
-Ctrl-Shift U 3b1 <Enter>
-# Insert β (beta)
-Ctrl-Shift U 3b2 <Enter>
-# Insert ₂ 
-Ctrl-Shift U 2082 <Enter>
-# Insert ® (registered trademark sign)
-Ctrl-Shift U ae <Enter>
+Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
+Ctrl-Shift-U b0   <Enter> # Insert ° (degree symbol)
+Ctrl-Shift-U 3b1  <Enter> # Insert α (alpha)
+Ctrl-Shift-U 3b2  <Enter> # Insert β (beta)
+Ctrl-Shift-U 2082 <Enter> # Insert ₂ 
+Ctrl-Shift-U ae   <Enter> # Insert ® (registered trademark sign)
 
 # Using zsync for downloads
 zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync
@@ -3193,3 +3196,6 @@ aptitude search -F "%p %V" "?narrow(?installed,?not(?archive(stable)))"
 # Show package name, candidate version, priority, section, and current state.
 aptitude search -F "%p %V %P %s %C" "?narrow(?installed,?not(?archive(stable)))" | less
 # http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s04s01.html
+
+printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
+# http://stackoverflow.com/questions/448126/lambda-functions-in-bash
