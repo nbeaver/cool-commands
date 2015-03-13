@@ -2564,7 +2564,7 @@ Ctrl-Shift-U ae   <Enter> # Insert ® (registered trademark sign)
 
 # Using zsync for downloads
 zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync
-# Do not do this! It will download the entire iso and then tell you it is a zsync file
+# Do not do this! It will download the entire iso and then tell you "Bad line - not a zsync file?"
 zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso
 
 # Using the venerable bc command
@@ -2855,8 +2855,8 @@ wine uninstaller
 # Using winetricks to install VB6 runtime.
 wintricks vb6run
 
-#TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
-#TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
+# TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
+# TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
 
 # URL for tracking a UPS package:
 http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
@@ -2943,7 +2943,7 @@ http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
 # Show a spinning icosahedron.
 ico -faces -sleep 0.05
 
-#TODO: find a command that lists installed packages that are available in debian unstable, but not debian stable.
+# TODO: find a command that lists installed packages that are available in debian unstable, but not debian stable.
 
 # Debug SpiderOak.
 # Takes a long time.
@@ -2992,7 +2992,7 @@ sudo sysctl -p
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 
-#TODO: figure out this gzip error
+# TODO: figure out this gzip error
 # gzip: MoO2 syn2 2014-11-14.elid: unknown suffix -- ignored
 
 python3 /usr/share/doc/python-acoustid/examples/aidmatch.py myfile.ogg myfile.mp3
@@ -3098,7 +3098,7 @@ sudo hddtemp /dev/sda
 # Hard drive temperature may not be associated with failure rates:
 # https://www.backblaze.com/blog/hard-drive-temperature-does-it-matter/
 
-#TODO: how to install --install-suggests packages after the package is already installed.
+# TODO: how to install --install-suggests packages after the package is already installed.
 # http://askubuntu.com/questions/556753/how-to-install-suggests-on-an-already-installed-package
 
 # Stream Google text-to-speech.
@@ -3196,6 +3196,7 @@ aptitude search -F "%p %V" "?narrow(?installed,?not(?archive(stable)))"
 # Show package name, candidate version, priority, section, and current state.
 aptitude search -F "%p %V %P %s %C" "?narrow(?installed,?not(?archive(stable)))" | less
 # http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s04s01.html
+# TODO: list packages with wheezy backports that aren't installed, but are installed on wheezy.
 
 printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
 # http://stackoverflow.com/questions/448126/lambda-functions-in-bash
