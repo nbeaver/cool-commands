@@ -186,9 +186,14 @@ ls --almost-all --format=single-column
 sudo chmod -R +rwx .mozilla
 !! # repeat previous command
 
-type rr # identify the kind of command rr is
-type -a rr # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
-# For example, type -a ls gives you both /bin/ls and whatever ls is aliased to, as it often is.
+type  # identify the kind of command rr is
+type -a ls # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
+# For example, `type -a ls` shows:
+# ls is aliased to `ls --color=auto'
+# ls is /bin/ls
+
+# See where the function `quote` was defined.
+shopt -s extdebug; declare -F quote; shopt -u extdebug
 
 source .bashrc # make bash re-read modified .bashrc file
 . .bashrc # make bash re-read modified .bashrc file
@@ -315,6 +320,12 @@ pstree -H $(pgrep athena) | less
 
 ps aux --sort=-%cpu # list processes using most CPU
 ps aux --sort=-%mem # list processes using most memory
+ps aux --sort=start_time # list processes from oldest to youngest
+
+# See start time of a particular process.
+ls -ld /proc/24088
+stat /proc/24088
+
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
 PROCESS STATE CODES
@@ -698,12 +709,37 @@ sudo killall upowerd && sudo /usr/lib/upower/upowerd & disown
 cat /proc/cpuinfo
 less /proc/cpuinfo
 
+# Show what the disks and partitions are, e.g. /dev/sda and /dev/sda1 /dev/sda2.
+sudo fdisk -l
+# Disk /dev/sda: 512.1 GB, 512110190592 bytes
+# 255 heads, 63 sectors/track, 62260 cylinders, total 1000215216 sectors
+# Units = sectors of 1 * 512 = 512 bytes
+# Sector size (logical/physical): 512 bytes / 4096 bytes
+# I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+# Disk identifier: 0x0008fe9b
+# 
+#    Device Boot      Start         End      Blocks   Id  System
+# /dev/sda1   *        2048   967141375   483569664   83  Linux
+# /dev/sda2       967143422  1000214527    16535553    5  Extended
+# Partition 2 does not start on physical sector boundary.
+# /dev/sda5       967143424  1000214527    16535552   82  Linux swap / Solaris
+
+# Another easy way to see disks and partitions; does not require sudo.
+lsblk
+# NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+# sda      8:0    0   477G  0 disk 
+# ├─sda1   8:1    0 461.2G  0 part /
+# ├─sda2   8:2    0     1K  0 part 
+# └─sda5   8:5    0  15.8G  0 part [SWAP]
+# sr0     11:0    1  1024M  0 rom  
+
 # Show disk logical name (e.g. /dev/sda), model number, vendor, serial, and size.
 sudo lshw -class disk
 # Show disk model number, serial number, firmware revision, configuration, rpm ("nominal rotation rate"), and enabled features.
 sudo hdparm -I /dev/sda
 # Show disk model number, serial number, firmware revision, size, and SMART disk health data.
 sudo smartctl -a /dev/sda
+sudo smartctl --all /dev/sda
 
 # Show how much RAM there is.
 sudo dmidecode --type memory | grep -i size
@@ -761,7 +797,7 @@ grep 'rtl8192\|wlan' |
 
 # Detach process from gnome-terminal
 Ctrl-Z # Access shell prompt
-bg     # Put job in background
+bg     # Put job in background, but let it keep running.
 # Note job number, or use
 jobs
 disown -h %1 # Detach job 1 from current terminal
@@ -1400,6 +1436,10 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 # Show full path of a file with ls
 ls -d $PWD/*
 
+# Show only directories.
+ls -d */
+# https://www.reddit.com/r/bash/comments/2z4rzo/why_ls_d_and_not_ls_d/
+
 # Use a text file as a command line argument
 w3m $(<temp.txt)
 
@@ -1426,6 +1466,11 @@ ssh -X nbeaver@rontgen.phys.iit.edu
 
 # Execute a graphical program over SSH (in this case, gedit)
 dbus-launch gedit
+
+# If you're using vnc over a slow connection, this is far better than X over SSH.
+vncviewer -compresslevel 9 -via iit@id1.mr.aps.anl.gov 164.54.244.13
+# For really crummy connections, reduce the quality.
+vncviewer -compresslevel 9 -quality 0 -via iit@id1.mr.aps.anl.gov 164.54.244.13
 
 # One way to check iowait,
 # although this isn't very useful on multicore systems.
@@ -1510,6 +1555,9 @@ ps aux | grep ssh
 # Example:
 nbeaver   7395  0.0  0.0   4756   572 ?        Ss   Oct18   0:00 /usr/bin/ssh-agent /usr/bin/dbus-launch --exit-with-session x-session-manager
 nbeaver  16870  0.0  0.1   8180  1480 ?        S    22:01   0:00 sshd: nbeaver@pts/1
+
+# Restart the ssh daemon.
+sudo /etc/init.d/ssh restart
 
 # Disable system speaker in X:
 xset -b
@@ -1877,6 +1925,8 @@ nmcli dev wifi | sort -k1.93nr
 # More robust, cutting out the * at the beginning that marks the current connection and then going to the 6th field,
 # which is the signal strength percentage.
 nmcli dev wifi | cut -c4- | sort -k6nr | less
+# This seems to work better for older version of nmcli.
+nmcli dev wifi | sort -k8n | less
 
 # Remove files with dashes, e.g. a file called '-'
 rm -- -
@@ -1902,6 +1952,11 @@ pandoc -f markdown -t latex myfile.markdown  > myfile.tex
 shopt extglob
 # Turn them on
 shopt -s extglob
+
+# Note on using mv command:
+mv folder1/ folder2
+# is different from
+mv folder1 folder2
 
 # Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
 mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
@@ -2171,6 +2226,7 @@ vncviewer dhcp195.wh.iit.edu:5900
 x11vnc -display :0
 # Next, run this on the client.
 xvncviewer -via iit@bm1.mr.aps.anl.gov bm1:0
+xvncviewer -via nbeaver@chloride.phys.iit.edu chloride:0
 
 # VNC into a Windows computer by running X over ssh through a linux server,
 # in case e.g. firewall blocks so you can't even ping the Windows machine.
@@ -2343,6 +2399,10 @@ sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/g
 # Another way to attach to a running process.
 gdb -p 503
 
+# This gdb command:
+set pagination off
+# is helpful for long backtraces.
+
 # Debugging a python process with gdb.
 # https://wiki.python.org/moin/DebuggingWithGdb
 sudo apt-get install gdb python2.7-dbg
@@ -2466,6 +2526,10 @@ mkdir $(date -I)
 # https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
 # This does the same thing, but takes much longer to type:
 mkdir $(date +"%Y-%m-%d")
+
+# A more complete date, suitable for e.g. filenames.
+date +"%Y-%m-%d_%T%p_%Z"
+# e.g 2015-03-23_01:06:39AM_CDT
 
 # Make a popup message
 gdialog --msgbox "Test"
@@ -3189,6 +3253,11 @@ aptitude search "?installed?not(?origin(Debian))"
 
 # List installed backports to wheezy.
 aptitude search '?narrow(?installed,?archive(wheezy-backports))'
+aptitude search '?narrow(?installed,?origin(Debian Backports))'
+aptitude search '?narrow(?version(CURRENT),?origin(Debian Backports))'
+# http://forums.debian.net/viewtopic.php?f=10&t=120739
+# http://backports.debian.org/FAQ/
+
 # List installed packages not from stable branch.
 aptitude search "?narrow(?installed,?not(?archive(stable)))"
 # Show package name and candidate version.
@@ -3196,7 +3265,19 @@ aptitude search -F "%p %V" "?narrow(?installed,?not(?archive(stable)))"
 # Show package name, candidate version, priority, section, and current state.
 aptitude search -F "%p %V %P %s %C" "?narrow(?installed,?not(?archive(stable)))" | less
 # http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s04s01.html
-# TODO: list packages with wheezy backports that aren't installed, but are installed on wheezy.
+
+# List installed packages with wheezy backports available.
+aptitude search '?and(~i, ~Awheezy-backports)'
+# http://askubuntu.com/questions/313806/how-to-list-available-backport-upgrades
+# http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s03s05.html
+
+# TODO: list installed pacakges with available backports that have not yet been installed.
 
 printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
 # http://stackoverflow.com/questions/448126/lambda-functions-in-bash
+
+GOOS=windows GOARCH=386 go build -o hello.exe hello.go
+wine hello.exe
+# http://www.limitlessfx.com/cross-compile-golang-app-for-windows-from-linux.html
+# https://github.com/golang/go/wiki/WindowsCrossCompiling
+# https://stackoverflow.com/questions/25051623/golang-compile-for-all-platforms-in-windows-7-32-bit
