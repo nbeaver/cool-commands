@@ -43,7 +43,7 @@ top
 top -o %MEM
 # Interactively
 f
-(navigate to %MEM)
+# (navigate to %MEM)
 s
 q
 
@@ -186,8 +186,8 @@ ls --almost-all --format=single-column
 sudo chmod -R +rwx .mozilla
 !! # repeat previous command
 
-type  # identify the kind of command rr is
-type -a ls # print all the places that contain an executable named 'rr', including aliases, functions, and builtins.
+type ls # identify the kind of command ls is
+type -a ls # print all the places that contain an executable named 'ls', including aliases, functions, and builtins.
 # For example, `type -a ls` shows:
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
@@ -196,7 +196,7 @@ type -a ls # print all the places that contain an executable named 'rr', includi
 shopt -s extdebug; declare -F quote; shopt -u extdebug
 
 source .bashrc # make bash re-read modified .bashrc file
-. .bashrc # make bash re-read modified .bashrc file
+. .bashrc      # make bash re-read modified .bashrc file
 
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
 
@@ -280,7 +280,7 @@ wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.c
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
 
 # Just the HTTP status code and URL.
-curl --silent --write-out "%{http_code} %{url_effective}\\n" --location "http://www.reddit.com/r/obscurantism" --output /dev/null
+curl --silent --write-out "%{http_code} %{url_effective}\\n" --location "http://w3.org/404" --output /dev/null
 # http://beerpla.net/2010/06/10/how-to-display-just-the-http-response-code-in-cli-curl/
 
 # Just the HTTP status code.
@@ -328,23 +328,23 @@ stat /proc/24088
 
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
-PROCESS STATE CODES
-       Here are the different values that the s, stat and state output specifiers (header "STAT" or "S") will display to describe the state of a process:
-       D    uninterruptible sleep (usually IO)
-       R    running or runnable (on run queue)
-       S    interruptible sleep (waiting for an event to complete)
-       T    stopped, either by a job control signal or because it is being traced.
-       W    paging (not valid since the 2.6.xx kernel)
-       X    dead (should never be seen)
-       Z    defunct ("zombie") process, terminated but not reaped by its parent.
-
-       For BSD formats and when the stat keyword is used, additional characters may be displayed:
-       <    high-priority (not nice to other users)
-       N    low-priority (nice to other users)
-       L    has pages locked into memory (for real-time and custom IO)
-       s    is a session leader
-       l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
-       +    is in the foreground process group.
+# PROCESS STATE CODES
+#        Here are the different values that the s, stat and state output specifiers (header "STAT" or "S") will display to describe the state of a process:
+#        D    uninterruptible sleep (usually IO)
+#        R    running or runnable (on run queue)
+#        S    interruptible sleep (waiting for an event to complete)
+#        T    stopped, either by a job control signal or because it is being traced.
+#        W    paging (not valid since the 2.6.xx kernel)
+#        X    dead (should never be seen)
+#        Z    defunct ("zombie") process, terminated but not reaped by its parent.
+# 
+#        For BSD formats and when the stat keyword is used, additional characters may be displayed:
+#        <    high-priority (not nice to other users)
+#        N    low-priority (nice to other users)
+#        L    has pages locked into memory (for real-time and custom IO)
+#        s    is a session leader
+#        l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
+#        +    is in the foreground process group.
 
 
 startx -- :1 # start x session
@@ -376,8 +376,8 @@ sudo /etc/init.d/network-manager restart
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
 sudo service lightdm restart
-# Magic SysRq key: rebooting when all other options fail
-hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
+# Magic SysRq key: rebooting when all else fails
+# hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
 
 
 date --date='2 hours 22 minutes' +%r # The time 2 hours and 22 minutes from now, formatted with AM/PM
@@ -391,7 +391,7 @@ date +%m/%d/%Y
 date --date='next week' +%m/%d/%Y
 date --date='7 days' +%m/%d/%Y
 
-grep -r "string" . # recursively search all files for string
+grep -r "string" ./ # recursively search all files for string
 
 # search man pages
 man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l
@@ -446,6 +446,7 @@ locate -b phys*
 locate *.htm?
 # Restrict locate to a single path
 locate --count /home/nathaniel/*/Makefile
+locate --count /home/nathaniel/*/Makefile
 
 # Update the locate database
 sudo updatedb
@@ -462,10 +463,10 @@ echo -n '12764787846358441471' | wc --chars # this is a 20-digit prime
 time factor 12764787846358441471 # factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
 
-real    0m14.582s
-user    0m14.533s
-sys 0m0.004s
 # This is what I get on my laptop
+# real    0m14.582s
+# user    0m14.533s
+# sys 0m0.004s
 
 # Make a file executable (defaults to current user)
 chmod +x zab.py
@@ -515,7 +516,9 @@ builtins.int.bit_length()
 # Profile a python script
 python -m cProfile script.py > profile.log
 
-
+# sage command
+plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
+VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
 
 # Create images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
@@ -530,10 +533,6 @@ sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
 Unattended-Upgrade::Package-Blacklist {
       "xserver-xorg-input-synaptics";
 };
-# sage command
-plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
-VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
-
 
 # Get rid of network popups
 killall nm-applet ; nm-applet &
@@ -545,7 +544,6 @@ echo {01..16}
 # Fun with brace expansion
 for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
 
-
 # find Unicode/non-ascii characters in text file by numbered line
 cat utf8.txt | LC_COLLATE=C grep -n '[^ -~]' --color=always | less -r
 # show only the matching characteres
@@ -555,10 +553,12 @@ cat utf8.txt | LC_COLLATE=C grep -o '[^ -~]' > non-ascii.txt
 # show only non-ascii characters
 perl -pe 's/[[:ascii:]]//g' utf8.txt
 cat utf8.txt | tr -cd '\200-\377'
-# highlight characters that are non-ascii
-grep --perl-regexp '[^[:ascii:]]' --color=always utf8.txt | less --RAW-CONTROL-CHARS
-# highlight characters that are non-ascii and give line number
-grep --perl-regexp '[^[:ascii:]]' --color=always --line-number utf8.txt | less --RAW-CONTROL-CHARS
+# highlight characters that are non-ascii (have unicode or other encodings) and give line number
+grep -nP '[^[:ascii:]]' --color=always myfile.txt | less -R
+# long flag version:
+grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less --RAW-CONTROL-CHARS
+# http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
+# http://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
 
 # Making fun of IIT's marketing strategy.
 grep 'it.*it' /usr/share/dict/words | sed 's/it/IIT/g' | less
@@ -585,7 +585,7 @@ tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 
 # decompress and unacrhive a tarred, gzipped file
-tar zxf keepassx-0.4.3.tar.gz # The - is not necessary.
+tar zxf keepassx-0.4.3.tar.gz # The - in front of the flags is not necessary.
 
 # list contents of a tarred file, i.e. tar archive
 tar -tf myfile.tar
@@ -623,11 +623,17 @@ patch -R < patch.txt
 # Find out what kind of files are in the current directory and its subdirectories.
 find . -type f -exec file '{}' \; | less
 # Reference: man find or https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
+# https://stackoverflow.com/questions/20913198/why-are-the-backslash-and-semicolon-required-with-the-find-commands-exec-optio
 
-# Execute /usr/bin/file on every file below current directory
+# Execute /usr/bin/file on every file and directory below current directory
 find . -exec file '{}' + | less
 
-# Find broken symlinks in directories below (test -r sees if the file is readable)
+# Find broken symlinks in directories below
+find ./ -xtype l
+find /usr/ -xtype l
+# http://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
+
+# Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
 find ./ -type l ! -exec test -r {} \; -print
 
 # Index all files in a directory with recoll
@@ -1170,7 +1176,9 @@ dpkg -L handbrake-gtk | grep bin
 dpkg --listfiles handbrake-gtk | grep bin
 
 # If you want to get really fancy, you can search in the .desktop file to see what gets executed.
-grep "Exec" $(dpkg -L handbrake-gtk | grep desktop)
+grep "Exec" $(dpkg -L handbrake-gtk | grep '/usr/share/applications/.*\.desktop$')
+# For just the executable command.
+grep "Exec" $(dpkg -L handbrake-gtk | grep '/usr/share/applications/.*\.desktop$') | cut -f2 -d"="
 # Warning: this will hang if there are no .desktop files associated with the package.
 
 # List the files installed by a .deb file
@@ -1195,6 +1203,9 @@ dpkg --vextract
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
 
+xdpyinfo | grep 'dimensions:' | awk '{print $2}'
+xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
+
 # See programs using the internet
 lsof -i -P | less
 
@@ -1204,8 +1215,10 @@ gfortran myprogram.f95 -o myprogram
 # Show kernel information (e.g. 64-bit vs 32-bit)
 uname --all
 
-# Show cpu information (e.g. 64-bit vs 32-bit)
+# Show cpu information
 lscpu
+# (e.g. 64-bit vs 32-bit)
+lscpu | grep 'Architecture:'
 
 # Try to fix wifi
 sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -1354,7 +1367,7 @@ mv */* ./
 
 # Move files in current directory to parent directory
 # Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
-mv * .[^.]* ..
+mv -- * .[^.]* ..
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
 ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
@@ -1444,10 +1457,11 @@ ls -d */
 w3m $(<temp.txt)
 
 # Get the fonts used by a pdf; useful to determine if it's OCR'ed or not.
-pdffonts *.pdf
+pdffonts file.pdf
 
 # Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
 pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
+find . -type f -name "*.pdf" -print -exec pdffonts -l 1 '{}' ';' | less
 
 # Get return (error) value of last command.
 echo $?
@@ -1492,9 +1506,9 @@ iostat -xkdz 1
 mount | column -t
 
 # Kill stopped jobs
-kill $(jobs -p)
+kill $(jobs -ps)
 
-# Use a string as if it were a file. Note that it add a newline at the end.
+# Use a string as if it were a file. Note that it adds a newline at the end. (Called a here-string.)
 cat <<< 'HI'
 md5sum <<< 'This is only a test.'
 cksum <<< 'This is only a test.'
@@ -1676,10 +1690,13 @@ tail --lines=+1 *.txt | less
 # Diff two man pages by running one into stdout and the other to stderr.
 # (Not the same as named pipes, as far as I can tell.)
 man chattr > 1; man chmod > 2; diff -u 1 2 | less
+# Another method, using process substitution:
+diff <(man chattr) <(man chmod)
 
 # Watch a file for changes
 tail -f myfile.log
 less +F myfile.log
+# http://serverfault.com/questions/445899/less-with-update-file-like-functionality
 
 # Pause/freeze/halt/stop the terminal output using the shell.
 Ctrl-S
@@ -1790,9 +1807,8 @@ env VISUAL=pico crontab -e
 find -L /haystack -xtype l -samefile name-of-file
 
 # Get a listed of sorted email addresses from a text file. From http://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
-cat raw.txt | egrep -o "[^[:space:]]+@[^[:space:]]+" | tr -d "<,>" | sort > sorted-email-list.txt
+egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d "<,>" | sort | uniq > sorted-email-list.txt
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
-grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})' file.html | sort | uniq > sorted-email-list.txt
 
 # Open that network manager connection editor that normally you click on the wifi icon to access.
 nm-connection-editor
@@ -2087,6 +2103,8 @@ pwd | xsel -b
 pwd | tr -d '\n' | xsel -b
 # Alternative method; shell-dependent (non-portable)
 echo -n $(pwd) | xsel -b
+# Yet another method.
+printf "%s" "$PWD" | xsel --clipboard
 
 # Copy a file to the clipboard.
 cat file.txt | xsel -b
@@ -2136,12 +2154,14 @@ find ~ -type f -mtime 0
 find ~ -type f -mtime 0 -iname '*.mp3'
 # Find files in your home directory that you don't own
 find ~ ! -user ${USER}
+
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
 # Show the real directory of a symlinked one
 pwd -P
 # Move to real directory
 cd $(pwd -P)
+cd $(pwd --physical)
 # Display a quick message
 xmessage -display :0.0 "You are late"
 
@@ -2774,6 +2794,9 @@ gksudo synaptic
 # Set default browser
 update-alternatives --config x-www-browser
 
+# Search for all matches for a manpage, not just the first section found.
+man --all printf
+
 # Open manpage html page in chromium browser.
 man --html=/usr/bin/chromium man
 # Open manpage html page in default browser.
@@ -2803,7 +2826,7 @@ unoconv --format ods --show |& less
 # Convert from ODS to Excel XLS.
 unoconv --format=xls --output=out.xls in.ods
 
-# Show ascii keycodes; press Ctrl-D to end.
+# Show ascii keycodes/keystrokes; press Ctrl-D to end.
 showkey -a
 showkey --ascii
 # Similar to just running
@@ -2813,6 +2836,52 @@ cat
 # Must be run in a virtual tty, not a graphical terminal, otherwise it will say:
 # "Couldn't get a file descriptor referring to the console"
 showkey
+#TODO: why doesn't --ascii work in debian?
+
+# See listing of ascii characters,
+# including caret notation if you look at Char in the corresponding last column.
+man 7 ascii
+# ^C = Ctrl-C to terminate a program, i.e. send SIGTERM
+# ^D = Ctrl-D to end an interactive program, i.e. send SIGHUP. Also end of file (EOF)
+# ^H = Ctrl-H (Backspace)
+# ^I = Ctrl-I (Tab)
+# ^L = Ctrl-L to repaint screen
+# ^M = Ctrl-M
+# ^Z = Ctrl-Z to suspend, i.e. send SIGTSTP
+#      Oct   Dec   Hex   Char                        Oct   Dec   Hex   Char
+#      ────────────────────────────────────────────────────────────────────────
+#      003   3     03    ETX (end of text)           103   67    43    C
+#      004   4     04    EOT (end of transmission)   104   68    44    D
+#      010   8     08    BS  '\b' (backspace)        110   72    48    H
+#      011   9     09    HT  '\t' (horizontal tab)   111   73    49    I
+#      014   12    0C    FF  '\f' (form feed)        114   76    4C    L
+#      015   13    0D    CR  '\r' (carriage ret)     115   77    4D    M
+#      021   17    11    DC1 (device control 1)      121   81    51    Q
+#      022   18    12    DC2 (device control 2)      122   82    52    R
+#      023   19    13    DC3 (device control 3)      123   83    53    S
+#      026   22    16    SYN (synchronous idle)      126   86    56    V
+#      032   26    1A    SUB (substitute)            132   90    5A    Z
+#      034   28    1C    FS  (file separator)        134   92    5C    \  '\\'
+#      033   27    1B    ESC (escape)                133   91    5B    [
+# http://en.wikipedia.org/wiki/Caret_notation
+# See also:
+man 3 termios
+man 7 signal
+man 1 xterm
+# control/D (used as an end of file in many shells),
+# control/H (backspace),
+# control/I (tab-feed),
+# control/J (line feed aka newline),
+# control/K (vertical tab),
+# control/L (form feed),
+# control/M (carriage return),
+# control/N (shift-out),
+# control/O (shift-in),
+# control/Q (XOFF),
+# control/X (cancel)
+
+# See what the terminal interprets.
+stty --all
 
 # Disable IPv6
 # http://superuser.com/questions/575684/how-to-disable-ipv6-on-a-specific-interface-in-linux
@@ -2973,20 +3042,20 @@ type echo
 # Follow links recursively.
 namei /usr/bin/vim
 # Example output.
-    $ namei $(which vim)
-    f: /usr/bin/vim
-     d /
-     d usr
-     d bin
-     l vim -> /etc/alternatives/vim
-       d /
-       d etc
-       d alternatives
-       l vim -> /usr/bin/vim.gtk
-         d /
-         d usr
-         d bin
-         - vim.gtk
+#   $ namei $(which vim)
+#   f: /usr/bin/vim
+#    d /
+#    d usr
+#    d bin
+#    l vim -> /etc/alternatives/vim
+#      d /
+#      d etc
+#      d alternatives
+#      l vim -> /usr/bin/vim.gtk
+#        d /
+#        d usr
+#        d bin
+#        - vim.gtk
 
 # Capture webcam image
 streamer -c /dev/video0 -o out.jpeg
