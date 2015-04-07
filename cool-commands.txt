@@ -102,7 +102,9 @@ bash env.sh 2>&1 > full_log.txt
 
 # If you want to pipe stdout and stderr together:
 command > /dev/null |& grep "something"
-# For example:
+# e.g.
+make > /dev/null |& grep "something"
+# another example:
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://google.com |& grep 'HTTP request'
 # Shorter version:
 wget --spider http://google.com |& grep 'HTTP request\|Location:'
@@ -163,9 +165,17 @@ print*,__FILE__,__LINE__
 
 # GNU debugger (gdb) basics
 gdb ./vc_forces_numer_deriv
+handle SIGPIPE nostop
+set pagination 0
+set logging overwrite on
 set logging on
-r
+set logging redirect on
+set logging file my-file.txt
+run
+# After the faulure:
 bt
+# or
+thread apply all bt
 frame 2
 info locals
 info args
@@ -312,11 +322,11 @@ do
 done
 
 # Process control
-ps aux |grep athena
+ps aux | grep athena
 pstree
 vmstat
 
-pstree -H $(pgrep athena) | less
+pstree -H $(pgrep athena | head -n1) | less
 
 ps aux --sort=-%cpu # list processes using most CPU
 ps aux --sort=-%mem # list processes using most memory
@@ -607,7 +617,7 @@ reset # fix it
 
 Ctrl-Z # get out of pretty much any terminal program and back to the shell
 fg # move the job back to the foreground
-kill %3 # kill job by jobspec (3, in this case)
+kill %3 # kill job by jobspec a.k.a job identifier (3, in this case)
 
 # Patching
 diff -u old_file new_file > patch.txt # Generates a patch file that can generate new_file from old_file
@@ -806,7 +816,7 @@ Ctrl-Z # Access shell prompt
 bg     # Put job in background, but let it keep running.
 # Note job number, or use
 jobs
-disown -h %1 # Detach job 1 from current terminal
+disown -h %1 # Detach job 1 from current terminal (%1 is the jobspec/job identifier)
 
 # Restart compiz from a terminal emulator
 # Note: Disown defaults to %1, so make sure you don't have any other jobs.
@@ -2284,6 +2294,12 @@ lsof -i :80 | grep LISTEN
 # Look at executable running process id 2720
 ls -l /proc/2720/exe
 # lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
+# Look at first vim process.
+ls -l /proc/$(pgrep vim | head -n1)/exe
+# Look at all vim processes.
+for i in $(pgrep vim); do ls -l /proc/$i/exe; done
+# Look at all processes with names matching 'sh'.
+for i in $(pgrep sh); do ls -l /proc/$i/exe; done
 
 # See what files it has open.
 ls -l /proc/2720/fd
@@ -3012,6 +3028,11 @@ tree -L 2 -a
 # Pass to less, with color.
 tree -L 2 -a -C | less -R
 
+# Spit out HTML tree.
+tree -H "$PWD" > index.html
+# If you don't want the full path as the root:
+tree -H . > index.html
+
 # See which users there are.
 users
 # See which groups you are in.
@@ -3304,7 +3325,7 @@ last reboot
 # Find approximate matches to man pages.
 man $(whichman whicman)
 
-# Convert filetypes.
+# Convert text encodings.
 iconv --from-code=ISO_8859-1 --to-code=UTF-8 latin-1.txt > utf-8.txt
 
 # See all available versions for a packages.
@@ -3350,3 +3371,9 @@ wine hello.exe
 # http://www.limitlessfx.com/cross-compile-golang-app-for-windows-from-linux.html
 # https://github.com/golang/go/wiki/WindowsCrossCompiling
 # https://stackoverflow.com/questions/25051623/golang-compile-for-all-platforms-in-windows-7-32-bit
+
+# Unix Y2K bug (only works on 32-bit architectures):
+date --date='January 19, 2038 03:14:07 UTC'
+# Mon Jan 18 21:14:07 CST 2038
+date --date='January 19, 2038 03:14:08 UTC'
+# date: invalid date `January 19, 2038 03:14:08 UTC'
