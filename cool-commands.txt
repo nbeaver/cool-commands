@@ -138,15 +138,17 @@ rename 'y/ /_/' * # replace spaces with underscores
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
 
-mv filename.{old,new} # Quick file rename using brace expansion
+mv file.{txt,csv} # Quick file rename using brace expansion.
 
 # Similarly, can make a copy of a copy to work on the live.
-cp filename.{,.old}
+cp ~/.local/share/mime/mime.cache{,.old}
 # http://www.shell-fu.org/lister.php?id=46
 
-# Using the system dictionary:
+# Using the system dictionary;
+# this is how samba was named:
+egrep -i '^S.*M.*B' /usr/share/dict/words
+# http://www.rxn.com/services/faq/smb/samba.history.txt
 grep -i '^s.*m.*b' /usr/share/dict/words
-# this is how samba was named: TODO: source
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
@@ -321,6 +323,8 @@ do
     hexdump -C $f > "${f%.*}.txt" # make a text hexdump
 done
 
+for f in *.exe; do hexdump -C "$f" > "$f.hexdump.txt"; done
+
 # Process control
 ps aux | grep athena
 pstree
@@ -335,7 +339,6 @@ ps aux --sort=start_time # list processes from oldest to youngest
 # See start time of a particular process.
 ls -ld /proc/24088
 stat /proc/24088
-
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
 # PROCESS STATE CODES
@@ -386,6 +389,7 @@ sudo /etc/init.d/network-manager restart
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
 sudo service lightdm restart
+
 # Magic SysRq key: rebooting when all else fails
 # hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
 
@@ -650,14 +654,23 @@ find ./ -type l ! -exec test -r {} \; -print
 find ./ -print -exec recollindex -i '{}' \;
 
 # Much like any other find exec command, but more efficient
-find . -type f -name "*.deadtime" -exec rm '{}' +
+# because it uses the fact that rm can take multiple arguments to runs rm fewer times. 
+find ./ -type f -name "*.deadtime" -exec rm '{}' +
+
+# Print all empty directories under current directory.
+find ./ -type d -empty
+# Recursively remove all empty directories under current directory.
+find ./ -type d -empty -delete
+# http://robotbutler.org/article/31
+# http://www.thegeekstuff.com/2010/03/find-empty-directories-and-files/
+# http://itsmetommy.com/2013/07/11/useful-linux-find-commands/
 
 # http://stackoverflow.com/questions/6085156/using-vs-with-exec-in-find
-find . -exec ls '{}' \;
+find ./ -exec ls '{}' \;
 # ls file1
 # ls file2
 # ls file3
-find . -exec ls '{}' \+
+find ./ -exec ls '{}' \+
 # ls file1 file2 file3
 
 ssh -D 9999 iit@id1.mr.aps.anl.gov # secure shell into the APS sector 10 insertion device beamline account for IIT
@@ -840,6 +853,7 @@ sudo select-default-wordlist
 lpstat
 # List printers
 lpstat -s
+lpstat -v
 # Print document from the command line to a network printer by printer's name
 lpr -P "Brother-HL-4070CDW" doc.pdf
 # Print in double-sided
@@ -1224,11 +1238,15 @@ gfortran myprogram.f95 -o myprogram
 
 # Show kernel information (e.g. 64-bit vs 32-bit)
 uname --all
+# Only the kernel architecture, e.g. x86_64
+uname --machine
 
 # Show cpu information
 lscpu
 # (e.g. 64-bit vs 32-bit)
 lscpu | grep 'Architecture:'
+# Show only the architecture name, e.g. x86_64
+lscpu | grep '^Architecture:' | awk '{print $2}'
 
 # Try to fix wifi
 sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -1307,6 +1325,8 @@ find . -depth | rename 's/\ /_/g'
 
 # Extract embedded images from a pdf and dump them into the current directory
 pdfimages -j mypdf ./
+# A somewhat neater solution for all pdfs in current directory.
+for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
@@ -1879,6 +1899,7 @@ speedtest-cli
 iperf -s -u -i1
 iperf -c 192.168.2.1 -u -i1 -l 1300 -b 100m -t 600
 # Replace 192.168.2.1 with router ip address from route -n.
+iperf --client 192.168.2.1 --udp --interval 1 --len 1300 --bandwidth 100m --time 600
 
 # See the ARP (Address Resolution Protocol) table.
 arp
@@ -1934,6 +1955,17 @@ date --date='TZ="Asia/Dhaka" 10 hours'
 TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +%r
 # What will be the full date?
 TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +'%A, %B %e, %r'
+
+# Which day of the week was the stock market crash of October 29, 1929?
+date +%A --date="October 29, 1929"
+# Tuesday
+# This was known as "Black Tuesday".
+
+# Demonstrate the changeover from Julian to Gregorian calendars.
+ncal -J -H 1752-09-13 September 1752
+ncal -H 1752-09-14 September 1752
+# "Wednesday 2 September 1752 was followed by Thursday 14 September 1752."
+# https://en.wikipedia.org/wiki/Calendar_%28New_Style%29_Act_1750
 
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
@@ -2071,8 +2103,13 @@ No Plan.
 whoami
 # Find out if you have root (sudoing) priveleges
 sudo -v
+# or
+groups | grep sudo
 # Find out what you can do if you have sudo priveleges
 sudo -l
+
+# Find out your full name.
+getent passwd "$USER" | cut -d ':' -f 5
 
 # Find out what your hostname is.
 hostname
@@ -2163,7 +2200,8 @@ find ~ -type f -mtime 0
 # If you know it's an mp3...
 find ~ -type f -mtime 0 -iname '*.mp3'
 # Find files in your home directory that you don't own
-find ~ ! -user ${USER}
+find $HOME ! -user $USER
+# http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
 
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
@@ -2181,6 +2219,7 @@ echo ' .... . .-.. .-.. ---  ...-.-' | morse -d
 
 # What's taking up space on your home directory?
 du --summarize ~/* | sort -nr | less
+du --summarize ~/* | sort -nr | head
 
 # Suspend the computer to RAM and wake up 60 seconds later
 sudo rtcwake -m mem -s 60
@@ -2198,27 +2237,36 @@ lynx gopher://gopher.floodgap.com/1/world
 https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
 
 # Mute master sound
-mixer set 'Master' mute
+amixer set 'Master' mute
 # Unmute master sound
 amixer set 'Master' unmute
 
-# List only dotfiles
+# List only dotfiles, including `.' and `..'.
 ls -a | grep '^\.'
+ls -d .*
+# List only dotfiles.
+echo .[^.]*
+find .  -mindepth 1 -maxdepth 1 -name '.*'
+# This doesn't work for hidden files like .a
+ls -d .??*
+echo .??*
+# http://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
+# http://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
 
 # Graphically change timezone
 time-admin
 # From the command-line
 sudo dpkg-reconfigure tzdata
 
-# See current timezone
-timedatectl status
-cat /etc/timezone
-date +%Z
-
 # List timezones
 timedatectl list-timezones
 # Set timezone with systemd.
 timedatectl set-timezone America/New_York
+
+# See current timezone
+timedatectl status
+cat /etc/timezone
+date +%Z
 
 # Combine/merge/join/concatenate pdf files together
 pdfjoin 1.pdf 2.pdf  # creates a 2-join.pdf file with both 1 and 2.
@@ -2329,6 +2377,7 @@ xinit -- :1
 
 # Check the web cam based on the device file
 camorama -d /dev/video1
+cheese -d /dev/video0
 
 # Change default terminal emulator
 sudo update-alternatives --config x-terminal-emulator
@@ -2745,6 +2794,11 @@ convert -background white -flatten file.pdf[0] file.png
 # http://stackoverflow.com/questions/22994313/imagemagick-convert-pdf-with-transparency-to-jpg
 # http://tex.stackexchange.com/questions/64505/how-to-make-each-pdf-page-of-a-beamer-output-have-an-opaque-background-when-it-i
 
+# Trim excess border of a uniform color.
+convert -trim image.png image-trimmed.png
+convert -trim image{.png,-trimmed.png}
+# http://www.imagemagick.org/script/command-line-options.php?#trim
+
 # Use imagemagick to reduce the size to 10% of all jpegs, over writing the originals (in place).
 mogrify -resize 10x10% *.jpg
 # If you want a set resolution.
@@ -2752,6 +2806,28 @@ mogrify -resize 640x480 *.jpg
 # If you want a set resolution, even if it distorts the image.
 mogrify -resize 640x480! *.jpg
 # https://www.novell.com/coolsolutions/tip/16524.html
+
+# Resize all the images in an .odt file:
+unzip images.odt -d out/
+cd out/
+# Otherwise, zip will add out/ to all the paths.
+mogrify -resize 10x10% Pictures/*
+# We can't junk the paths, since we need to keep the structure.
+zip -rm ../resize.odt *
+cd ..
+rmdir out/
+
+# Or do this:
+dir="$(mktemp -d --tmpdir=.)"
+unzip images.odt -d "$dir"
+cd "$dir"
+mogrify -resize 10x10% Pictures/*
+zip -rm ../resize.odt *
+cd ..
+rmdir "$dir"
+
+# On one line:
+dir="$(mktemp -d --tmpdir=.)" && unzip -q file.odt -d "$dir" && cd "$dir" && mogrify -resize 10x10% Pictures/* && zip -qrm ../resized.odt * && cd .. && rmdir "$dir"
 
 # restart xfce4 panels
 xfce4-panel -r
@@ -2764,6 +2840,8 @@ svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
 
 # Set the screen brightness (backlight) from the command line
 xbacklight -set 100
+# See current brightness
+xbacklight -get
 
 # gnuplot command we typically use at the beamline
 gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
@@ -2915,7 +2993,7 @@ net.ipv6.conf.eth0.disable_ipv6 = 1
 # Restart stuff.
 sudo sysctl -p
 # To check what's using IPv6
-sudo netstat -tunlp | grep p6
+sudo netstat -tunlp | grep 'udp6\|tcp6'
 # More certain way that requires reboot.
 echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist
 # Reboot and check
@@ -3264,7 +3342,7 @@ md5sum debian-live-7.6.0-amd64-xfce-desktop.iso
 
 # Download a file while running the checksum.
 # http://unix.stackexchange.com/questions/19049/obtaining-md5-during-wget/19054#19054
-wget -O - http://commons.wikimedia.org/wiki/File:Ippolito1.jpg | tee Ippolito1.jpg | md5sum
+wget -qO - 'http://commons.wikimedia.org/wiki/File:Ippolito1.jpg' | tee Ippolito1.jpg | md5sum
 # 570f9617245979be3c5219c73b577230  -
 
 # TODO: use `watch` on functions?
@@ -3326,7 +3404,7 @@ last reboot
 man $(whichman whicman)
 
 # Convert text encodings.
-iconv --from-code=ISO_8859-1 --to-code=UTF-8 latin-1.txt > utf-8.txt
+iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt > utf-8.txt
 
 # See all available versions for a packages.
 rmadison recoll
@@ -3377,3 +3455,6 @@ date --date='January 19, 2038 03:14:07 UTC'
 # Mon Jan 18 21:14:07 CST 2038
 date --date='January 19, 2038 03:14:08 UTC'
 # date: invalid date `January 19, 2038 03:14:08 UTC'
+# on 64-bit systems, it just says:
+# Mon Jan 18 21:14:08 CST 2038
+# http://en.wikipedia.org/wiki/Year_2038_problem
