@@ -208,7 +208,7 @@ type -a ls # print all the places that contain an executable named 'ls', includi
 shopt -s extdebug; declare -F quote; shopt -u extdebug
 
 source .bashrc # make bash re-read modified .bashrc file
-. .bashrc      # make bash re-read modified .bashrc file
+. .bashrc      # make bash re-read modified .bashrc file (portable)
 
 apt-cache search my-package # search apt packages for 'my-package', case insensitive
 
@@ -396,7 +396,14 @@ sudo service lightdm restart
 
 date --date='2 hours 22 minutes' +%r # The time 2 hours and 22 minutes from now, formatted with AM/PM
 date --date='45 days after 9/11/2012' +%r
-date -d "April 19, 2014 + 12 weeks"
+date -d 'April 19, 2014 + 12 weeks'
+# https://www.gnu.org/software/coreutils/manual/html_node/Examples-of-date.html
+
+# Time in the past.
+date --date='5 hours 15 minutes 2 seconds ago'
+#TODO: why don't these match?
+date --date='-5 hours -15 minutes -2 seconds'
+
 # find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
 # Standard American date
@@ -1161,6 +1168,10 @@ dpkg --search $(which gnash)
 dlocate /usr/share/dict/words
 dlocate libc.so.6
 
+# Find which package rm is from.
+# The trailing $ is necessary to prevent e.g. matches to /bin/rmdir.
+dlocate "$(which rm)\$"
+
 #   $ time dpkg -S /usr/share/dict/words
 #   diversion by dictionaries-common from: /usr/share/dict/words
 #   diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
@@ -1178,9 +1189,12 @@ dlocate libc.so.6
 #   real	0m0.054s
 #   user	0m0.016s
 #   sys	0m0.016s
-# Same search, but also include uninstalled packages.
+
+# Same search, but also works for uninstalled packages.
 apt-file search $(which gnash)
 apt-file search libc.so.6
+# This doesn't require an internet connection,
+# but apt-file update does.
 
 #   $ time apt-file search /usr/share/dict/words
 #   dictionaries-common: /usr/share/dict/words
@@ -1198,6 +1212,9 @@ dpkg -L handbrake-gtk | grep bin
 /usr/bin
 /usr/bin/ghb
 dpkg --listfiles handbrake-gtk | grep bin
+
+# This does the same thing, but you don't need to actually install the package to use it.
+apt-file list handbrake-gtk
 
 # If you want to get really fancy, you can search in the .desktop file to see what gets executed.
 grep "Exec" $(dpkg -L handbrake-gtk | grep '/usr/share/applications/.*\.desktop$')
@@ -1538,7 +1555,8 @@ mount | column -t
 # Kill stopped jobs
 kill $(jobs -ps)
 
-# Use a string as if it were a file. Note that it adds a newline at the end. (Called a here-string.)
+# Use a string as if it were a file.
+# Note that it adds a newline at the end. (Called a here-string.)
 cat <<< 'HI'
 md5sum <<< 'This is only a test.'
 cksum <<< 'This is only a test.'
@@ -1881,6 +1899,13 @@ nslookup 216.47.138.69
 # 69.138.47.216.in-addr.arpa	name = chloride.phys.iit.edu.
 nslookup debian.org
 
+nslookup 8.8.8.8
+#Server:		192.168.1.254
+#Address:	192.168.1.254#53
+#
+#Non-authoritative answer:
+#8.8.8.8.IN-ADDR.ARPA	name = google-public-dns-a.google.com.
+
 # Slightly more detailed
 host -a 216.47.138.69
 dig -x 216.47.138.69
@@ -1988,6 +2013,12 @@ nmcli dev wifi | sort -k8n | less
 
 # Remove files with dashes, e.g. a file called '-'
 rm -- -
+rm ./-
+unlink -
+# Difference between rm and unlink:
+# http://unix.stackexchange.com/questions/151951/what-is-the-difference-between-rm-and-unlink
+# http://serverfault.com/questions/38816/what-is-the-difference-between-unlink-and-rm
+
 # Remove all files without being goofed up by leading dashes.
 rm -- *
 
@@ -2150,6 +2181,7 @@ pwd | xsel -b
 pwd | tr -d '\n' | xsel -b
 # Alternative method; shell-dependent (non-portable)
 echo -n $(pwd) | xsel -b
+echo -n "$PWD" | xsel -b
 # Yet another method.
 printf "%s" "$PWD" | xsel --clipboard
 
@@ -2199,6 +2231,7 @@ tracepath 10.96.21.19
 find ~ -type f -mtime 0
 # If you know it's an mp3...
 find ~ -type f -mtime 0 -iname '*.mp3'
+
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
 # http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
@@ -2208,8 +2241,7 @@ find $HOME ! -user $USER
 # Show the real directory of a symlinked one
 pwd -P
 # Move to real directory
-cd $(pwd -P)
-cd $(pwd --physical)
+cd -- "$(pwd -P)"
 # Display a quick message
 xmessage -display :0.0 "You are late"
 
@@ -2218,8 +2250,13 @@ echo "Hello" | morse -s | tr -d '\n'
 echo ' .... . .-.. .-.. ---  ...-.-' | morse -d
 
 # What's taking up space on your home directory?
-du --summarize ~/* | sort -nr | less
-du --summarize ~/* | sort -nr | head
+# Sort numerically in KB (1024 bytes).
+du -d 1 ~ | sort -nr | less
+du --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
+# Sort human-based, e.g. 250MB, 10KB, etc.
+du -hd 1 ~ | sort -hr | less
+du --human --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
+# http://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
 
 # Suspend the computer to RAM and wake up 60 seconds later
 sudo rtcwake -m mem -s 60
@@ -2237,9 +2274,16 @@ lynx gopher://gopher.floodgap.com/1/world
 https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
 
 # Mute master sound
-amixer set 'Master' mute
+amixer set Master mute
 # Unmute master sound
-amixer set 'Master' unmute
+amixer set Master unmute
+# Set master to 50%.
+amixer set Master 50
+# http://www.tldp.org/HOWTO/Alsa-sound-6.html
+# http://www.linuxjournal.com/content/change-volume-bash-script
+
+# See master settings.
+amixer get Master
 
 # List only dotfiles, including `.' and `..'.
 ls -a | grep '^\.'
@@ -2247,7 +2291,7 @@ ls -d .*
 # List only dotfiles.
 echo .[^.]*
 find .  -mindepth 1 -maxdepth 1 -name '.*'
-# This doesn't work for hidden files like .a
+# These don't work for hidden files like .a
 ls -d .??*
 echo .??*
 # http://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
@@ -2724,7 +2768,7 @@ echo '1 2 + p' | dc
 # A simple stopwatch; press Ctrl-C or Ctrl-D to end.
 time cat
 # http://lifehacker.com/285093/turn-the-terminal-into-a-stopwatch-with-time-cat
-# An even simple stopwatch; press enter or Ctrl-D to end
+# An even simpler stopwatch; press enter or Ctrl-D to end
 time read
 # http://www.commandlinefu.com/commands/view/1567/a-very-simple-and-useful-stopwatch
 # Press any key to stop the watch
@@ -2798,6 +2842,9 @@ convert -background white -flatten file.pdf[0] file.png
 convert -trim image.png image-trimmed.png
 convert -trim image{.png,-trimmed.png}
 # http://www.imagemagick.org/script/command-line-options.php?#trim
+
+# Leave a 10-pixel black border behind.
+convert -bordercolor black -trim -border 10x10 in.png out.png
 
 # Use imagemagick to reduce the size to 10% of all jpegs, over writing the originals (in place).
 mogrify -resize 10x10% *.jpg
@@ -3405,6 +3452,7 @@ man $(whichman whicman)
 
 # Convert text encodings.
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt > utf-8.txt
+iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt --output utf-8.txt
 
 # See all available versions for a packages.
 rmadison recoll
@@ -3458,3 +3506,13 @@ date --date='January 19, 2038 03:14:08 UTC'
 # on 64-bit systems, it just says:
 # Mon Jan 18 21:14:08 CST 2038
 # http://en.wikipedia.org/wiki/Year_2038_problem
+
+# Display date of Easter (for Western Christian churches).
+ncal -e
+
+# Show upcoming event information.
+pal -r 30 | less
+
+# Running cmd.exe on Linux.
+wine cmd
+# http://www.linux.org/threads/running-windows-batch-files-on-linux.7610/
