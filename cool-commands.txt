@@ -134,6 +134,7 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
+# http://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
 
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
@@ -327,6 +328,8 @@ for f in *.exe; do hexdump -C "$f" > "$f.hexdump.txt"; done
 
 # Process control
 ps aux | grep athena
+# or
+ps -C athena
 pstree
 vmstat
 
@@ -367,6 +370,7 @@ ls -l -S --reverse --human-readable # -l = long listing and -S = sort
 ls -v1 # Show files one on each line and in numeric order instead of alphanumeric
 
 lsof # display open files
+lsof -p 1234 # Show open files from process id 1234.
 
 # Sure ways to restart a wireless network
 ping -c 4 google.com # ping 4 times
@@ -475,7 +479,9 @@ sudo updatedb
 stat -c %y /var/lib/mlocate/mlocate.db
 # Find out when the last time the database was queried.
 stat -c %x /var/lib/mlocate/mlocate.db
+# ~/src/python/json-command-database/CmdOysters/1744989ea5403ab4d565a4f2b86857403d6160dc.json
 # TODO: write a command that shows how long its been (in days) since the database was updated.
+
 
 # Make a tree using the Contex Free grammar image generator
 /usr/bin/cfdg -s 500 /usr/share/doc/contextfree/examples/mtree.cfdg mtree.png
@@ -580,6 +586,13 @@ grep -nP '[^[:ascii:]]' --color=always myfile.txt | less -R
 grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less --RAW-CONTROL-CHARS
 # http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
 # http://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
+# ~/src/python/json-command-database/CmdOysters/118f2d8f8666f09b5d9c9db536d645be5f923f6c.json
+
+# Grep for matching lines, but show only matching filenames.
+grep -rl "blah" # list files with lines that match "blah"
+grep --recursive --files-with-matches "blah" # list files with lines that match "blah"
+# Can be useful if you want to, say, edit all these files with a text editor.
+vim "$(grep -rl "blah")"
 
 # Making fun of IIT's marketing strategy.
 grep 'it.*it' /usr/share/dict/words | sed 's/it/IIT/g' | less
@@ -622,6 +635,11 @@ tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
 
 # Gzip a single file
 gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
+# Gzip a file without removing the original.
+gzip < file > file.gz
+# http://unix.stackexchange.com/a/58814
+gzip -k -- file
+# ~/src/python/json-command-database/CmdOysters/10fb1d782f10eb50f61349f4a2973362319ebb87.json
 
 cat /bin/cat # mojibake-fy the screen
 reset # fix it
@@ -951,6 +969,7 @@ Alt-Shift-,
 # Move to end of history
 Alt-Shift-.
 # Bash history modifiers (bang commands) http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
+# The technical term is "event designator" http://www.catonmat.net/blog/top-ten-one-liners-from-commandlinefu-explained/
 !! # execute last command
 !-1 # execute last command
 !!:1 # first argument of the last command
@@ -1073,6 +1092,7 @@ cat -v
 
 # Text to speech
 echo 'Hello, world!' | espeak --stdin
+echo 'Hello, world!' | festival --tts
 
 # List to your computer say "Ping!" every 2 seconds
 ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
@@ -1081,6 +1101,7 @@ ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 # Ping google.com instead, and use Mac OS X 'say' command:
 ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 # https://news.ycombinator.com/item?id=8861819
+# ~/src/python/json-command-database/CmdOysters/4599d9679d5c2de5d9e987b681b790949039cb18.json
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -1126,6 +1147,11 @@ sudo chmod a+r file
 echo $SHELL
 # The actual shell you're running inside (name of the running process):
 echo $0
+# The actual executable run by the shell of the running process.
+readlink -f "$(which "$0")"
+readlink --canonicalize "$(which "$0")"
+# Follow the links leading there.
+namei $(which $0)
 
 # Change the login shell to bash if your username is nbeaver.
 chsh --shell /bin/bash nbeaver
@@ -1137,6 +1163,7 @@ export SHELL=/bin/bash
 bash
 # This will require you to hit Ctrl-D twice when one want to log out,
 # once when you exit bash and once when you exit dash.
+# ~/src/python/json-command-database/CmdOysters/f3951f67052d0a0ea66062977ab7074c88bf9708.json
 
 # Find out whether a package is installed or not.
 # Also tells you the version and whether it's installed from a ppa.
@@ -1240,14 +1267,15 @@ dpkg --extract
 dpkg -X /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
 dpkg --vextract
 
-# Make a screencast
+# Make a screencast by capturing output.
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
 
 xdpyinfo | grep 'dimensions:' | awk '{print $2}'
 xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
+xrandr | grep '*' | awk '{print $1}'
 
-# See programs using the internet
+# See programs using the Internet.
 lsof -i -P | less
 
 # Compile with the gfortran compiler
@@ -1257,6 +1285,7 @@ gfortran myprogram.f95 -o myprogram
 uname --all
 # Only the kernel architecture, e.g. x86_64
 uname --machine
+# ~/src/python/json-command-database/CmdOysters/c061264c95aede5a5e512500e5069e2c5f3a71f5.json
 
 # Show cpu information
 lscpu
@@ -1264,6 +1293,7 @@ lscpu
 lscpu | grep 'Architecture:'
 # Show only the architecture name, e.g. x86_64
 lscpu | grep '^Architecture:' | awk '{print $2}'
+# ~/src/python/json-command-database/CmdOysters/9f2fdee93e84817e73dcbe46d01e28af001fbe1e.json
 
 # Try to fix wifi
 sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -1344,6 +1374,7 @@ find . -depth | rename 's/\ /_/g'
 pdfimages -j mypdf ./
 # A somewhat neater solution for all pdfs in current directory.
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
+# ~/src/python/json-command-database/CmdOysters/040662df76d8e74369a2b56c10764ba16b44d2a7.json
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
@@ -1377,6 +1408,7 @@ auto-apt run ./configure
 
 # Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
 grep -v '^#\|^$'
+# TODO: also include optional whitespace before comment character.
 
 # Copy hidden files (dotfiles)
 cp -r test/.[a-zA-Z0-9]* target_directory
@@ -1522,6 +1554,11 @@ killall korgac
 # Get random 6 digit number
 echo $RANDOM
 
+# 
+od -vAn -N4 -tu4 < /dev/urandom
+od -An -N2 -i /dev/random
+# http://www.cyberciti.biz/faq/bash-shell-script-generating-random-numbers/
+
 # X over SSH
 ssh -X nbeaver@rontgen.phys.iit.edu
 
@@ -1554,6 +1591,7 @@ mount | column -t
 
 # Kill stopped jobs
 kill $(jobs -ps)
+# ~/src/python/json-command-database/CmdOysters/d3c97a0498d770f39f9e1b386a8dddfdf6c71701.json
 
 # Use a string as if it were a file.
 # Note that it adds a newline at the end. (Called a here-string.)
@@ -1669,6 +1707,7 @@ ALT-.
 # Check video file for errors
 # http://606u.dir.bg/avicheck/
 ffmpeg -v 5 -i file.avi -f null -
+ffmpeg -loglevel 5 -i file.avi -f null -
 # Double video volume (256 is unchanged)
 # http://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
 ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
@@ -1713,6 +1752,7 @@ avconv -i image.iso
 
 # Blank the screen temporarily (turn off display)
 xset dpms force standby
+# ~/src/python/json-command-database/CmdOysters/324aa3ea7d1c5fa22bab543daaf98435473c61cb.json
 
 # Use less on multiple files
 less file1 file2 file3
@@ -1911,6 +1951,7 @@ host -a 216.47.138.69
 dig -x 216.47.138.69
 # Also works on domain names
 host senfter.debian.org
+host example.com
 
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
@@ -2200,12 +2241,16 @@ xclip -selection clipboard -t image/png -o > out.png
 # Have not seen it work with image/tiff yet.
 # http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
 # http://ubuntuforums.org/showthread.php?t=1335075
+# ~/src/python/json-command-database/CmdOysters/2e1ca763ebea072b02b583a7a91af95abfacf31f.json
 
 # Lookup information about a website or ip address
 whois iit.edu
 
 # Remove newlines, trailing and otherwise
 tr -d '\n'
+
+# Remove trailing whitespace in place.
+sed -i 's/[ \t]*$//' file.txt
 
 # Get the last entry in history
 history |
@@ -2235,6 +2280,7 @@ find ~ -type f -mtime 0 -iname '*.mp3'
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
 # http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
+# ~/src/python/json-command-database/CmdOysters/c3248866c4ec72d23e3912e1589e1781fd9b92e5.json
 
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
@@ -2257,6 +2303,7 @@ du --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 du -hd 1 ~ | sort -hr | less
 du --human --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 # http://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
+# ~/src/python/json-command-database/CmdOysters/ebe7fab4a1058e850a7f40e757c310e1f9a59c62.json
 
 # Suspend the computer to RAM and wake up 60 seconds later
 sudo rtcwake -m mem -s 60
@@ -2296,6 +2343,7 @@ ls -d .??*
 echo .??*
 # http://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
 # http://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
+# ~/src/python/json-command-database/CmdOysters/2d0b6b2b90eeb1efbd9591dbfa593766f6cf540a.json
 
 # Graphically change timezone
 time-admin
@@ -2323,6 +2371,14 @@ pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
 # Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
 # Combine/merge/join/concatenate pdf files together in numerical order of filename, instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea. Sorry.
 pdfjoin $(ls -v)
+
+# Splitting pdfs.
+pdftk myoldfile.pdf cat 1-2 4-5 output mynewfile.pdf
+# http://linuxcommando.blogspot.com/2013/02/splitting-up-is-easy-for-pdf-file.html
+gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutputFile=outputT4.pdf T4.pdf
+# http://linuxcommando.blogspot.com/2014/01/how-to-split-up-pdf-files-part-2.html
+convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
+# http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
 
 # Oh my gosh, I just entered my password in the terminal and now it will be in the bash history! What can I do?
 unset HISTFILE
@@ -2653,8 +2709,9 @@ nameserver 176.58.120.112
 mkdir $(date -I)
 # Note: -I is deprecated.
 # https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
-# This does the same thing, but takes much longer to type:
-mkdir $(date +"%Y-%m-%d")
+# This does the same thing, but takes a little longer to type:
+mkdir $(date +"%F")
+
 
 # A more complete date, suitable for e.g. filenames.
 date +"%Y-%m-%d_%T%p_%Z"
@@ -2695,7 +2752,7 @@ ddate +%.
 weborf --basedir ~/weborf/ --cache ~/Downloads/weborf-cache/ --noexec --mime -d
 
 # See security updates
-apt-get -s dist-upgrade |grep "^Inst" |grep -i securi
+apt-get -s dist-upgrade | grep "^Inst" | grep -i securi
 
 # Login with mobile shell
 mosh username@remote.computer
@@ -2875,6 +2932,8 @@ rmdir "$dir"
 
 # On one line:
 dir="$(mktemp -d --tmpdir=.)" && unzip -q file.odt -d "$dir" && cd "$dir" && mogrify -resize 10x10% Pictures/* && zip -qrm ../resized.odt * && cd .. && rmdir "$dir"
+# TODO: delete dir variable.
+# ~/src/python/json-command-database/CmdOysters/f200d2b9c05860539eff503d392be186fa479bb7.json
 
 # restart xfce4 panels
 xfce4-panel -r
@@ -3400,6 +3459,7 @@ dict factotum
 dict synecdoche
 dict scrofulous
 dict 'sine qua non'
+dict "bete noire"
 # Surprisingly good for physics terminology.
 dict 'ab initio'
 dict adiabatic
@@ -3443,6 +3503,7 @@ tail --lines=+1 /proc/27870/{status,syscall,sched,io,limits,maps} > proc-info.tx
 
 # Time of last reboot.
 who -b
+who --boot
 last reboot
 
 # TODO: command that crops png images if the background is all the same color, leaving only a small border.
@@ -3453,6 +3514,7 @@ man $(whichman whicman)
 # Convert text encodings.
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt > utf-8.txt
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt --output utf-8.txt
+iconv -f iso-8859-1 -t utf-8 latin-1.txt -o utf-8.txt
 
 # See all available versions for a packages.
 rmadison recoll
@@ -3516,3 +3578,31 @@ pal -r 30 | less
 # Running cmd.exe on Linux.
 wine cmd
 # http://www.linux.org/threads/running-windows-batch-files-on-linux.7610/
+
+# Check if linux crash dump is enabled.
+grep CONFIG_CRASH /boot/config-$(uname -r)
+
+# Check for obsolete packages.
+aptitude search ?obsolete | less
+
+# Looking up fonts.
+fc-match Helvetica
+# helvR12-ISO8859-1.pcf.gz: "Helvetica" "Regular"
+dlocate helvR12-ISO8859-1.pcf.gz
+# xfonts-75dpi: /usr/share/fonts/X11/75dpi/helvR12-ISO8859-1.pcf.gz
+# xfonts-100dpi: /usr/share/fonts/X11/100dpi/helvR12-ISO8859-1.pcf.gz
+
+# convert Windows/DOS format text files with \r\n newlines to Unix format.
+tr -d '\r' < file.txt > out.txt
+dos2unix file.txt
+# https://stackoverflow.com/questions/82726/convert-dos-line-endings-to-linux-line-endings-in-vim
+
+# Recursively find text files that contain the DOS carriage return (octal 015, hexadecimal x0D).
+grep -Url $'\015' --include='*.txt'
+grep -Url $'\x0d' --include='*.txt'
+grep -Url $'\r' --include='*.txt'
+grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
+# https://unix.stackexchange.com/questions/79702/how-to-test-whether-the-file-is-crlf-or-lf-without-modyfing-it
+# http://unix.stackexchange.com/a/79713
+# http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
+# ~/src/python/json-command-database/CmdOysters/9f2fdee93e84817e73dcbe46d01e28af001fbe1e.json
