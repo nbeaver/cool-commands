@@ -385,7 +385,6 @@ sudo modprobe --remove rtl8192ce
 sudo modprobe rtl8192ce
 ping -c 4 google.com
 
-
 # Another method
 sudo /etc/init.d/networking restart
 sudo /etc/init.d/network-manager restart
@@ -1270,6 +1269,7 @@ dpkg --vextract
 # Make a screencast by capturing output.
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
+ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY -sameq output.mkv
 
 xdpyinfo | grep 'dimensions:' | awk '{print $2}'
 xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
@@ -1331,6 +1331,7 @@ less -R
 # Suspend to screensaver and lock screen
 xscreensaver-command -lock
 # Choose display; normally :0.0 unless you have another x server running.
+# See the current one with `echo $DISPLAY`.
 xscreensaver-command --lock --display :1.0
 # On xfce
 xflock4
@@ -1851,6 +1852,8 @@ wmctrl -a banshee
 
 # Show display you're using (e.g. :0.0)
 xdpyinfo | grep 'name of display:'
+# Alternative:
+echo $DISPLAY
 
 # Suspend the bash shell
 suspend
@@ -1952,6 +1955,9 @@ dig -x 216.47.138.69
 # Also works on domain names
 host senfter.debian.org
 host example.com
+
+# Just get ip address(es).
+dig +short example.com
 
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
@@ -2289,7 +2295,9 @@ pwd -P
 # Move to real directory
 cd -- "$(pwd -P)"
 # Display a quick message
+xmessage "You are late"
 xmessage -display :0.0 "You are late"
+xmessage -display $DISPLAY "You are late"
 
 # Morse code!
 echo "Hello" | morse -s | tr -d '\n'
@@ -2316,6 +2324,8 @@ sudo apt-get --reinstall --purge install flashplugin-installer
 
 # Browse gopher with lynx
 lynx gopher://gopher.floodgap.com/1/world
+
+# Get html with lynx.
 
 # Link to USPS package tracking for three packages
 https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
@@ -2366,10 +2376,12 @@ pdfunite 1.pdf 2.pdf 1-and-2.pdf # creates a 1-and-2.pdf file with both 1 and 2.
 pdftk *.pdf cat output onelargepdfile.pdf
 # Insert pages into a pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B A15-end output manual.pdf
-# Inset pages in whatever order necessary into a pdf
+# Insert pages in whatever order necessary into a pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
 # Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
-# Combine/merge/join/concatenate pdf files together in numerical order of filename, instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea. Sorry.
+# Combine/merge/join/concatenate pdf files together in numerical order of filename,
+# instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea.
+# Sorry.
 pdfjoin $(ls -v)
 
 # Splitting pdfs.
@@ -2380,9 +2392,13 @@ gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutp
 convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 # http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
 
-# Oh my gosh, I just entered my password in the terminal and now it will be in the bash history! What can I do?
+# Oh my gosh, I just entered my password in the terminal
+# and now it will be in the bash history! What can I do?
 unset HISTFILE
 # Whew!
+# Can also use this:
+history -cw
+# https://askubuntu.com/questions/625277/terminal-incognito-mode
 
 # Remote desktop into a Windows machine
 rdesktop 123.45.678.910
@@ -2434,10 +2450,11 @@ sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa
 sudo apt-get update
 sudo apt-get upgrade
 
-# Figure out what is listening on port 80 (http://www.cyberciti.biz/faq/find-linux-what-running-on-port-80-command/)
+# Figure out what is listening on port 80.
 netstat -tulpn | grep :80
 fuser 80/tcp
 lsof -i :80 | grep LISTEN
+# http://www.cyberciti.biz/faq/find-linux-what-running-on-port-80-command/
 
 # Look at executable running process id 2720
 ls -l /proc/2720/exe
@@ -2482,9 +2499,13 @@ cheese -d /dev/video0
 # Change default terminal emulator
 sudo update-alternatives --config x-terminal-emulator
 
-# Using globstar
+# Using globstar.
 shopt -s globstar
 vim -p **/*.txt
+# When the globstar shell option is enabled, and * is used in a pathname
+# expansion context, two adjacent *s used as a single pattern will match all
+# files and zero or more directories and subdirectories. If followed by a, two
+# adjacent *s will match only directories and subdirectories.
 
 # See which packages are using the most disk space.
 dpkg-query -W --showformat='${Installed-Size} ${Package}\n' | sort -nr | less
@@ -2768,10 +2789,9 @@ wdiff -3 a.txt b.txt
 # List all fonts
 fc-list
 
-
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
-# Note: purge will note remove files in /home/, only files in /etc/.
+# Note: purge will not remove files in /home/, only files in /etc/.
 # "Configuration files residing in ~ are not usually affected by this command."
 # https://help.ubuntu.com/community/AptGet/Howto
 
@@ -3606,3 +3626,22 @@ grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
 # ~/src/python/json-command-database/CmdOysters/9f2fdee93e84817e73dcbe46d01e28af001fbe1e.json
+
+# Save a transcript of terminal session.
+script
+# Default output file is `typescript`.
+# http://linuxers.org/article/script-command-line-tool-recordsave-your-terminal-activity
+more typescript
+less -r typescript
+# Alternative: use `screen`.
+# https://www.gnu.org/software/screen/manual/screen.html#Hardcopy
+
+gsettings list-keys  org.gnome.desktop.default-applications.terminal
+
+gsettings get org.gnome.desktop.default-applications.terminal exec
+# e.g. 'x-terminal-emulator'
+
+gsettings set org.gnome.desktop.default-applications.terminal xfce4-terminal
+
+column -s, -t file.csv
+# https://www.reddit.com/r/bash/comments/37cb9v/favorite_shell_tricks/
