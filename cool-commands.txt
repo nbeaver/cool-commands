@@ -293,14 +293,16 @@ wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.c
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
 
 # Just the HTTP status code and URL.
-curl --silent --write-out "%{http_code} %{url_effective}\\n" --location "http://w3.org/404" --output /dev/null
+curl --head --silent --write-out "%{http_code} %{url_effective}\\n" --location 'http://w3.org/404' --output /dev/null
+curl --head --silent --write-out "%{http_code} %{url_effective}\\n" --location 'http://w3.org/404' --output /dev/null
 # http://beerpla.net/2010/06/10/how-to-display-just-the-http-response-code-in-cli-curl/
 
 # Just the HTTP status code.
-curl --silent --write-out "%{http_code}\\n" --location "http://www.reddit.com/r/obscurantism" -o /dev/null
+curl --head --silent --write-out "%{http_code}\\n" --location 'http://www.reddit.com/r/obscurantism' -o /dev/null
 
 # No redirects
 curl --head --silent "http://www.reddit.com/r/obscurantism"
+curl --head --silent "http://info.cern.ch/"
 wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
 
 # Download just the first level of linked files, and don't re-download them if they haven't been updated
@@ -427,6 +429,8 @@ git grep -i rhubarb $(git rev-list --all)
 # search for commands and aliases named 'my-command'.
 compgen -ac | grep my-command
 # Note: -a is for aliases, -c is for commands
+# Example: all executables ending in `.py` in $PATH:
+compgen -c | grep '\.py$'
 
 # Get wireshark working for non-root user
 sudo apt-get install wireshark
@@ -529,6 +533,7 @@ print file.__doc__
 # print in scientific notation
 print "%e" % 2**32
 print '{:e}'.format(2**32)
+print "{:f}".format(0.5)
 # python3 version
 print("%e" % 2**32)
 print('{:e}'.format(2**32))
@@ -722,6 +727,8 @@ rsync --archive --recursive --verbose --partial --compress --progress --rsh=ssh 
 # If you're not sure what you're doing is the right thing, use --dry-run.
 rsync --archive --recursive --verbose --partial --compress --progress --dry-run --rsh=ssh iit@id1.mr.aps.anl.gov:/home/iit/2014-07-18/ /home/nathaniel/Dropbox/15_Summer_2014/XAFS/2014-07-18/
 
+rsync --recursive --archive /media/disk1/ /media/disk2
+
 # Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
 rsync --recursive --progress --partial /origin/path /target/path
 # If you care about things like permissions, modification times, and symlinks:
@@ -796,8 +803,11 @@ sudo smartctl --all /dev/sda
 
 # Show how much RAM there is.
 sudo dmidecode --type memory | grep -i size
+# Alternately, use this; does not required root.
+grep MemTotal: /proc/meminfo
 # Ram form factor
 sudo dmidecode --type memory
+
 
 # Check hard drive partitions
 cat /proc/diskstats
@@ -892,6 +902,7 @@ lpq -P "Brother-HL-4070CDW"
 # List avahi/bonjour services like printers on the local area network (LAN)
 # Need avahi-utils
 avahi-browse --all --verbose --terminate --resolve
+avahi-browse -avtr
 # Need arp-scan package
 sudo arp-scan --localnet | less
 sudo arp-scan --interface eth3 --localnet | less
@@ -1130,10 +1141,16 @@ time fcrackzip -u -l 3-4 geek.zip
 
 # Do something for each line of a file
 while read line; do
-    echo $line # or whaterver you want to do with the $line variable
+    echo $line  < /dev/null # to keep the command from consuming stdin.
 done < file.txt
 # On one line
 while read line; do echo -e "$line\n"; done < file.txt
+# http://bash.cyberciti.biz/guide/While_loop
+# Example: see the type of the first command in each of the bash history.
+while read line; do type $(echo -n "$line" | cut -d' ' -f1); done < ~/.bash_history |& less
+while read line; do whois "$line" | grep 'NetName'; done < list-of-ip-addresses.txt
+# Most commands already run over lines of a text file already,
+# so it's not often that this kind of command is necessary.
 
 # Run redshift in the background so that the terminal can be closed
 # and use nohup so that it says open even after logging out
@@ -1898,8 +1915,9 @@ env VISUAL=pico crontab -e
 find -L /haystack -xtype l -samefile name-of-file
 
 # Get a listed of sorted email addresses from a text file. From http://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
-egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d "<,>" | sort | uniq > sorted-email-list.txt
+egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d '<,>' | sort | uniq > sorted-email-list.txt
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
+grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})'
 
 # Open that network manager connection editor that normally you click on the wifi icon to access.
 nm-connection-editor
@@ -2014,11 +2032,19 @@ tzselect
 # See what the time is in India.
 echo -e '5\n14\n1' | tzselect 2>&1 | grep 'Local time' # time in India
 echo -e '2\n49\n11\n1' | tzselect 2>&1 | grep 'Local time' # time in Chicago (CST)
-# A better way, based on
-# http://www.cyberciti.biz/tips/date-command-set-tz-environment-variable.html
+
+# A better way.
 export TZ=America/Chicago && date && unset TZ
 export TZ=Asia/Kolkata && date && unset TZ
 export TZ=Asia/Dhaka && date && unset TZ
+# or just
+TZ=Asia/Dhaka date
+TZ=America/Argentina/Buenos_Aires date
+TZ=Asia/Hong_Kong date
+# http://www.cyberciti.biz/tips/date-command-set-tz-environment-variable.html
+# https://unix.stackexchange.com/questions/48101/how-can-i-have-date-output-the-time-from-a-different-timezone
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
 # What time will it be 10 hours from now in Bangladesh?
 export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
 # What time will it be here when it's 10 hours later in Dhaka?
@@ -2290,10 +2316,12 @@ find $HOME ! -user $USER
 
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
+
 # Show the real directory of a symlinked one
 pwd -P
 # Move to real directory
 cd -- "$(pwd -P)"
+
 # Display a quick message
 xmessage "You are late"
 xmessage -display :0.0 "You are late"
@@ -2526,6 +2554,10 @@ time recoll -t '"moved permanently"'
 
 # See ten newest processes
 ps k-start_time
+# List nine oldest processes.
+ps -ef --sort start_time | head
+ps ax --sort lstart | head
+ps ax --sort bsdstart | head
 # See oldest processes first
 ps axkstart_time | less
 # See newest processes first
@@ -2580,8 +2612,24 @@ echo $SHLVL # If this is 1, the shell was launched by a terminal, sshd, etc. If 
 # Who is the parent process, anyway?
 ps -p $PPID
 
+echo $PPID
+grep PPid /proc/$$/status | awk '{print $2}'
+
 # See the contents of a gzip'd file without creating a temp file.
 zcat file.gz
+# See how much space a gzip'd file would take up without actually unzipping it.
+gunzip --list file.gz
+# With nicer formatting.
+gunzip --list file.gz | numfmt --header=1 --field=1 --to=iec-i | numfmt --header=1 --field=2 --to=iec-i
+# For files not in gzip format:
+zcat file.gz | wc -c | numfmt --to=iec-i
+# The 'zcat' command is just a wrapper for `gzip -cd`.
+gzip -cd file.gz | wc -c | numfmt --to=iec-i
+gzip --stdout --decompress file.gz | wc --bytes | numfmt --to=iec-i
+
+# Show file size nicely.
+wc --bytes file | numfmt --to='iec-i' --suffix='B'
+
 # See paged contents of a gzip'd file without creating a temp file.
 zless file.gz
 
@@ -2637,6 +2685,7 @@ lsb_release -a
 texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G H I J K L M N O P Q R S T U V X Y Z
 # See the definition of the AA macro (for Angstroms).
 texdef AA
+latexdef AA
 
 # See all non-printing characters in a text file
 cat -A myfile.txt
@@ -2850,6 +2899,10 @@ time read
 # http://www.commandlinefu.com/commands/view/1567/a-very-simple-and-useful-stopwatch
 # Press any key to stop the watch
 time read -sn1
+# A stopwatch that counts up the seconds until it's stopped.
+i=0; while true; do echo $i; sleep 1; i=$((i+1)); done
+i=0; while true; do echo $i; sleep 1; ((i++)); done
+for ((i=0;; i++)); do echo $i; sleep 1; done
 
 # Getting help about bash builtins like read, cd, echo, printf, and type
 # They don't have man pages of their own, and the bash man page is way too long to sift through.
@@ -3504,6 +3557,7 @@ complete -p
 complete -c which follow
 # https://www.debian-administration.org/article/316/An_introduction_to_bash_completion_part_1
 # http://tldp.org/LDP/abs/html/tabexpansion.html
+# https://unix.stackexchange.com/questions/108423/how-to-add-pattern-to-bash-completion-for-unzip
 # The completion scripts are here:
 # /usr/share/bash-completion/bash_completion
 # /etc/bash_completion.d/
@@ -3635,6 +3689,7 @@ more typescript
 less -r typescript
 # Alternative: use `screen`.
 # https://www.gnu.org/software/screen/manual/screen.html#Hardcopy
+C-a H # Begins/ends logging of the current window to the file screenlog.n in the window's default directory, where n is the number of the current window.
 
 gsettings list-keys  org.gnome.desktop.default-applications.terminal
 
@@ -3645,3 +3700,21 @@ gsettings set org.gnome.desktop.default-applications.terminal xfce4-terminal
 
 column -s, -t file.csv
 # https://www.reddit.com/r/bash/comments/37cb9v/favorite_shell_tricks/
+
+# Install python packages the safe way (or at least safer).
+pip install --user package-name
+# Not this:
+sudo pip install package-name
+
+vlc http://traffic.libsyn.com/nightvale/1-Pilot.mp3
+
+echo 'THIS IS ALL UPPERCASE' | tr '[:upper:]' '[:lower:]'
+echo 'THIS IS ALL UPPERCASE' | tr 'A-Z' 'a-z'
+# this is all uppercase
+echo 'THIS IS PARTLY UPPERCASE, and partly lowercase.' | tr '[:upper:][:lower:]' '[:lower:][:upper:]'
+# this is partly uppercase, AND PARTLY LOWERCASE.
+
+# rot13 a file.
+tr a-zA-Z n-za-mN-ZA-M < file.txt | less
+
+# TODO: how to change the date modified to a given date, but keep the time of day unchanged.
