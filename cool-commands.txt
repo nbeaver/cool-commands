@@ -34,6 +34,14 @@ find . -perm -g+s
 # Find all files over a certain size (500MB in this case.)
 find . -size +500M
 
+# Find executables.
+find . -type f -executable -print
+# Find non-executables.
+find . -type f \! -executable -print
+find . -type f -not -executable -print
+find /usr/bin/ -type f -not -executable -print
+find /bin/ -type f -not -executable -print
+
 # View only files not ending in '.txt'
 ls --ignore=*.txt
 
@@ -246,11 +254,17 @@ cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 sudo chown nathaniel: .xdvirc
 # Had to do this when copying over files from old install.
 cat precise.txt | grep root > to-chown.txt
+# Unnecessary use of cat.
+grep root precise.txt > to-chown.txt
 cat fix_dotfile_permissions/to-chown-file-names.txt | xargs sudo chown nathaniel:
+# All together:
+grep root precise.txt | xargs sudo chown nathaniel:
 
 # Using curl to download from the command line
-curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip # test download speed
+curl --remote-name 'url' # Basically a wget replacement.
+curl --output file.zip 'url' # Choose output filename.
 curl --continue-at - --remote-name 'url_for_file' # Download file, automatically with same name and ability to resume download
+curl --output /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip # test download speed
 
 # Using wget to download from the command line
 wget http://cdimage.debian.org/cdimage/release/current-live/i386/usb-hdd/debian-live-6.0.4-i386-lxde-desktop.img # simpler
@@ -463,6 +477,9 @@ newgrp dialout
 
 # Add current user to those permitted to print.
 sudo usermod -a -G lpadmin $USER
+
+# See what groups you are in, in a line-by-line fashion.
+id | tr ',' '\n'
 
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
@@ -1025,7 +1042,7 @@ netstat -tnlp | grep -v 127.0.0 | grep -v ::1:
 # Disk usage of current directory (total only)
 du -sh
 du --summarize --human-readable
-# Director/file taking up the most space
+# List ten directory or files taking up the most space
 du -hsx * | sort -rh | head -10
 du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head --lines=10
 
@@ -1041,7 +1058,7 @@ pdftk book.pdf update_info  info.txt output out-book.pdf
 # Dump all metadata
 for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
 
-# Copy all files in a remote director to this computer
+# Copy all files in a remote directory to this computer.
 scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
 
 # Run redshift with location near Chicago
@@ -1338,8 +1355,15 @@ zcat --force /var/log/dpkg.log* | grep "\ remove\ " | sort --reverse | less
 
 # TODO: get list of recently updated packages that works offline.
 
-# Add something to your $PATH, a colon-separated list of directories
+# Add something to your $PATH, a colon-separated list of directories.
 export PATH=$PATH:$HOME/my-path
+PATH=${PATH}:/opt/bin
+
+# See directories in $PATH, one per line.
+echo $PATH | tr ':' '\n'
+# Process each directory in $PATH using a for loop.
+IFS=':'; for dir in $PATH; do printf -- "$dir\n"; done;
+# Note the lack of quotes around $PATH to ensure it gets split.
 
 # View colored output in less
 less --RAW-CONTROL-CHARS
@@ -1754,6 +1778,16 @@ lsof $HOME
 # Start less at the first instance of a pattern
 less -p ghemical /var/log/dpkg.log
 
+# Start less at the 100th line.
+less +100 /var/log/messages
+less +100g /var/log/messages
+# Start at 25% of the file.
+less +25p /var/log/messages
+# Start at the 1000th byte of the file.
+less +1000P /var/log/messages
+# https://superusersome.wordpress.com/2015/06/08/less-quickly-jump-to-line-number-in-large-file/
+# https://superuser.com/questions/113039/less-quickly-jump-to-line-number-in-large-file
+
 # Start less at the bottom of a file
 less +G /var/log/dpkg.log
 # Unnecessary use of cat.
@@ -1860,6 +1894,8 @@ xprop _NET_WM_PID
 xprop WM_CLASS
 # Search for the process number, e.g. 1400
 ps -p 1400
+
+ps -p $(xprop _NET_WM_PID | cut -d' ' -f 3)
 
 # Determine more info about a window
 xwininfo
@@ -2094,6 +2130,16 @@ unlink -
 
 # Remove all files without being goofed up by leading dashes.
 rm -- *
+
+# Wipe/truncate a file without removing it.
+cat /dev/null > /path/to/file
+> /path/to/file
+: > /path/to/file
+printf "" > file
+true > file
+truncate --size=0
+truncate -s 0
+# https://superuser.com/questions/849413/why-would-you-cat-dev-null-var-log-messages
 
 # Kill an unresponsive SSH session
 # http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
@@ -3059,6 +3105,10 @@ kpsewhich tengwarscript.sty
 kpsewhich -var-value TEXMFHOME
 # LaTeX paths
 kpsexpand '$TEXMF'
+# See if AMS fonts are installed.
+kpsewhich amsfonts.sty
+# See if AMS symbols are installed.
+kpsewhich amssymb.sty
 
 # Run as sudo with a graphical password entry rather than typing password into terminal.
 # (Useful when launching a graphical program without the ability to type into a terminal.)
@@ -3715,6 +3765,42 @@ echo 'THIS IS PARTLY UPPERCASE, and partly lowercase.' | tr '[:upper:][:lower:]'
 # this is partly uppercase, AND PARTLY LOWERCASE.
 
 # rot13 a file.
-tr a-zA-Z n-za-mN-ZA-M < file.txt | less
+tr a-zA-Z n-za-mN-ZA-M < /usr/share/dict/words | less
 
 # TODO: how to change the date modified to a given date, but keep the time of day unchanged.
+
+# Do optical character recognition on an image.
+gocr file.png > out.txt
+gocr file.png -o out.txt
+gocr -a 50 file.png -o gocr_50.txt
+# gocr seems to be better at screenshots.
+# http://jorgenmodin.net/index_html/archive/2010/06/15/linux-ocr-for-getting-text-from-a-screenshot
+
+tesseract file.png stdout
+# tesseract seems to be better at scanned books,
+# or at any rate larger text.
+
+# https://askubuntu.com/questions/280475/how-can-instantaneously-extract-text-from-a-screen-area-using-ocr-tools
+
+export NSPR_LOG_MODULES=imap:5; export NSPR_LOG_FILE=/tmp/imap.log; icedove & disown
+export NSPR_LOG_MODULES=imap:5,timestamp; export NSPR_LOG_FILE=/tmp/imap.log; icedove & disown
+# https://wiki.mozilla.org/MailNews:Logging#Linux.2Funix
+# http://wiki2.dovecot.org/Debugging/Thunderbird
+
+>C:\Python27\python.exe myscript.py first_argument.txt > outfile.txt
+
+# Using ANSI color codes in the terminal.
+black='\E[30;47m'
+red='\E[31;47m'
+RED='\033[0;31m'
+green='\E[32;47m'
+yellow='\E[33;47m'
+blue='\E[34;47m'
+magenta='\E[35;47m'
+cyan='\E[36;47m'
+white='\E[37;47m'
+no_color='\033[0m'
+# http://misc.flogisoft.com/bash/tip_colors_and_formatting
+# http://www.tldp.org/LDP/abs/html/colorizing.html
+# https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
+# https://stackoverflow.com/questions/30868750/xargs-echo-colored-output
