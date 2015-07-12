@@ -31,6 +31,17 @@ find . -perm -g+s
 # http://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # http://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 
+# Show permisisons in octal.
+stat -c '%a %n' -- *
+stat --format='%a %n' -- *
+# Include the human-readable permissions.
+stat -c '%A %a %n' *
+# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
+
+# Basically the same thing, but recursive.
+find . -type f -printf "%M %m %f\n" | less
+# https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
+
 # Find all files over a certain size (500MB in this case.)
 find . -size +500M
 
@@ -247,6 +258,20 @@ find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
 # -o means 'or', so either prune .git or if they are files (not directories) run wc -l filename on them.
 # Same, but skip .zim as well.
 find . -path ./.git -prune -o -path ./.zim -prune -o -type f -exec 'wc' '-l' '{}' \;
+# Find all files that the current user has write-access to; a kind of crude security audit.
+find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print | less
+find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print 2> /dev/null | less
+# We can use brace expansion for the pruned paths instead of writing them all out by hand.
+# TODO: why doesn't this work?
+find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
+# http://www.liamdelahunty.com/tips/linux_find_exclude_multiple_directories.php
+# https://askubuntu.com/questions/206277/find-files-in-linux-and-exclude-specific-directories
+# http://www.cyberciti.biz/faq/linux-unix-osx-bsd-find-command-exclude-directories/
+# https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
+
+# Find a writable file owned by root.
+find / -xdev -user root -perm -u+w -name hello 2>/dev/null
+# https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
 
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 
@@ -275,6 +300,15 @@ wget --no-host-directories ~/Dropbox/UbuntuBackup/ 'http://www.google.com/calend
 
 # Using wget to get a recursive (default to 5 links deep) local copy of a page.
 wget --no-host-directories --recursive --convert-links --page-requisites 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
+wget -nHrkp 'http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/oddballs/oddballs-web/'
+
+wget --recursive --no-clobber --page-requisites --html-extension --convert-links restrict-file-names=windows --domains website.org --no-parent www.example.com/foo/bar/
+# https://askubuntu.com/questions/425275/download-entire-web-archive-using-terminal
+wget -E -H -k -K -p url
+wget --adjust-extension --span-hosts --convert-links --backup-converted --page-requisites url
+wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows url
+wget -E -H -k -K -p url -e robots=off
+# https://superuser.com/questions/55040/save-a-single-web-page-with-background-images-with-wget
 
 # Use wget, but reject some URLs/files from download.
 wget --recursive "http://groovebackup.com/?lang=en" --reject index.html?lang=de,index.html?lang=dk,index.html?lang=en,logout
@@ -509,11 +543,29 @@ stat -c %x /var/lib/mlocate/mlocate.db
 echo -n '12764787846358441471' | wc --chars # this is a 20-digit prime
 time factor 12764787846358441471 # factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
+# TODO: what on earth?
+#   $ time factor 12764787846358441471
+#   12764787846358441471: 12764787846358441471
+#
+#   real	0m0.003s
+#   user	0m0.000s
+#   sys	0m0.000s
 
 # This is what I get on my laptop
 # real    0m14.582s
 # user    0m14.533s
 # sys 0m0.004s
+
+# Check if `factor` was built with GMP for bignum support:
+ldd "$(which factor)"
+#	linux-vdso.so.1 (0x00007ffcc1d63000)
+#	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd60e2b4000)
+#	/lib64/ld-linux-x86-64.so.2 (0x00007fd60e65d000)
+# Nope. Here's why:
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=608832
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=64527
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=121306
+# https://bugs.launchpad.net/ubuntu/+source/coreutils/+bug/696618
 
 # Make a file executable (defaults to current user)
 chmod +x zab.py
@@ -837,6 +889,12 @@ sudo regionset /dev/dvd4
 
 # Capture a disc image
 cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
+# or
+sudo dd if=/dev/dvd4 of=/path/to/output/file.iso
+# or
+sudo readom dev=/dev/sr0 f=/home/greg/files/windows-nt4.iso
+# https://superuser.com/questions/616392/copying-windows-installation-cd-to-iso-on-ubuntu
+# http://www.1stbyte.com/2012/10/19/create-iso-image-from-cd-or-dvd-disk-in-linux/
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -892,6 +950,7 @@ unity --reset & disown
 
 # Generate 4-word passphrase
 shuf --head-count=4 /usr/share/dict/words
+shuf -n 4 /usr/share/dict/words
 
 # if you install dictionaries-common,
 # you may need to run
@@ -1173,8 +1232,12 @@ while read line; do whois "$line" | grep 'NetName'; done < list-of-ip-addresses.
 # and use nohup so that it says open even after logging out
 nohup redshift -l 41:87 & disown
 
-# Allow everyone to read a file
+# Allow everyone to read a file.
 sudo chmod a+r file
+# Turn off world-readable status.
+sudo chmod o-r file
+# Turn off world-editable status.
+sudo chmod o-w file
 
 # The default shell:
 echo $SHELL
@@ -1421,6 +1484,9 @@ for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
 
+# Change a tab-separated file (TSV) to a comma-separated file (CSV) in the most naive fashion possible.
+cat in.tsv | tr '\t' ',' > out.csv
+
 # Simple file sharing
 # http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
 # (On sending machine:)
@@ -1448,9 +1514,11 @@ auto-apt run ./configure
 # Install
 ./install
 
-# Strip out comments (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
-grep -v '^#\|^$'
-# TODO: also include optional whitespace before comment character.
+# Strip out comment lines (lines starting with #, i.e. '^#') and blank lines (i.e. '^$')
+grep -v '^#\|^$' file.sh
+# Include optional whitespace before comment character.
+grep -v '^\s*#\|^$' file.sh
+# Note that this does not match comments that occur on the same line as the source code.
 
 # Copy hidden files (dotfiles)
 cp -r test/.[a-zA-Z0-9]* target_directory
@@ -2133,12 +2201,18 @@ rm -- *
 
 # Wipe/truncate a file without removing it.
 cat /dev/null > /path/to/file
+# or
 > /path/to/file
+# or
 : > /path/to/file
+# or
 printf "" > file
+# or
 true > file
-truncate --size=0
-truncate -s 0
+# or
+truncate --size=0 file
+# or
+truncate -s 0 file
 # https://superuser.com/questions/849413/why-would-you-cat-dev-null-var-log-messages
 
 # Kill an unresponsive SSH session
@@ -2165,6 +2239,8 @@ shopt -s extglob
 mv folder1/ folder2
 # is different from
 mv folder1 folder2
+# TODO: how is it different? What about this?
+mv folder1 folder2/
 
 # Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
 mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
@@ -2453,13 +2529,20 @@ pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B A15-end output manual.pdf
 # Insert pages in whatever order necessary into a pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
 # Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
+
 # Combine/merge/join/concatenate pdf files together in numerical order of filename,
 # instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea.
+# http://mywiki.wooledge.org/ParsingLs
 # Sorry.
 pdfjoin $(ls -v)
 
 # Splitting pdfs.
-pdftk myoldfile.pdf cat 1-2 4-5 output mynewfile.pdf
+# Get only a single page (number 17 in this case).
+pdftk myoldfile.pdf cat 17 output mynewfile.pdf
+# Get a range of pages (10 through 12 and 17 to the end in this case).
+pdftk myoldfile.pdf cat 10-12 17-end output mynewfile.pdf
+# Get all but a single page (number 17 in this case).
+pdftk myoldfile.pdf cat '~17' output mynewfile.pdf
 # http://linuxcommando.blogspot.com/2013/02/splitting-up-is-easy-for-pdf-file.html
 gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutputFile=outputT4.pdf T4.pdf
 # http://linuxcommando.blogspot.com/2014/01/how-to-split-up-pdf-files-part-2.html
@@ -3804,3 +3887,29 @@ no_color='\033[0m'
 # http://www.tldp.org/LDP/abs/html/colorizing.html
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 # https://stackoverflow.com/questions/30868750/xargs-echo-colored-output
+
+# How many processors does this machine have?
+getconf _NPROCESSORS_ONLN
+
+# How long can paths be?
+getconf PATH_MAX /
+
+# Hey, what operating system is this?
+echo $OSTYPE
+
+# List all signals.
+compgen -A signal
+
+# http://zwischenzugs.tk/index.php/2015/07/01/bash-shortcuts-gem/
+bind -P
+stty -a
+
+# Keybindings for the terminal.
+stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
+# https://news.ycombinator.com/item?id=9810823
+
+# Information about a file or directory.
+gvfs-info /etc/hosts
+
+# Check if a mimetype is known.
+gvfs-mime --query x-scheme-handler/thunderlink
