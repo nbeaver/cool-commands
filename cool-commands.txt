@@ -543,7 +543,12 @@ stat -c %x /var/lib/mlocate/mlocate.db
 echo -n '12764787846358441471' | wc --chars # this is a 20-digit prime
 time factor 12764787846358441471 # factoring this will take on the order of a few seconds
 12764787846358441471: 12764787846358441471
-# TODO: what on earth?
+# This is what I get on my laptop
+# real    0m14.582s
+# user    0m14.533s
+# sys 0m0.004s
+
+# This is what I see on my laptop now.
 #   $ time factor 12764787846358441471
 #   12764787846358441471: 12764787846358441471
 #
@@ -551,10 +556,6 @@ time factor 12764787846358441471 # factoring this will take on the order of a fe
 #   user	0m0.000s
 #   sys	0m0.000s
 
-# This is what I get on my laptop
-# real    0m14.582s
-# user    0m14.533s
-# sys 0m0.004s
 
 # Check if `factor` was built with GMP for bignum support:
 ldd "$(which factor)"
@@ -964,6 +965,8 @@ lpstat
 # List printers
 lpstat -s
 lpstat -v
+cat /etc/printcap | tr "|" "\t" | cut -f 1 | grep -v "#"
+tr "|" "\t" < /etc/printcap | cut -f 1 | grep -v "#"
 # Print document from the command line to a network printer by printer's name
 lpr -P "Brother-HL-4070CDW" doc.pdf
 # Print in double-sided
@@ -1382,7 +1385,26 @@ gfortran myprogram.f95 -o myprogram
 uname --all
 # Only the kernel architecture, e.g. x86_64
 uname --machine
+uname -m
+# Linux
+# Darwin
 # ~/src/python/json-command-database/CmdOysters/c061264c95aede5a5e512500e5069e2c5f3a71f5.json
+
+# Shows kernal architecture as well,
+# theoretically the same as uname -m.
+arch
+# x86_64
+# i386
+
+# Darwin-only command to get machine architecture.
+machine
+# i486
+
+# Show byte-order.
+perl -MConfig -e 'printf "%s\n", $Config{byteorder}'
+# 12345678
+# 1234
+
 
 # Show cpu information
 lscpu
@@ -1920,8 +1942,10 @@ diffuse <(zcat file1.gzip) <(zcat file2.gzip)
 
 # IRC chat command to register nickname
 /msg NickServ register [password] email@email-provider.com
-# All freenode servers listen on ports 6665, 6666, 6667, 6697 (SSL only), 7000 (SSL only), 7070 (SSL only), 8000, 8001 and 8002
-# All GeekShed servers accept standard connections on the following ports: 6667, 6660, 6661, 6662, 6663, 6664, 6665, 6666, 6668, 6669, 7029, 7070, 1494, 1755, and 6697 (SSL only).
+# All freenode servers listen on ports:
+# 6665, 6666, 6667, 6697 (SSL only), 7000 (SSL only), 7070 (SSL only), 8000, 8001 and 8002
+# All GeekShed servers accept standard connections on the following ports:
+# 6667, 6660, 6661, 6662, 6663, 6664, 6665, 6666, 6668, 6669, 7029, 7070, 1494, 1755, and 6697 (SSL only).
 # IIT filters 6666, 6667, 6668, and 6669, and a lot more. SSL works just dandy, though.
 # Start a new channel, e.g. #openkim. Make sure you are registered first.
 /join #openkim
@@ -2848,6 +2872,11 @@ for file in *.txt ; do
 done
 # Another option is to use find with --exec flag
 
+# Check what your IFS is:
+cat -etv <<<"$IFS"
+cat --show-all <<< "$IFS"
+# http://www.cyberciti.biz/faq/unix-linux-bash-split-string-into-array/
+
 # Do a one-liner, e.g. from the command line.
 # In this case, append a newline to each file.
 for f in *; do echo -e '\n' > "$f"; done
@@ -3079,6 +3108,13 @@ cp /etc/apt/preferences.d/apt-listbugs ~/tmp/
 # user	0m11.024s
 # sys	0m1.664s
 
+# Instead of pinning, just hold the package to keep it from getting updated with the other packages.
+apt-mark hold lvm2
+apt-mark unhold lvm2
+# See held packages.
+apt-mark showhold
+# https://www.reddit.com/r/debian/comments/3d4v06/looking_to_up_my_debian_game_aptlistbugs_tells_me/
+
 # Use imagemagick to find out information about several files
 identify *.jpg
 
@@ -3182,9 +3218,9 @@ apt-cache policy linux-headers-$(uname -r)
 sudo dhclient -r eth0
 # http://serverfault.com/questions/42799/how-to-force-linux-to-reacquire-a-new-ip-address-from-the-dhcp-server
 
-# Check if a LaTeX package is installed
+# Check if a LaTeX package is installed; tengwarscript in this case.
 kpsewhich tengwarscript.sty
-# Local LaTeX folder
+# Local local LaTeX folder.
 kpsewhich -var-value TEXMFHOME
 # LaTeX paths
 kpsexpand '$TEXMF'
@@ -3450,7 +3486,7 @@ type echo
 #     details about the options it supports.
 # http://askubuntu.com/questions/27355/how-do-i-get-help-for-echo-or-other-bash-commands
 
-# Follow links recursively.
+# Follow symbolic links recursively.
 namei /usr/bin/vim
 # Example output.
 #   $ namei $(which vim)
@@ -3705,6 +3741,9 @@ tracker-search
 debtags search "implemented-in::lisp"
 axi-cache search --all implemented-in::lisp
 
+# TODO: search for homepages that include 'sourceforge.net'
+# https://askubuntu.com/questions/650704/commands-to-search-by-project-homepage-tag
+
 # Get useful debugging info from /proc/ pseudo-filesystem.
 tail --lines=+1 /proc/27870/{status,syscall,sched,io,limits,maps} > proc-info.txt
 
@@ -3757,6 +3796,12 @@ aptitude search '?and(~i, ~Awheezy-backports)'
 # http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s03s05.html
 
 # TODO: list installed pacakges with available backports that have not yet been installed.
+# https://askubuntu.com/questions/596175/list-uninstalled-backports
+
+# List packages by section.
+aptitude -F'|%p|%d|' search '?section(hamradio)'
+# https://askubuntu.com/questions/469612/how-can-i-get-a-list-of-all-packages-in-a-repository-section-from-command-line
+
 
 printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
 # http://stackoverflow.com/questions/448126/lambda-functions-in-bash
@@ -3896,6 +3941,18 @@ getconf PATH_MAX /
 
 # Hey, what operating system is this?
 echo $OSTYPE
+# Note: bash-only.
+# linux-gnu
+# darwin13
+uname
+# Darwin
+# Linux
+uname -s
+# Same as uname.
+uname -o
+# GNU-only extension.
+# GNU/Linux
+# 
 
 # List all signals.
 compgen -A signal
@@ -3910,6 +3967,64 @@ stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
 
 # Information about a file or directory.
 gvfs-info /etc/hosts
+# display name: hosts
+# edit name: hosts
+# name: hosts
+# type: regular
+# size:  188
+# uri: file:///etc/hosts
+# attributes:
+#   standard::type: 1
+#   standard::name: hosts
+#   standard::display-name: hosts
+#   standard::edit-name: hosts
+#   standard::copy-name: hosts
+#   standard::icon: text-plain, text-x-generic
+#   standard::content-type: text/plain
+#   standard::fast-content-type: application/octet-stream
+#   standard::size: 188
+#   standard::allocated-size: 4096
+#   standard::symbolic-icon: text-plain-symbolic, text-x-generic-symbolic, text-plain, text-x-generic
+#   etag::value: 1418606230:639411
+#   id::file: l2049:26216579
+#   id::filesystem: l2049
+#   access::can-read: TRUE
+#   access::can-write: FALSE
+#   access::can-execute: FALSE
+#   access::can-delete: FALSE
+#   access::can-trash: FALSE
+#   access::can-rename: FALSE
+#   time::modified: 1418606230
+#   time::modified-usec: 639411
+#   time::access: 1436849840
+#   time::access-usec: 671999
+#   time::changed: 1418606230
+#   time::changed-usec: 639411
+#   unix::device: 2049
+#   unix::inode: 26216579
+#   unix::mode: 33188
+#   unix::nlink: 1
+#   unix::uid: 0
+#   unix::gid: 0
+#   unix::rdev: 0
+#   unix::block-size: 4096
+#   unix::blocks: 8
+#   owner::user: root
+#   owner::user-real: root
+#   owner::group: root
 
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
+
+# Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
+ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
+xdg-open http://localhost:1631/
+sensible-browser http://localhost:1631/
+# http://askubuntu.com/a/164971/182196
+# https://askubuntu.com/questions/23936/how-do-you-administer-cups-remotely-using-the-web-interface
+
+# When you're curious what `newspeak` from the filters package does.
+diff --side-by-side --suppress-common-lines /usr/share/dict/words <( newspeak < /usr/share/dict/words ) | less
+
+# Same for `censor`.
+diff --side-by-side --suppress-common-lines /usr/share/dict/words <( censor < /usr/share/dict/words ) | less
