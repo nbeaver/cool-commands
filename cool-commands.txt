@@ -403,7 +403,7 @@ stat /proc/24088
 #        W    paging (not valid since the 2.6.xx kernel)
 #        X    dead (should never be seen)
 #        Z    defunct ("zombie") process, terminated but not reaped by its parent.
-# 
+#
 #        For BSD formats and when the stat keyword is used, additional characters may be displayed:
 #        <    high-priority (not nice to other users)
 #        N    low-priority (nice to other users)
@@ -454,7 +454,7 @@ date -d 'April 19, 2014 + 12 weeks'
 
 # Time in the past.
 date --date='5 hours 15 minutes 2 seconds ago'
-#TODO: why don't these match?
+# TODO: why don't these match?
 date --date='-5 hours -15 minutes -2 seconds'
 
 # find number of days' difference between two dates
@@ -753,7 +753,7 @@ find ./ -type l ! -exec test -r {} \; -print
 find ./ -print -exec recollindex -i '{}' \;
 
 # Much like any other find exec command, but more efficient
-# because it uses the fact that rm can take multiple arguments to runs rm fewer times. 
+# because it uses the fact that rm can take multiple arguments to runs rm fewer times.
 find ./ -type f -name "*.deadtime" -exec rm '{}' +
 
 # Print all empty directories under current directory.
@@ -847,7 +847,7 @@ sudo fdisk -l
 # Sector size (logical/physical): 512 bytes / 4096 bytes
 # I/O size (minimum/optimal): 4096 bytes / 4096 bytes
 # Disk identifier: 0x0008fe9b
-# 
+#
 #    Device Boot      Start         End      Blocks   Id  System
 # /dev/sda1   *        2048   967141375   483569664   83  Linux
 # /dev/sda2       967143422  1000214527    16535553    5  Extended
@@ -857,9 +857,9 @@ sudo fdisk -l
 # Another easy way to see disks and partitions; does not require sudo.
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-# sda      8:0    0   477G  0 disk 
+# sda      8:0    0   477G  0 disk
 # ├─sda1   8:1    0 461.2G  0 part /
-# ├─sda2   8:2    0     1K  0 part 
+# ├─sda2   8:2    0     1K  0 part
 # └─sda5   8:5    0  15.8G  0 part [SWAP]
 # sr0     11:0    1  1024M  0 rom  
 
@@ -894,8 +894,12 @@ cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
 sudo dd if=/dev/dvd4 of=/path/to/output/file.iso
 # or
 sudo readom dev=/dev/sr0 f=/home/greg/files/windows-nt4.iso
+# or
+cdrdao
 # https://superuser.com/questions/616392/copying-windows-installation-cd-to-iso-on-ubuntu
 # http://www.1stbyte.com/2012/10/19/create-iso-image-from-cd-or-dvd-disk-in-linux/
+
+isoinfo -d -i /dev/cdrom
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -1213,7 +1217,7 @@ fcrackzip -u -l 3-4 geek.zip
 time fcrackzip -u -l 3-4 geek.zip
 
 # PASSWORD FOUND!!!!: pw == geek
-# 
+#
 # real	0m49.633s
 # user	0m1.916s
 # sys	0m2.236s
@@ -1686,7 +1690,7 @@ killall korgac
 # Get random 6 digit number
 echo $RANDOM
 
-# 
+#
 od -vAn -N4 -tu4 < /dev/urandom
 od -An -N2 -i /dev/random
 # http://www.cyberciti.biz/faq/bash-shell-script-generating-random-numbers/
@@ -2181,6 +2185,14 @@ date --date='TZ="Asia/Dhaka" 10 hours'
 TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +%r
 # What will be the full date?
 TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +'%A, %B %e, %r'
+
+grep Alaska /usr/share/zoneinfo/zone.tab
+# US  +550737-1313435 America/Metlakatla  Pacific Standard Time - Annette Island, Alaska
+# US  +611305-1495401 America/Anchorage   Alaska Time
+# US  +581807-1342511 America/Juneau  Alaska Time - Alaska panhandle
+# US  +571035-1351807 America/Sitka   Alaska Time - southeast Alaska panhandle
+# US  +593249-1394338 America/Yakutat Alaska Time - Alaska panhandle neck
+# US  +643004-1652423 America/Nome    Alaska Time - west Alaska
 
 # Which day of the week was the stock market crash of October 29, 1929?
 date +%A --date="October 29, 1929"
@@ -3639,6 +3651,16 @@ acpitool --battery
 #    Model number       : 42T4763
 #    Serial number      : <snip>
 
+# Alternative.
+upower -i /org/freedesktop/UPower/devices/battery_BAT0
+
+# To see everything.
+upower -d
+upower --dump
+
+cat /sys/class/power_supply/BAT0/status
+cat /sys/class/power_supply/BAT0/capacity
+
 # Run the C++ interpreter, ROOT (cint)
 root -l
 # requires root-system package.
@@ -3952,7 +3974,7 @@ uname -s
 uname -o
 # GNU-only extension.
 # GNU/Linux
-# 
+#
 
 # List all signals.
 compgen -A signal
@@ -4028,3 +4050,10 @@ diff --side-by-side --suppress-common-lines /usr/share/dict/words <( newspeak < 
 
 # Same for `censor`.
 diff --side-by-side --suppress-common-lines /usr/share/dict/words <( censor < /usr/share/dict/words ) | less
+
+xfce4-power-manager --restart --debug |& ts | tee xfce4-power-manager.log & disown
+
+virtualenv my-virtualenv
+cd my-virtualenv
+source bin/activate
+deactivate
