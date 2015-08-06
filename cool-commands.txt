@@ -562,11 +562,18 @@ ldd "$(which factor)"
 #	linux-vdso.so.1 (0x00007ffcc1d63000)
 #	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd60e2b4000)
 #	/lib64/ld-linux-x86-64.so.2 (0x00007fd60e65d000)
+# Or just do this.
+factor 340282366920938463463374607431768211456
 # Nope. Here's why:
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=608832
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=64527
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=121306
 # https://bugs.launchpad.net/ubuntu/+source/coreutils/+bug/696618
+
+objdump -p /usr/bin/factor | grep NEEDED
+#   NEEDED               libc.so.6
+objdump -p /usr/bin/factor | grep 'file format'
+# /usr/bin/factor:     file format elf64-x86-64
 
 # Make a file executable (defaults to current user)
 chmod +x zab.py
@@ -891,13 +898,15 @@ sudo regionset /dev/dvd4
 # Capture a disc image
 cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
 # or
-sudo dd if=/dev/dvd4 of=/path/to/output/file.iso
+dd if=/dev/dvd4 of=/path/to/output/file.iso
 # or
-sudo readom dev=/dev/sr0 f=/home/greg/files/windows-nt4.iso
+readom dev=/dev/sr0 f=$HOME/Downloads/disc.iso
 # or
 cdrdao
 # https://superuser.com/questions/616392/copying-windows-installation-cd-to-iso-on-ubuntu
 # http://www.1stbyte.com/2012/10/19/create-iso-image-from-cd-or-dvd-disk-in-linux/
+safecopy /dev/dvd out.iso
+# https://askubuntu.com/questions/138152/software-to-copy-a-scratched-cd-dvd-blueray-to-an-iso-file
 
 isoinfo -d -i /dev/cdrom
 
@@ -2845,6 +2854,7 @@ calibredb list --fields 'title,authors,size'
 cat /etc/issue
 # Find out which Debian/Ubuntu distribution you have installed.
 lsb_release -a
+# See also: uname -a
 
 # See one-letter macros definitions for LaTeX.
 texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G H I J K L M N O P Q R S T U V X Y Z
@@ -2947,8 +2957,11 @@ nameserver 176.58.120.112
 
 # Make a directory with the format yyyy-mm-dd of today's date
 mkdir $(date -I)
-# Note: -I is deprecated.
+# Note: the -I / --iso-8601 was deprecated until 2011-10-27. 
+# http://unix.stackexchange.com/a/164834
+# https://unix.stackexchange.com/questions/164826/date-command-iso-8601-option
 # https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
+
 # This does the same thing, but takes a little longer to type:
 mkdir $(date +"%F")
 
@@ -3418,7 +3431,7 @@ gnome-open
 kde-open
 exo-open
 
-# See what syscalls a program makes, what files it reads, and so on.
+# See what syscalls (system calls) a program makes, what files it reads, and so on.
 strace echo "Hello."
 # Attach strace to a running process. Useful for e.g. seeing if a process is respoding,
 # and sending kill signals and seeing if it gets them.
@@ -4057,3 +4070,10 @@ virtualenv my-virtualenv
 cd my-virtualenv
 source bin/activate
 deactivate
+
+# Generate a uuid (a.k.a guid).
+uuidgen
+# or
+cat /proc/sys/kernel/random/uuid
+# or
+python  -c 'import uuid; print uuid.uuid1()'
