@@ -683,6 +683,18 @@ unzip -l myfile.zip # list contents of zip file
 unzip '*.zip' # unzip all files ending in .zip
 unzip myfile.zip -d /path/to/desired/directory
 
+# Zip file gone wrong:
+file imap.zip
+# imap.zip: Zip archive data, at least v3.0 to extract
+unzip imap.zip
+# Archive:  imap.zip
+# warning [imap.zip]:  10050086 extra bytes at beginning or within zipfile
+#   (attempting to process anyway)
+# error [imap.zip]:  start of central directory not found;
+#   zipfile corrupt.
+#   (please check that you have transferred or created the zipfile in the
+#   appropriate BINARY mode and that you have compiled UnZip properly)
+
 # Latex for adding tengwar stuff (unfinished)
 updmap --enable Map=tengwarscript.map
 
@@ -1008,11 +1020,66 @@ ifconfig eth0
 # Note Bcast address. Now ping it:
 ping -b -c 3 -i 20 $BROADCASE_ADDRESS
 
-# Chat using netcat
-# On computer #1
-nc -l 55555
-# On computer #2, where $IP is computer #1's ip address
-nc $IP 55555
+# Chat using netcat.
+# On computer #1 (chloride):
+nc -l -p 4444
+# On computer #2 (thinpad):
+nc chloride.phys.iit.edu 4444
+# Set a 1-second timeout in case the port is blocked.
+nc -w 1 chloride.phys.iit.edu 4444
+# Press enter when you want to send a line.
+# Press Ctrl-C when you are done.
+
+# Example log:
+# nbeaver@chloride:~$ nc -l -p 4444
+# Hi, thinkpad!
+# Hi, chloride!
+# Are we done here?
+# Yes, goodbye.
+# Alright, bye.
+# ^C
+# nc chloride.phys.iit.edu 4444
+# Hi, thinkpad!
+# Hi, chloride!
+# Are we done here?
+# Yes, goodbye.
+# Alright, bye.
+
+# If another machine tries to join, it gets this message:
+# nbeaver@omega:~$ nc chloride.phys.iit.edu 4444
+# chloride.phys.iit.edu [216.47.138.69] 4444 (?) : Connection refused
+
+telnet chloride.phys.iit.edu 80
+# Use Ctrl-] q to get out of it.
+# $ telnet chloride.phys.iit.edu 80
+# Trying 216.47.138.69...
+# Connected to chloride.phys.iit.edu.
+# Escape character is '^]'.
+# ^]q
+#
+# telnet> q
+# Connection closed.
+
+# Check if a port is filtered on a remote machine.
+nmap -p T:60000 chloride.phys.iit.edu
+# $ nmap -p T:60000 chloride.phys.iit.edu
+#
+# Starting Nmap 6.47 ( http://nmap.org ) at 2015-08-07 15:08 CDT
+# Nmap scan report for chloride.phys.iit.edu (216.47.138.69)
+# Host is up (0.027s latency).
+# PORT      STATE    SERVICE
+# 60000/tcp filtered unknown
+#
+# Nmap done: 1 IP address (1 host up) scanned in 0.39 seconds
+# nathaniel@thinkpad:~/tmp$ nmap -p T:4444 chloride.phys.iit.edu
+#
+# Starting Nmap 6.47 ( http://nmap.org ) at 2015-08-07 15:08 CDT
+# Nmap scan report for chloride.phys.iit.edu (216.47.138.69)
+# Host is up (0.025s latency).
+# PORT     STATE  SERVICE
+# 4444/tcp closed krb524
+#
+# Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
 
 # See what your browser is doing.
 nc -l -p 8000 -v
@@ -1097,7 +1164,7 @@ awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | u
 # Kill escalation
 kill 21213 # sends SIGTERM (like Ctrl-C) to process 21213
 kill -15 21213 # sends SIGTERM (like Ctrl-C) to process 21213
-kill -2 21213 # send SIGINT to process 21213 (
+kill -2 21213 # send SIGINT to process 21213
 kill -1 21213 # send SIGHUP to process 21213
 kill -3 21213 # send SIGQUIT (like Ctrl-\) to process 21213; will dump core
 kill -9 21213 # sends unblockable KILL signal to kernel
@@ -1739,20 +1806,28 @@ kill $(jobs -ps)
 # ~/src/python/json-command-database/CmdOysters/d3c97a0498d770f39f9e1b386a8dddfdf6c71701.json
 
 # Use a string as if it were a file.
-# Note that it adds a newline at the end. (Called a here-string.)
+# Note that it adds a newline at the end.
+# This construction is called a here-string.
 cat <<< 'HI'
 md5sum <<< 'This is only a test.'
+# b9fdcb35dba569b1ca651f2b243b5144  -
 cksum <<< 'This is only a test.'
-# Give length in bytes and CRC-32 checksum. http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/cksum.c
+# 2744897339 21
+# Give length in bytes and CRC-32 checksum.
+# http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/cksum.c
 # Although this is not necessary because these commands can read stdin, too.
 printf  'HI\n' | cat
 printf 'This is only a test.\n' | md5sum
+# b9fdcb35dba569b1ca651f2b243b5144  -
 printf 'This is only a test.\n' | cksum
+# 2744897339 21
 # Python version.
-import(binascii)
-binascii.crc32
+import binascii
+binascii.crc32("This is only a test.\n")
+# 828642827
 import hashlib
-hashlib.
+hashlib.md5("This is only a test.\n").hexdigest()
+# 'b9fdcb35dba569b1ca651f2b243b5144'
 
 # From here: http://mmb.pcb.ub.es/~carlesfe/unix/tricks.txt
 # let people in your group access folders without messing up file permissions (never do 'chmod g+x * -R'!)
@@ -1762,10 +1837,10 @@ find . -type d -exec chmod g+x {} \;
 echo "Done" | at now + 5 minutes
 # or
 at now + 5 minutes
-warning: commands will be executed using /bin/sh
-at> echo "Done"
+# warning: commands will be executed using /bin/sh
+# at> echo "Done"
 # Use Ctrl-D to finish.
-at> <EOT>
+# at> <EOT>
 # See 'at' commands
 atq
 # Remove at commands
@@ -1798,8 +1873,8 @@ last
 # Or
 ps aux | grep ssh
 # Example:
-nbeaver   7395  0.0  0.0   4756   572 ?        Ss   Oct18   0:00 /usr/bin/ssh-agent /usr/bin/dbus-launch --exit-with-session x-session-manager
-nbeaver  16870  0.0  0.1   8180  1480 ?        S    22:01   0:00 sshd: nbeaver@pts/1
+# nbeaver   7395  0.0  0.0   4756   572 ?        Ss   Oct18   0:00 /usr/bin/ssh-agent /usr/bin/dbus-launch --exit-with-session x-session-manager
+# nbeaver  16870  0.0  0.1   8180  1480 ?        S    22:01   0:00 sshd: nbeaver@pts/1
 
 # Restart the ssh daemon.
 sudo /etc/init.d/ssh restart
@@ -1926,6 +2001,7 @@ for i in *.mp3; do sox --multi-threaded "$i" -r 44100 "converted/$i"; done
 # Make sure you don't try to to change the files in place; they will be trashed.
 # Either put them in a another directory, as above, or modify the file name.
 cat Sn_Ni3Sn4_nano_02-21-2013.002 | tail -n +18 | column -t | less
+tail Sn_Ni3Sn4_nano_02-21-2013.002 -n +18 | column -t | less
 
 # Run through a bunch of text files like cat, but with the filenames visible
 tail --lines=+1 *.txt | less
@@ -1975,6 +2051,8 @@ sudo nmap -sL 216.47.138.* | less
 # Skip port scan/'ping scan'/slightly more intrusive than -sL/determines if host is online
 nmap -sP 198.37.19.*
 nmap -sn 10.10.10.0/24
+nmap -sP localhost
+nmap -sn localhost
 # http://www.linuxforums.org/forum/newbie/51732-see-all-users-currently-lan-2.html
 # These can take a while...
 # TCP scan, assuming network 192.168.1.0/255.255.255.0.
@@ -2382,12 +2460,35 @@ sudo -l
 # Find out your full name.
 getent passwd "$USER" | cut -d ':' -f 5
 
+# Find out host information, including FQDN, etc.
+getent hosts
+# Example output:
+# nbeaver@chloride:~$ getent hosts
+# 127.0.0.1       chloride localhost.localdomain localhost
+# 127.0.1.1       chloride.phys.iit.edu chloride.phys.iit.edu
+# 216.47.138.69   monarch.spinlock.hr krb.spinlock.hr ldap.spinlock.hr monarch krb ldap
+# 127.0.0.1       ip6-localhost ip6-loopback
+
 # Find out what your hostname is.
 hostname
 uname -n
 # Find out more.
 hostname -f
+# nbeaver@omega:~$ hostname -f
+# omega.cs.iit.edu
+# nbeaver@chloride:~$ hostname -f
+# chloride
+
 dnsdomainname
+# nbeaver@omega:~$ dnsdomainname
+# cs.iit.edu
+# nbeaver@chloride:~$ dnsdomainname
+# nbeaver@chloride:~$
+
+# Numeric ip address.
+hostname -i
+# nbeaver@omega:~$ hostname -i
+# 216.47.152.135
 
 # Find words in the dictionary starting with certain letters
 look xa
@@ -2626,9 +2727,12 @@ xvncviewer -via nbeaver@chloride.phys.iit.edu chloride:0
 
 # VNC into a Windows computer by running X over ssh through a linux server,
 # in case e.g. firewall blocks so you can't even ping the Windows machine.
-me@laptop:~$ ssh -X iit@bm1.mr.aps.anl.gov
-me@remote-server:~$ dbus-launch vncviewer 164.54.244.15:5900
-me@remote-server:~$ rdesktop -u PTStat -f 164.54.244.15
+ssh -X iit@bm1.mr.aps.anl.gov
+dbus-launch vncviewer 164.54.244.15:5900
+rdesktop -u PTStat -f 164.54.244.15
+# me@laptop:~$ ssh -X iit@bm1.mr.aps.anl.gov
+# me@remote-server:~$ dbus-launch vncviewer 164.54.244.15:5900
+# me@remote-server:~$ rdesktop -u PTStat -f 164.54.244.15
 
 # See cron updates and ssmtp status
 less /var/log/syslog
@@ -2957,7 +3061,7 @@ nameserver 176.58.120.112
 
 # Make a directory with the format yyyy-mm-dd of today's date
 mkdir $(date -I)
-# Note: the -I / --iso-8601 was deprecated until 2011-10-27. 
+# Note: the -I / --iso-8601 was deprecated until 2011-10-27.
 # http://unix.stackexchange.com/a/164834
 # https://unix.stackexchange.com/questions/164826/date-command-iso-8601-option
 # https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
@@ -4077,3 +4181,8 @@ uuidgen
 cat /proc/sys/kernel/random/uuid
 # or
 python  -c 'import uuid; print uuid.uuid1()'
+
+# Get external ip address.
+curl --proto https ifconfig.me
+# Alternative method, using DNS:
+dig +short myip.opendns.com @resolver1.opendns.com
