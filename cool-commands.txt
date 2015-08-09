@@ -2263,6 +2263,7 @@ TZ=Asia/Hong_Kong date
 # http://www.cyberciti.biz/tips/date-command-set-tz-environment-variable.html
 # https://unix.stackexchange.com/questions/48101/how-can-i-have-date-output-the-time-from-a-different-timezone
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# http://www.trueelena.org/computers/howto/date_hints_and_tips.html
 
 # What time will it be 10 hours from now in Bangladesh?
 export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
@@ -2594,6 +2595,9 @@ cd -- "$(pwd -P)"
 xmessage "You are late"
 xmessage -display :0.0 "You are late"
 xmessage -display $DISPLAY "You are late"
+
+# Take a screenshot remotely.
+DISPLAY=:0 import -window root screenshot.png
 
 # Morse code!
 echo "Hello" | morse -s | tr -d '\n'
@@ -3677,6 +3681,8 @@ scrot -u -d 2
 # Select size of screenshot with mouse.
 scrot --select
 scrot -s
+import out.png
+xfce4-screenshooter --region
 
 # Diagnose inotify problems.
 # If you can run
@@ -3879,6 +3885,9 @@ tracker-search
 # See all the packages implemented in the Lisp programming language.
 debtags search "implemented-in::lisp"
 axi-cache search --all implemented-in::lisp
+
+# See all terminal emulators.
+axi-cache search --all x11::terminal
 
 # TODO: search for homepages that include 'sourceforge.net'
 # https://askubuntu.com/questions/650704/commands-to-search-by-project-homepage-tag
@@ -4186,3 +4195,24 @@ python  -c 'import uuid; print uuid.uuid1()'
 curl --proto https ifconfig.me
 # Alternative method, using DNS:
 dig +short myip.opendns.com @resolver1.opendns.com
+
+# Remove file by inode.
+ls -i
+# or
+stat myfile | grep 'Inode'
+# then use the find command.
+find . -maxdepth 1 -type f -inum 21630370 -delete
+
+# Filter out comments.
+grep '^[^#]' /etc/sysctl.conf
+grep -v '^#' /etc/sysctl.conf
+grep -v '^$\|^#' /etc/sysctl.conf
+grep -Ev '^$|^#' /etc/sysctl.conf
+grep -v '^$\|^\s*\#' /etc/sysctl.conf
+grep -v "^\($\|#\)" /etc/sysctl.conf
+# http://www.linuxjournal.com/content/tech-tip-view-config-files-without-comments
+# http://www.commandlinefu.com/commands/view/841/output-files-without-comments-or-empty-lines
+
+# It's interesting which packages config files come from.
+dlocate /etc/*.conf | sort | less
+dlocate /etc/* | sort | vipe > /dev/null
