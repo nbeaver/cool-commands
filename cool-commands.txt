@@ -1624,6 +1624,15 @@ grep -v '^#\|^$' file.sh
 # Include optional whitespace before comment character.
 grep -v '^\s*#\|^$' file.sh
 # Note that this does not match comments that occur on the same line as the source code.
+# Filter out comments.
+grep '^[^#]' /etc/sysctl.conf
+grep -v '^#' /etc/sysctl.conf
+grep -v '^$\|^#' /etc/sysctl.conf
+grep -Ev '^$|^#' /etc/sysctl.conf
+grep -v '^$\|^\s*\#' /etc/sysctl.conf
+grep -v "^\($\|#\)" /etc/sysctl.conf
+# http://www.linuxjournal.com/content/tech-tip-view-config-files-without-comments
+# http://www.commandlinefu.com/commands/view/841/output-files-without-comments-or-empty-lines
 
 # Copy hidden files (dotfiles)
 cp -r test/.[a-zA-Z0-9]* target_directory
@@ -4206,15 +4215,6 @@ stat myfile | grep 'Inode'
 # then use the find command.
 find . -maxdepth 1 -type f -inum 21630370 -delete
 
-# Filter out comments.
-grep '^[^#]' /etc/sysctl.conf
-grep -v '^#' /etc/sysctl.conf
-grep -v '^$\|^#' /etc/sysctl.conf
-grep -Ev '^$|^#' /etc/sysctl.conf
-grep -v '^$\|^\s*\#' /etc/sysctl.conf
-grep -v "^\($\|#\)" /etc/sysctl.conf
-# http://www.linuxjournal.com/content/tech-tip-view-config-files-without-comments
-# http://www.commandlinefu.com/commands/view/841/output-files-without-comments-or-empty-lines
 
 # It's interesting which packages config files come from.
 dlocate /etc/*.conf | sort | less
