@@ -487,6 +487,9 @@ sudo usermod --append --groups wireshark $USER
 # Now log out and log back in again.
 gnome-session-quit --logout --no-prompt
 
+# Access USB devices through VirtualBox.
+sudo usermod -aG vboxusers $USER
+
 # Check if current user is in a group like dialout or lpadmin.
 id | grep dialout
 id | grep lpadmin
