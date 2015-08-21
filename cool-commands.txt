@@ -464,6 +464,8 @@ date +%m/%d/%Y
 # Standard American date one week from now
 date --date='next week' +%m/%d/%Y
 date --date='7 days' +%m/%d/%Y
+# Unambiguous time ahead of behind UTC.
+date -R
 
 grep -r "string" ./ # recursively search all files for string
 
@@ -489,6 +491,7 @@ gnome-session-quit --logout --no-prompt
 
 # Access USB devices through VirtualBox.
 sudo usermod -aG vboxusers $USER
+sudo usermod --append --groups vboxusers $USER
 
 # Check if current user is in a group like dialout or lpadmin.
 id | grep dialout
@@ -2686,6 +2689,8 @@ date +%Z
 pdfjoin 1.pdf 2.pdf  # creates a 2-join.pdf file with both 1 and 2.
 pdfunite 1.pdf 2.pdf 1-and-2.pdf # creates a 1-and-2.pdf file with both 1 and 2.
 pdftk *.pdf cat output onelargepdfile.pdf
+# Change the order of pages of a pdf.
+pdftk in.pdf cat 5-12 1-4 output out.pdf
 # Insert pages into a pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B A15-end output manual.pdf
 # Insert pages in whatever order necessary into a pdf
@@ -4219,3 +4224,16 @@ find . -maxdepth 1 -type f -inum 21630370 -delete
 # It's interesting which packages config files come from.
 dlocate /etc/*.conf | sort | less
 dlocate /etc/* | sort | vipe > /dev/null
+
+# List graphical applications.
+xlsclients | awk '{print $2}' | sort | uniq
+
+# List all users.
+cut -d: -f1 /etc/passwd
+awk -F':' '{ print $1 }' /etc/passwd
+
+# Example ssh command.
+ssh new@sdf.org
+
+# Example public sftp server.
+sftp://itcsubmit.wustl.edu
