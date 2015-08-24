@@ -3165,22 +3165,6 @@ reportbug --kudos
 # Report a bug with mutt (note that --attach will not transfer to mutt)
 reportbug --mutt
 
-# Notes on data entry to LibreOffice Calc
-Ctrl-Shift-P toggle superscript
-Ctrl-Shift-B toggle subscript
-# Finding the rightmost and bottommost row/column containing data.
-Ctrl-End
-# Moves to A1 cell. (Not leftmost and topmost, which is kind of inconsistent.)
-Ctrl-Home
-# Can autofill a column with Ctrl-D or Edit → Fill.
-# Edit a cell with F2.
-
-# Copy over data, but not formulas:
-# Paste special, deselect formulas.
-# Can be in a different tab,
-# but keep it in same spreadsheet.
-# Then copy it over to a different spreadsheet.
-
 # Entering unicode on Linux.
 Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
 Ctrl-Shift-U b0   <Enter> # Insert ° (degree symbol)
@@ -3661,10 +3645,6 @@ streamer -o out.jpeg
 
 # Live edit reStructuredText and Markdown files.
 retext file.rst
-
-# Zim shortcuts.
-Ctrl-D # insert date.
-Ctrl-J # jump to page.
 
 # TODO: figure out order of commands for:
 sudo nohup time nice
