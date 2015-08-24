@@ -1556,6 +1556,7 @@ gnome-screensaver-command --lock
 
 # See all keybindings
 bind -p | less
+bind -P | grep 'can be' | less
 
 # List a user's crontab
 crontab -u username -l | less
@@ -4108,7 +4109,30 @@ compgen -A signal
 
 # http://zwischenzugs.tk/index.php/2015/07/01/bash-shortcuts-gem/
 bind -P
+# Example: shortcuts related to line editing.
+bind -P | grep line
+# accept-line can be found on "\C-j", "\C-m".
+# alias-expand-line is not bound to any keys
+# backward-kill-line can be found on "\C-x\C-?".
+# beginning-of-line can be found on "\C-a", "\eOH", "\e[H".
+# end-of-line can be found on "\C-e", "\eOF", "\e[F".
+# history-and-alias-expand-line is not bound to any keys
+# history-expand-line can be found on "\e^".
+# kill-line can be found on "\C-k".
+# kill-whole-line is not bound to any keys
+# redraw-current-line is not bound to any keys
+# revert-line can be found on "\e\C-r", "\er".
+# shell-expand-line can be found on "\e\C-e".
+# unix-line-discard can be found on "\C-u".
 stty -a
+# speed 38400 baud; rows 21; columns 159; line = 0;
+# intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = M-^?; eol2 = M-^?; swtch = M-^?; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W;
+# lnext = ^V; flush = ^O; min = 1; time = 0;
+# -parenb -parodd -cmspar cs8 hupcl -cstopb cread -clocal -crtscts
+# -ignbrk brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff -iuclc ixany imaxbel iutf8
+# opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+# isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
+
 
 # Keybindings for the terminal.
 stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
