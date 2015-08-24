@@ -4245,3 +4245,7 @@ ssh new@sdf.org
 
 # Example public sftp server.
 sftp://itcsubmit.wustl.edu
+
+# Get number of pages in a pdf.
+pdfinfo file.pdf | grep 'Pages'
+pdftk file.pdf dump_data | grep 'NumberOfPages'
