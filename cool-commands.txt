@@ -525,6 +525,8 @@ id | tr ',' '\n'
 locate --ignore-case file
 # Locate all files ending with '.cif'
 locate *.cif
+# Slower way to do the same thing.
+locate -r '\.cif$'
 # Locate all base filenames starting with phys
 locate -b phys*
 # Locate using the ? for one or zero unknown letter, * for many unknown letters
@@ -532,6 +534,8 @@ locate *.htm?
 # Restrict locate to a single path
 locate --count /home/nathaniel/*/Makefile
 locate --count /home/nathaniel/*/Makefile
+# Use regular expressions, e.g. match end of line to get all .bib files.
+locate -b -r '\.bib$' | less
 
 # Update the locate database
 sudo updatedb
