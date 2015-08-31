@@ -158,6 +158,9 @@ rename 'y/ /_/' * # replace spaces with underscores
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
 
+# Rename all .jpeg files to .jpg.
+rename 's/.jpeg/.jpg/' *.jpeg
+
 mv file.{txt,csv} # Quick file rename using brace expansion.
 
 # Similarly, can make a copy of a copy to work on the live.
@@ -536,6 +539,8 @@ locate --count /home/nathaniel/*/Makefile
 locate --count /home/nathaniel/*/Makefile
 # Use regular expressions, e.g. match end of line to get all .bib files.
 locate -b -r '\.bib$' | less
+# Another regex example.
+locate -r share/applications$
 
 # Update the locate database
 sudo updatedb
@@ -1878,6 +1883,18 @@ sed --in-place '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
 sed --in-place=.bak --expression='s/hello/jello/' hello.txt
 
+# Get a numbered list of headers in from the 1st line of a csv file.
+sed 's/,/\n/g;q' file.csv | nl
+# http://www.commandlinefu.com/commands/view/14647/printout-a-list-of-field-numbers-from-a-csv-file-with-headers-as-first-line.
+
+# Do the same, but for the 4th line (in case there are other headers).
+sed -n '4{s/,/\n/g;p;q}' file.csv | nl
+# Explanation:
+# suppress default printing with -n,
+# global (g) sed substitution (s) on the 4th line,
+# print (p) the resulting output,
+# and then quit (q).
+
 # SSH without a password (using ssh keys). You only need to do this once.
 ssh-keygen -t rsa
 # Use defaults (blank password)
@@ -2721,6 +2738,10 @@ gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutp
 convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 # http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
 
+convert -density 600 temp.pdf out.jpeg
+
+convert -density 300 temp.pdf out.png
+
 # Oh my gosh, I just entered my password in the terminal
 # and now it will be in the bash history! What can I do?
 unset HISTFILE
@@ -3320,6 +3341,8 @@ dropbox status
 
 # Copy contents of subversion repository into current directory
 svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
+# or into a named directory:
+svn checkout http://svn.csrri.iit.edu/mx/trunk mx
 
 # Set the screen brightness (backlight) from the command line
 xbacklight -set 100
@@ -3624,6 +3647,11 @@ type echo
 #     the version described here.  Please refer to your shell's documentation for
 #     details about the options it supports.
 # http://askubuntu.com/questions/27355/how-do-i-get-help-for-echo-or-other-bash-commands
+
+# Using python instead of which:
+>>>> import distutils.spawn
+>>>> distutils.spawn.find_executable('mkdir')
+
 
 # Follow symbolic links recursively.
 namei /usr/bin/vim
@@ -4249,3 +4277,39 @@ sftp://itcsubmit.wustl.edu
 # Get number of pages in a pdf.
 pdfinfo file.pdf | grep 'Pages'
 pdftk file.pdf dump_data | grep 'NumberOfPages'
+
+# Uses BSD top, not procps (Linux) top.
+top -stats pid,command,cpu,idlew,power -o power -d
+# compatible SHA1: 628e7d9dbf5d39de5e45cdd4613d4f16f34c991e  /usr/bin/top
+# file /usr/bin/top
+# /usr/bin/top: setuid Mach-O 64-bit executable x86_64
+# $ top -v
+# invalid option or syntax: -v
+# (returns 1)
+
+# incompatible SHA1: 6542f721ad7d0ef23378bd1e5b53b9e205513483  /usr/bin/top
+# file /usr/bin/top
+# /usr/bin/top: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=57ff969efeb84f3097ced51c23ceedcbfe78f03c, stripped
+# $ top -v
+#  procps-ng version 3.3.9
+#Usage:
+#  top -hv | -bcHiOSs -d secs -n max -u|U user -p pid(s) -o field -w [cols]
+
+# TODO: find a command to determine how many watts a process is using.
+
+# Get build-id (buildid) of a binary.
+file `which ls` | tr , '\n' | grep BuildID
+readelf -n `which ls` | grep 'Build ID'
+# https://askubuntu.com/questions/139770/what-does-buildid-sha1-mean
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Developer_Guide/compiling-build-id.html
+# https://stackoverflow.com/questions/7744795/python-get-build-id-from-an-elf-file
+
+# See the versions of all USB devices.
+cat /sys/bus/usb/devices/*/version
+
+# Change the permissions of a recently created partition on an external drive.
+sudo chown -R nathaniel:nathaniel /media/nathaniel/TB-backup/laptop-backup/
+
+# Restore a duplicity file.
+duplicity restore file:///path_to_folder_contains_backups/ path_where_to_extract_it/
+
