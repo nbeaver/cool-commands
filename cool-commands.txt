@@ -736,6 +736,8 @@ tar --list --file myfile.tar
 # untar a tarred file into the working directory
 tar -xvf myfile.tar
 tar --extract --verbose --file myfile.tar
+# Or just this:
+dtrx myfile.tar
 
 # untar a tarred file to a specified directory
 tar -xvf myfile.tar -C /path/to/my/directory
@@ -1325,6 +1327,13 @@ while read line; do type $(echo -n "$line" | cut -d' ' -f1); done < ~/.bash_hist
 while read line; do whois "$line" | grep 'NetName'; done < list-of-ip-addresses.txt
 # Most commands already run over lines of a text file already,
 # so it's not often that this kind of command is necessary.
+
+# Run a command until it fails.
+while popd; do :; done
+while ping -c 1 google.com; do sleep 1; done
+
+# Run a command until it succeeds.
+until ping -c 1 google.com; do sleep 1; done
 
 # Run redshift in the background so that the terminal can be closed
 # and use nohup so that it says open even after logging out
