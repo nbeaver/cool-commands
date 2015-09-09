@@ -2131,6 +2131,8 @@ xwininfo
 
 # focus an application based on name, e.g. banshee
 wmctrl -a banshee
+# move that application to the current desktop and focus it
+wmctrl -R xload
 
 # Show display you're using (e.g. :0.0)
 xdpyinfo | grep 'name of display:'
@@ -3129,6 +3131,23 @@ mkdir $(date +"%F")
 # A more complete date, suitable for e.g. filenames.
 date +"%Y-%m-%d_%T%p_%Z"
 # e.g 2015-03-23_01:06:39AM_CDT
+# Warning: this will not work on Windows, because colons cannot exist in filenames.
+
+# Seconds since the Unix epoch (1970-01-01), suitable for filenames and logfiles.
+date +%s
+# Example: 1441752464
+# Drawback: not very human-readable.
+
+# Convert Unix epoch to human-readable time.
+date --date='@1441752464' +%c
+# Tue 08 Sep 2015 05:47:44 PM CDT
+
+# A complete human-readable date,
+# not suitable for filenames or directory names,
+# but fine for log files.
+date +%c
+# Looks like this:
+# Tue 08 Sep 2015 05:46:13 PM CDT
 
 # Make a popup message
 gdialog --msgbox "Test"
@@ -4322,3 +4341,58 @@ sudo chown -R nathaniel:nathaniel /media/nathaniel/TB-backup/laptop-backup/
 # Restore a duplicity file.
 duplicity restore file:///path_to_folder_contains_backups/ path_where_to_extract_it/
 
+# See the 'simplest' binaries,
+# in the sense of having the fewest symbols.
+for file in /bin/*; do nm --dynamic $file 2> /dev/null | wc -l | xargs echo -n; echo " $file "; done | sort -n | less
+
+nm --dynamic /usr/bin/line
+#                  w __gmon_start__
+#                  U _IO_putc
+#                  U __libc_start_main
+#                  U read
+#                  U __stack_chk_fail
+# 0000000000601050 B stdout
+
+nm --dynamic /usr/bin/clear
+# 0000000000601060 B __bss_start
+#                  U cur_term
+# 0000000000601060 D _edata
+# 0000000000601068 B _end
+#                  U exit
+# 0000000000400954 T _fini
+#                  w __gmon_start__
+# 00000000004006a0 T _init
+#                  U _IO_putc
+#                  w _ITM_deregisterTMCloneTable
+#                  w _ITM_registerTMCloneTable
+#                  w _Jv_RegisterClasses
+#                  U __libc_start_main
+#                  U setupterm
+#                  U stdout
+#                  U tigetstr
+#                  U tputs
+
+ldd /usr/bin/line
+# 	linux-vdso.so.1 (0x00007ffc919de000)
+# 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb4c7e06000)
+# 	/lib64/ld-linux-x86-64.so.2 (0x00007fb4c81af000)
+
+ldd /usr/bin/clear
+# 	linux-vdso.so.1 (0x00007ffceca64000)
+# 	libtinfo.so.5 => /lib/x86_64-linux-gnu/libtinfo.so.5 (0x00007f612bfae000)
+# 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f612bc05000)
+# 	/lib64/ld-linux-x86-64.so.2 (0x00007f612c1d8000)
+
+# Get nth line (3rd in this case) of a text file using sed.
+sed '3q;d' /usr/share/dict/words
+sed -n '3p' /usr/share/dict/words
+# Get the 3rd and 10th words of a text file.
+sed -n '3p;10p;d' /usr/share/dict/words
+sed '3p;10q;d' /usr/share/dict/words
+awk 'NR==3 || NR==10' /usr/share/dict/words
+# https://stackoverflow.com/questions/2017034/how-do-i-extract-lines-from-a-file-using-their-line-number-on-unix
+# Do it without running through the entire file.
+sed -n '3p;10{p;q;}' /usr/share/dict/words
+
+# Plot the system load every second.
+xload -update 1 -jumpscroll 1
