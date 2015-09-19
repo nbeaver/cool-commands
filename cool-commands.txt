@@ -341,6 +341,7 @@ wget --adjust-extension --span-hosts --convert-links --backup-converted --page-r
 
 # Check to see if the website is up beyond using something like ping.
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.com/miegakure/
+wget --timeout=3 --tries=1 --spider --no-check-certificate ftp://ftp.gnu.org/
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
 
 # Just the HTTP status code and URL.
@@ -475,6 +476,8 @@ grep -r "string" ./ # recursively search all files for string
 # search man pages
 man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l
 # returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+man -K 'maintained as a Texinfo manual' | grep 'maintained as a Texinfo manual' | wc -l
+# returns 271, last I checked.
 
 # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
 git grep -i rhubarb $(git rev-list --all)
@@ -824,6 +827,8 @@ ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/
 # Even better, spider the actual file before streaming it.
 wget --spider https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 
+
+
 # Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
 rsync --recursive --archive --verbose --rsh=ssh nbeaver@216.47.138.69:~/* ./
@@ -856,6 +861,9 @@ lsof -i -P +c 0 +M
 
 # See information about battery, power, etc.
 upower --dump | less
+upower -d
+# See all power-related paths.
+upower -e
 # Check battery state/power level
 acpi    # shows battery info by default.
 acpi -b # show battery specifically.
@@ -897,7 +905,7 @@ lsblk
 # ├─sda1   8:1    0 461.2G  0 part /
 # ├─sda2   8:2    0     1K  0 part
 # └─sda5   8:5    0  15.8G  0 part [SWAP]
-# sr0     11:0    1  1024M  0 rom  
+# sr0     11:0    1  1024M  0 rom
 
 # Show disk logical name (e.g. /dev/sda), model number, vendor, serial, and size.
 sudo lshw -class disk
@@ -1406,7 +1414,7 @@ dlocate "$(which rm)\$"
 #   diversion by dictionaries-common from: /usr/share/dict/words
 #   diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
 #   dictionaries-common, wamerican: /usr/share/dict/words
-#   
+#
 #   real	0m0.395s
 #   user	0m0.300s
 #   sys	0m0.088s
@@ -1415,7 +1423,7 @@ dlocate "$(which rm)\$"
 #   dictionaries-common: /usr/share/dict/words
 #   diversion by dictionaries-common from: /usr/share/dict/words
 #   diversion by dictionaries-common to: /usr/share/dict/words.pre-dictionaries-common
-#   
+#
 #   real	0m0.054s
 #   user	0m0.016s
 #   sys	0m0.016s
@@ -1429,7 +1437,7 @@ apt-file search libc.so.6
 #   $ time apt-file search /usr/share/dict/words
 #   dictionaries-common: /usr/share/dict/words
 #   wamerican: /usr/share/dict/words
-#   
+#
 #   real	0m2.820s
 #   user	0m2.812s
 #   sys	0m0.228s
@@ -1456,8 +1464,13 @@ grep "Exec" $(dpkg -L handbrake-gtk | grep '/usr/share/applications/.*\.desktop$
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
 dpkg --contents
 
+# Untar a debian file.
+ar vx skype-debian_4.3.0.37-1_i386.deb
+
 # Install a .deb file.
-dpkg -i example-package.deb
+sudo dpkg -i example-package.deb
+# Install a .deb along with its prerequisites.
+sudo gdebi skype-debian_4.3.0.37-1_i386.deb
 
 # Download debian package into current directory
 apt-get download mypackage
@@ -1465,6 +1478,7 @@ apt-get download mypackage
 # Extract the files in a .deb package to a specified directory
 dpkg -x /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
 dpkg --extract
+dpkg-deb -x skype-deb_4.3.0.37-1_i386.deb /tmp/extract/
 # Extract the files in a .deb package to a specified directory,
 # and list all the files that were extracted (verbose extract)
 dpkg -X /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
@@ -1768,6 +1782,8 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 # The reddit disapproval face
 ಠ_ಠ
 # Requires debian package fonts-knda
+# https://tracker.debian.org/pkg/fonts-knda
+unicode ಠ
 # U+0CA0 KANNADA LETTER TTHA
 # UTF-8: e0 b2 a0  UTF-16BE: 0ca0  Decimal: &#3232;
 
@@ -1994,6 +2010,10 @@ ffmpeg -i file.ext -acodec copy -vn out.ext
 ffmpeg -i in.ext out.mp3
 # Somewhat better method (less loss of quality)
 ffmpeg -v 5 -y -i input.m4a -acodec libmp3lame -ac 2 -ab 192k output.mp3
+# Use a tool designed for it.
+faad -o my.wav my.m4a
+# Or the lame option. :)
+lame -h -b 192 my.wav my.mp3
 
 # See open files in home directory
 lsof ~
@@ -2266,6 +2286,14 @@ arp
 ip link show
 netstat -i
 /usr/sbin/ifconfig -a
+# Just the interface names.
+ls -1 /sys/class/net/
+netstat -i | tail -n+3 | cut -f 1 -d' '
+
+# Show the default route interface.
+route | grep '^default' | awk '{print $NF}'
+# List all active route interfaces.
+route | tail -n+3 | awk '{print $NF}' | sort | uniq
 
 # Find out your ip address
 ifconfig
@@ -2572,8 +2600,15 @@ pwd | tr -d '\n' | xsel -b
 # Alternative method; shell-dependent (non-portable)
 echo -n $(pwd) | xsel -b
 echo -n "$PWD" | xsel -b
-# Yet another method.
+# Yet another method, robust against oddly named directories.
 printf "%s" "$PWD" | xsel --clipboard
+printf -- "$PWD" | xsel --clipboard
+
+# Copy current directory without the full path or trailing newline.
+printf -- "$(basename "$PWD")" | xsel --clipboard
+# Avoid use of basename.
+printf -- "${PWD##*/}" | xsel --clipboard
+# https://stackoverflow.com/questions/1371261/get-current-directory-name-without-full-path-in-bash-script
 
 # Copy a file to the clipboard.
 cat file.txt | xsel -b
@@ -2594,6 +2629,7 @@ xclip -selection clipboard -t image/png -o > out.png
 
 # Lookup information about a website or ip address
 whois iit.edu
+whois domain iit.edu
 
 # Remove newlines, trailing and otherwise
 tr -d '\n'
@@ -2696,6 +2732,10 @@ ls -d .*
 # List only dotfiles.
 echo .[^.]*
 find .  -mindepth 1 -maxdepth 1 -name '.*'
+# List only hidden directories.
+find .  -mindepth 1 -maxdepth 1 -name '.*' -type d
+# List only hidden files.
+find .  -mindepth 1 -maxdepth 1 -name '.*' -type f
 # These don't work for hidden files like .a
 ls -d .??*
 echo .??*
@@ -3433,6 +3473,8 @@ man --all printf
 man --html=/usr/bin/chromium man
 # Open manpage html page in default browser.
 man --html=x-www-browser man
+# Or set the $BROWSER variable.
+BROWSER=iceweasel man --html man
 
 # Convert Excel file (xls) to CSV
 ssconvert -O 'separator=;' my-spreadsheet.xls out.csv
@@ -3511,6 +3553,9 @@ man 1 xterm
 # control/O (shift-in),
 # control/Q (XOFF),
 # control/X (cancel)
+
+# See information about filesystem hierarchy.
+man 7 hier
 
 # See what the terminal interprets.
 stty --all
@@ -3725,8 +3770,30 @@ SpiderOak --repair
 
 # Convert hexadecimal to decimal
 python:
-int("78",16)
-int("0x78",16)
+int("78",16) # 120
+float.fromhex('0x1.ffffp10') # -4.9406564584124654e-324
+int("0x78",16) # 120
+# Convert decimal to hexadecimal.
+hex(120) # '0x78'
+3.14159.hex() # '0x1.921f9f01b866ep+1'
+
+# Convert octal to decimal.
+int('0170', 8)
+# Convert decimal to octal.
+oct(120)
+
+# Convert decimal to binary.
+bin(120)
+# '0b1111000'
+# Convert binary to decimal.
+int('0b1111000', 2)
+int('1111000', 2)
+int('1111000', base=2)
+
+# Convert decimal to ternary (requires numpy).
+import numpy
+numpy.base_repr(73, 3)
+# '2201'
 
 # Capture screenshot.
 scrot
@@ -3790,8 +3857,14 @@ VBoxManage modifyhd Win7.vdi --resize 51200
 # http://jonmifsud.com/blog/increase-virtualbox-disk-size/
 # http://stackoverflow.com/questions/1688690/how-can-i-easily-add-storage-to-a-virtualbox-machine-with-xp-installed
 
+sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.28-100309.vbox-extpack
+
 # Enable multiarch, specifically i386 packages.
 sudo dpkg --add-architecture i386
+# See which ones are enabled.
+dpkg --print-foreign-architectures
+# See the main one.
+dpkg --print-architecture
 
 # See which distros have a package, e.g. warsow.
 whohas warsow
@@ -4245,6 +4318,9 @@ gvfs-info /etc/hosts
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
 
+# Set the default application for ftp:// urls to be Thunar.
+xdg-mime default Thunar.desktop x-scheme-handler/ftp
+
 # Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
 ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
 xdg-open http://localhost:1631/
@@ -4252,11 +4328,13 @@ sensible-browser http://localhost:1631/
 # http://askubuntu.com/a/164971/182196
 # https://askubuntu.com/questions/23936/how-do-you-administer-cups-remotely-using-the-web-interface
 
-# When you're curious what `newspeak` from the filters package does.
-diff --side-by-side --suppress-common-lines /usr/share/dict/words <( newspeak < /usr/share/dict/words ) | less
+# When you're curious what `newspeak` from the `filters` package does.
+diff --width 80 --side-by-side --suppress-common-lines /usr/share/dict/words <( newspeak < /usr/share/dict/words ) | less
+# bawdily                               | bawdiwise
 
 # Same for `censor`.
-diff --side-by-side --suppress-common-lines /usr/share/dict/words <( censor < /usr/share/dict/words ) | less
+diff --width 80 --side-by-side --suppress-common-lines /usr/share/dict/words <( censor < /usr/share/dict/words ) | less
+# Cockney                               | CENSOREDney
 
 xfce4-power-manager --restart --debug |& ts | tee xfce4-power-manager.log & disown
 
@@ -4386,6 +4464,8 @@ ldd /usr/bin/clear
 # Get nth line (3rd in this case) of a text file using sed.
 sed '3q;d' /usr/share/dict/words
 sed -n '3p' /usr/share/dict/words
+# Get it without running through the entire file.
+sed -n '3{p;q;}' /usr/share/dict/words
 # Get the 3rd and 10th words of a text file.
 sed -n '3p;10p;d' /usr/share/dict/words
 sed '3p;10q;d' /usr/share/dict/words
@@ -4396,3 +4476,86 @@ sed -n '3p;10{p;q;}' /usr/share/dict/words
 
 # Plot the system load every second.
 xload -update 1 -jumpscroll 1
+
+# Disable volume change notification pop-up bubbles.
+sudo mv /usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service /usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service.disabled
+# Reverse the change.
+sudo mv /usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service.disabled /usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service
+# https://askubuntu.com/questions/104273/how-do-i-disable-pop-up-notifications-in-xubuntu
+
+# Debug a `mono` program.
+locate -i banshee.exe
+# /usr/lib/banshee/Banshee.exe
+# /usr/lib/banshee/Banshee.exe.config
+# /usr/lib/banshee/Banshee.exe.mdb
+mono --debug /usr/lib/banshee/Banshee.exe |& tee mono.log
+# Or just use this instead:
+banshee --debug |& tee banshee.log
+
+# Arithmetic.
+
+# Addition.
+echo $((2+2))
+expr 2 + 2
+
+# Multiplication.
+echo $((2*2))
+expr 2 '*' 2
+expr 2 \* 2
+
+# Integer division.
+expr 1 / 2
+# 0
+echo $((1/2))
+# 0
+echo $((1/0))
+# bash: 1/0: division by 0 (error token is "0")
+expr 1 / 0
+# expr: division by zero
+
+# Doing arithmetic in other bases with bash.
+# E.g. 1010011011 in binary.
+echo $(( 2#1010011011 ))
+# 667
+
+# Browse GNU info pages in the KDE web browser.
+konqueror info:bash
+
+# The actual pages are stored here:
+ls /usr/share/info/
+
+# Show mouse clicks/events on a window.
+xev
+xinput --test-xi2
+
+# Show list of input devices.
+xinput
+
+# If Mathematica freezes on startup with WolframKernel taking all the CPU.
+mathematica  -cleanStart -nostderrWindow
+
+# Try javascript in a repl.
+rhino
+# js> [] + []
+#
+# js> [] + {}
+# [object Object]
+# js> {} + []
+# 0
+# js> {} + {}
+# NaN
+# js> 'wat' - 1
+# NaN
+# https://www.destroyallsoftware.com/talks/wat
+# Somewhat different type system in node.js:
+nodejs
+# > [] + []
+# ''
+# > [] + {}
+# '[object Object]'
+# > {} + []
+# '[object Object]'
+# > {} + {}
+# '[object Object][object Object]'
+# > 'wat' - 1
+# NaN
