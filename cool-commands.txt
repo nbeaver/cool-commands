@@ -471,16 +471,20 @@ date --date='7 days' +%m/%d/%Y
 # Unambiguous time ahead of behind UTC.
 date -R
 
-grep -r "string" ./ # recursively search all files for string
+grep -r "string" ./ # recursively search all files for "string"
 
 # search man pages
 man --global-apropos "David MacKenzie" | grep "David MacKenzie" | wc -l
-# returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie
+man --global-apropos "David MacKenzie" | grep --count "David MacKenzie"
+str='David MacKenzie'; man --global-apropos "$str" | grep --count "$str"
+# returns 55, last I checked. Number of manpages with lines mentioning David MacKenzie.
+
 man -K 'maintained as a Texinfo manual' | grep 'maintained as a Texinfo manual' | wc -l
+str='maintained as a Texinfo manual'; man -K "$str" --sections=1 | grep --count "$str"
 # returns 271, last I checked.
 
 # case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
-git grep -i rhubarb $(git rev-list --all)
+git grep -i 'rhubarb' "$(git rev-list --all)"
 
 # search for commands and aliases named 'my-command'.
 compgen -ac | grep my-command
@@ -981,9 +985,6 @@ journalctl -fu NetworkManager
 # Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
-grep 'rtl8192\|wlan' |
-
-
 # Detach process from gnome-terminal
 Ctrl-Z # Access shell prompt
 bg     # Put job in background, but let it keep running.
@@ -999,9 +1000,11 @@ DISPLAY=:0 compiz --replace & disown
 unity --reset & disown
 
 
-# Generate 4-word passphrase
-shuf --head-count=4 /usr/share/dict/words
-shuf -n 4 /usr/share/dict/words
+# Generate 5-word passphrase
+shuf --head-count=5 /usr/share/dict/words
+shuf -n 5 /usr/share/dict/words
+# Get rid of the words with apostrophes.
+grep -v "'" /usr/share/dict/words | shuf -n 5
 
 # if you install dictionaries-common,
 # you may need to run
