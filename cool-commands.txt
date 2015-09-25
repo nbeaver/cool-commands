@@ -227,6 +227,10 @@ type -a ls # print all the places that contain an executable named 'ls', includi
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
 
+# Run the "real" ls, in case it is aliased.
+command ls
+\ls
+
 # See where the function `quote` was defined.
 shopt -s extdebug; declare -F quote; shopt -u extdebug
 
@@ -442,6 +446,7 @@ ping -c 4 google.com
 # Another method
 sudo /etc/init.d/networking restart
 sudo /etc/init.d/network-manager restart
+sudo /etc/init.d/vsftpd restart
 
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
@@ -491,6 +496,12 @@ compgen -ac | grep my-command
 # Note: -a is for aliases, -c is for commands
 # Example: all executables ending in `.py` in $PATH:
 compgen -c | grep '\.py$'
+# See shortest and longest commands.
+compgen -c | awk '{print length, $0;}' | sort -n | less
+# http://www.commandlinefu.com/commands/view/3724/sort-lines-by-length
+# https://stackoverflow.com/questions/5917576/sort-a-text-file-by-line-length-including-spaces
+# http://www.linuxscrew.com/2009/04/14/sort-cli-output-by-line-length/
+# http://www.unixcl.com/2009/08/sort-strings-by-length-using-awk-and.html
 
 # Get wireshark working for non-root user
 sudo apt-get install wireshark
@@ -1216,6 +1227,9 @@ du --summarize --human-readable
 du -hsx * | sort -rh | head -10
 du --summarize --human-readable --one-file-system * | sort --human-numeric-sort --reverse | head --lines=10
 
+# Ignore hidden files.
+du -sh --exclude "./.*"
+
 # Adding metadata to pdfs with pdftk
 # Add an info dictionary if there isn't one already (harmless)
 pdftk book.pdf cat output book.pdf
@@ -1725,6 +1739,8 @@ HandBrakeCLI -Z "High Profile" -i a_movie.iso -o a_movie.mp4
 
 # Count number of files in working directory, recursively
 find . -type f | wc -l
+# Ignore hidden files and files in hidden directories.
+find . -type f -not -path '*/\.*' | wc -l
 
 # Set up an ad-hoc wireless network between two linux machines
 # http://unixlab.blogspot.com/2010/01/setting-up-ad-hoc-wireless-network.html
@@ -1789,6 +1805,7 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 unicode ಠ
 # U+0CA0 KANNADA LETTER TTHA
 # UTF-8: e0 b2 a0  UTF-16BE: 0ca0  Decimal: &#3232;
+Ctrl-Shift-U 0ca0 <Enter> # Insert ಠ
 
 # Show full path of a file with ls
 ls -d $PWD/*
@@ -1922,6 +1939,11 @@ sed -n '4{s/,/\n/g;p;q}' file.csv | nl
 # global (g) sed substitution (s) on the 4th line,
 # print (p) the resulting output,
 # and then quit (q).
+
+# See all lines between two patterns.
+sed -n '/StartPattern/,/EndPattern/p' FileName
+# http://www.shellhacks.com/en/Using-SED-and-AWK-to-Print-Lines-Between-Two-Patterns
+# https://stackoverflow.com/questions/12443122/using-sed-to-print-between-two-patterns
 
 # SSH without a password (using ssh keys). You only need to do this once.
 ssh-keygen -t rsa
@@ -3419,6 +3441,7 @@ svn checkout http://svn.csrri.iit.edu/mx/trunk mx
 xbacklight -set 100
 # See current brightness
 xbacklight -get
+cat /sys/class/backlight/intel_backlight/actual_brightness
 
 # gnuplot command we typically use at the beamline
 gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
