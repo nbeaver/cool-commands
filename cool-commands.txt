@@ -1928,6 +1928,12 @@ sed --in-place '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
 sed --in-place=.bak --expression='s/hello/jello/' hello.txt
 
+# Remove byte order mark (BOM).
+sed -i '1 s/^\xef\xbb\xbf//' *.txt
+# https://stackoverflow.com/questions/1068650/using-awk-to-remove-the-byte-order-mark
+# http://stackoverflow.com/a/3622153/1608986
+# Note: idempotent.
+
 # Get a numbered list of headers in from the 1st line of a csv file.
 sed 's/,/\n/g;q' file.csv | nl
 # http://www.commandlinefu.com/commands/view/14647/printout-a-list-of-field-numbers-from-a-csv-file-with-headers-as-first-line.
