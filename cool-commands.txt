@@ -69,6 +69,9 @@ q
 # Changing sound settings
 alsamixer
 
+# Show sound cards and headsets.
+cat /proc/asound/cards
+
 # Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
 speaker-test --device plug:front --channels 2 --test sine --frequency 100 # long version
@@ -841,8 +844,6 @@ echo $(yes hurpaflerp)
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
 # Even better, spider the actual file before streaming it.
 wget --spider https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
-
-
 
 # Rsyncing remote directory contents into current local directory
 rsync -rave ssh nbeaver@216.47.138.69:~/* ./
@@ -2737,6 +2738,9 @@ sudo rtcwake -m no -s 60
 # If your package manager gives you trouble, don't bother swearing, just reinstall!
 sudo apt-get --reinstall --purge install flashplugin-installer
 
+# Update the flash plugin, since Debian can't legally package it.
+sudo update-flashplugin-nonfree --install
+
 # Browse gopher with lynx
 lynx gopher://gopher.floodgap.com/1/world
 
@@ -2831,6 +2835,7 @@ unset HISTFILE
 # Can also use this:
 history -cw
 # https://askubuntu.com/questions/625277/terminal-incognito-mode
+# Or maybe just change your password.
 
 # Remote desktop into a Windows machine
 rdesktop 123.45.678.910
@@ -4591,3 +4596,5 @@ nodejs
 # '[object Object][object Object]'
 # > 'wat' - 1
 # NaN
+
+
