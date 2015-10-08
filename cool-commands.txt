@@ -433,6 +433,11 @@ ls -v1 # Show files one on each line and in numeric order instead of alphanumeri
 lsof # display open files
 lsof -p 1234 # Show open files from process id 1234.
 
+sudo lsof -i :22
+# COMMAND PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+# sshd    650 root    3u  IPv4 59613617      0t0  TCP *:ssh (LISTEN)
+# sshd    650 root    4u  IPv6 59613619      0t0  TCP *:ssh (LISTEN)
+
 # Sure ways to restart a wireless network
 ping -c 4 google.com # ping 4 times
 lspci | grep -i network
@@ -1973,6 +1978,11 @@ ps aux | grep ssh
 # Restart the ssh daemon.
 sudo /etc/init.d/ssh restart
 
+# Restart the apache web server.
+sudo /etc/init.d/apache2 restart
+sudo service apache2 restart
+sudo apache2ctl graceful
+
 # Disable system speaker in X:
 xset -b
 # Turn off console beeps (system bell) for all programs
@@ -2896,6 +2906,23 @@ fuser 80/tcp
 lsof -i :80 | grep LISTEN
 # http://www.cyberciti.biz/faq/find-linux-what-running-on-port-80-command/
 
+# Show which process has particular port number open.
+lsof -i :8000
+# COMMAND   PID      USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+# python  13790 nathaniel    3u  IPv4 59798486      0t0  TCP *:8000 (LISTEN)
+# https://www.debian-administration.org/article/184/How_to_find_out_which_process_is_listening_upon_a_port
+
+# Will return 1 if insufficient permissions, e.g. for sshd.
+lsof -i :22
+
+
+sudo lsof -i :631
+# COMMAND    PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+# cups-brow  892 root    5u  IPv6 52509000      0t0  TCP localhost:58445->localhost:ipp (CLOSE_WAIT)
+# cups-brow  892 root    7u  IPv4    20672      0t0  UDP *:ipp 
+# cupsd     3284 root   10u  IPv6 53523258      0t0  TCP localhost:ipp (LISTEN)
+# cupsd     3284 root   11u  IPv4 53523259      0t0  TCP localhost:ipp (LISTEN)
+
 # Look at executable running process id 2720
 ls -l /proc/2720/exe
 # lrwxrwxrwx 1 nathaniel nathaniel 0 Aug  9 11:05 /proc/2720/exe -> /usr/lib/firefox/firefox
@@ -3121,6 +3148,11 @@ watch date
 # Note that this is often better than tail --follow,
 # especially if the file is being truncated rapidly.
 
+# A poor man's live coding environment.
+touch temp.sh
+watch -t -n 0.1 'bash temp.sh'
+# watch --no-title --interval 0.1 'bash temp.sh'
+vim -c 'autocmd TextChanged,TextChangedI <buffer> write' temp.sh
 
 # watch a piped command
 watch 'ps aux | grep mycommand'
@@ -4196,9 +4228,12 @@ column -s, -t file.csv
 # https://www.reddit.com/r/bash/comments/37cb9v/favorite_shell_tricks/
 
 # Install python packages the safe way (or at least safer).
-pip install --user package-name
+pip install --user matplotlib
 # Not this:
-sudo pip install package-name
+sudo pip install matplotlib
+# Remove packages with pip.
+pip uninstall matplotlib
+# https://pip.readthedocs.org/en/stable/reference/pip_uninstall/
 
 vlc http://traffic.libsyn.com/nightvale/1-Pilot.mp3
 
