@@ -2386,7 +2386,7 @@ TZ=Asia/Hong_Kong date
 # What time will it be 10 hours from now in Bangladesh?
 export TZ=Asia/Dhaka && date --date='10 hours' && unset TZ
 # What time will it be here when it's 10 hours later in Dhaka?
-date --date='TZ="Asia/Dhaka" 10 hours'
+TZ="Asia/Dhaka" date --date='10 hours'
 # What time of day will it be in India if it's at a specified Central Standard Time?
 TZ=Asia/Kolkata date -d 'Monday, February 24, 2014 9:00am CST' +%r
 # What will be the full date?
@@ -4211,6 +4211,9 @@ grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
 script
 # Default output file is `typescript`.
 # http://linuxers.org/article/script-command-line-tool-recordsave-your-terminal-activity
+script --flush
+
+# View the typescript.
 more typescript
 less -r typescript
 # Alternative: use `screen`.
@@ -4632,4 +4635,19 @@ nodejs
 # > 'wat' - 1
 # NaN
 
+# Update X server settings.
+xrdb -merge ~/.Xresources
 
+# See ssh activity.
+sudo tcpdump -i wlan1 port 22 -n -Q inout
+
+# Play audio backwards.
+play file.mp3 reverse
+
+# Play video backwards.
+# https://ffmpeg.org/pipermail/ffmpeg-user/2011-December/003564.html
+# https://forums.gentoo.org/viewtopic-t-34771-start-0.html
+# http://madcompscientist.blogspot.com/2009/03/sdrawkcab-oediv-gniyalp.html
+# https://stackoverflow.com/questions/2553448/encode-video-in-reverse
+# http://ubuntuforums.org/showthread.php?t=1353893
+# https://softwarerecs.stackexchange.com/questions/25668/what-video-player-in-linux-allows-to-play-backwards
