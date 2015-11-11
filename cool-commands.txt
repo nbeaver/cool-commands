@@ -1400,6 +1400,8 @@ apt-cache policy ".*gnash.*"
 dpkg --list "*gnash*"
 dpkg -l "*gnash*"
 
+# Also useful for checking if a package is installed.
+
 # Get description of package
 aptitude show gnash
 dpkg --status gnash
@@ -4674,3 +4676,15 @@ openshot myfile.mp4
 # https://stackoverflow.com/questions/2553448/encode-video-in-reverse
 # http://ubuntuforums.org/showthread.php?t=1353893
 # https://softwarerecs.stackexchange.com/questions/25668/what-video-player-in-linux-allows-to-play-backwards
+
+# Edit a pdf file with a text editor.
+# First, generate the qdf text file (may be large).
+qdf in.pdf --qdf out.qdf
+# Then, edit it in your favorite text editor.
+vim out.qdf
+# Finally generate the pdf.
+qpdf out.qdf out.pdf
+# Or 
+fix-qdf out.qdf > out.pdf
+# Or
+fix-qdf < out.qdf > out.pdf
