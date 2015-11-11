@@ -194,25 +194,6 @@ printf("Line %d reached.\n",__LINE__); /* debug */
 # Debugging segfaults in Fortran:
 print*,__FILE__,__LINE__
 
-# GNU debugger (gdb) basics
-gdb ./vc_forces_numer_deriv
-handle SIGPIPE nostop
-set pagination 0
-set logging overwrite on
-set logging on
-set logging redirect on
-set logging file my-file.txt
-run
-# After the faulure:
-bt
-# or
-thread apply all bt
-frame 2
-info locals
-info args
-# Running gdb commands
-gdb -ex 'set logging on' -ex 'run' iceweasel
-
 # Disk usage:
 du | sort --numeric-sort --reverse
 du | sort -nr # quick version
@@ -3122,20 +3103,6 @@ sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/g
 # Another way to attach to a running process.
 gdb -p 503
 
-# This gdb command:
-set pagination off
-# is helpful for long backtraces.
-
-# Debugging a python process with gdb.
-# https://wiki.python.org/moin/DebuggingWithGdb
-sudo apt-get install gdb python2.7-dbg
-gdb python <pid of running process>
-(gdb) py-bt
-(gdb) info threads
-(gdb) py-list
-(gdb) thread apply all py-list
-(gdb) pystack
-(gdb) pystackv
 
 # Filter out control sequences like backspace, return, etc.
 cat myfile.txt | col -b > filtered.txt
