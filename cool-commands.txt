@@ -83,6 +83,7 @@ echo !! >> ~/Dropbox/how-to/cool-commands.txt
 echo !! > my-script.sh
 
 # Append a file onto another file.
+# (A non-useless use of cat).
 cat commands.sh >> ~/.bash_history
 
 # Grepping
@@ -535,6 +536,9 @@ newgrp dialout
 
 # Add current user to those permitted to print.
 sudo usermod -a -G lpadmin $USER
+
+# Add a user to the list of sudoers (as root).
+usermod -a -G sudo nathaniel
 
 # See what groups you are in, in a line-by-line fashion.
 id | tr ',' '\n'
@@ -1489,6 +1493,9 @@ sudo gdebi skype-debian_4.3.0.37-1_i386.deb
 
 # Download debian package into current directory
 apt-get download mypackage
+
+# Can also get it from the web mirrors.
+wget http://ftp.us.debian.org/debian/pool/contrib/h/horae/horae_071~svn537-2_all.deb
 
 # Extract the files in a .deb package to a specified directory
 dpkg -x /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/files
@@ -3695,6 +3702,18 @@ sudo sysctl -w net.ipv6.conf.eth0.autoconf=0
 
 # Add google's public gpg keys for installing their software
 wget -q -O - http://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
+# Similar for the Tor browser.
+sudo apt-key adv --recv-keys --keyserver keys.gnupg.net  74A941BA219EC810
+# http://superuser.com/questions/513609/how-to-apt-update-when-apt-is-not-accepting-the-repository
+
+# Same for Spotify.
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+
+# Similar for InSync.
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 06BBDC2602DFE7E7
+# For these kinds of errors:
+# W: GPG error: http://apt.insynchq.com jessie InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 06BBDC2602DFE7E7
 
 # Change your MAC address (i.e. hardware address)
 sudo macchanger --mac 12:34:56:78:91:01 eth0
