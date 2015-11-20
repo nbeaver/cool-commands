@@ -86,6 +86,9 @@ echo !! > my-script.sh
 # (A non-useless use of cat).
 cat commands.sh >> ~/.bash_history
 
+# Append a line to a non-empty file.
+sed -i '$ a\this is a line of text' myfile.txt
+
 # Grepping
 grep PHY unofficial-transcript-11-24-11.txt
 grep ALLOCATE COORD *.F90
@@ -897,6 +900,10 @@ sudo killall upowerd && sudo /usr/lib/upower/upowerd & disown
 cat /proc/cpuinfo
 less /proc/cpuinfo
 
+# Check for AES hardware support.
+grep aes /proc/cpuinfo
+# https://unix.stackexchange.com/questions/14077/how-to-check-that-aes-ni-is-supported-by-my-cpu
+
 # Show what the disks and partitions are, e.g. /dev/sda and /dev/sda1 /dev/sda2.
 sudo fdisk -l
 # Disk /dev/sda: 512.1 GB, 512110190592 bytes
@@ -1623,8 +1630,16 @@ sudo /etc/init.d/cron start
 incrontab -u $USER -l
 # if you get this:
 # user 'nathaniel' is not allowed to use incron
+# fix it manually with
 sudo vim /etc/incron.allow
-
+# or in one command with:
+echo "$USER" | sudo tee -a /etc/incron.allow
+echo "$USER" | sudo tee --append /etc/incron.allow
+# ignore stdout.
+echo "$USER" | sudo tee -a /etc/incron.allow > /dev/null
+# or use a here-file:
+sudo tee -a /etc/incron.allow <<< $USER
+sudo tee --append /etc/incron.allow <<< $USER
 
 # This is apparently how to solve your XFCE problems
 rm -rf ~/.cache/sessions
@@ -3715,6 +3730,9 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 06BBDC2602DFE7E7
 # For these kinds of errors:
 # W: GPG error: http://apt.insynchq.com jessie InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 06BBDC2602DFE7E7
 
+# Backup keys.
+sudo apt-key exportall > Repo.key
+
 # Change your MAC address (i.e. hardware address)
 sudo macchanger --mac 12:34:56:78:91:01 eth0
 # Note that this won't change your IP address until you disconnect and reconnect.
@@ -4156,6 +4174,10 @@ apt-cache policy | sed -n 's/.*o=\([^,]\+\).*/\1/p' | uniq
 
 # List packages from an origin other than Debian.
 aptitude search "?installed?not(?origin(Debian))"
+
+# List dummy or transitional packages.
+aptitude search '~i ~d transitional'
+dpkg -l | grep 'dummy\|transitional\|obsolete' | less
 
 # List installed backports to wheezy.
 aptitude search '?narrow(?installed,?archive(wheezy-backports))'
