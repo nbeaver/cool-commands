@@ -564,6 +564,8 @@ locate -b -r '\.bib$' | less
 # Another regex example.
 locate -r share/applications$
 
+# https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
+
 # Update the locate database
 sudo updatedb
 # Find out when the last time the database was (successfully) updated by checking the database file modification date.
@@ -2435,6 +2437,12 @@ ncal -H 1752-09-14 September 1752
 # "Wednesday 2 September 1752 was followed by Thursday 14 September 1752."
 # https://en.wikipedia.org/wiki/Calendar_%28New_Style%29_Act_1750
 
+# Events and holidays on January 1st, 1970.
+calendar -t 19700101
+
+# calendar -t 19691231
+# calendar: specified date is outside allowed range
+
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
 
@@ -3812,6 +3820,9 @@ tree -L 2 -a
 # Pass to less, with color.
 tree -L 2 -a -C | less -R
 
+# Save as html.
+tree -L 2 -a -C | aha > tree.html
+
 # Spit out HTML tree.
 tree -H "$PWD" > index.html
 # If you don't want the full path as the root:
@@ -4143,6 +4154,10 @@ axi-cache search --all implemented-in::lisp
 # See all terminal emulators.
 axi-cache search --all x11::terminal
 
+
+# TODO: how to search for multiple tags with axi-cache?
+debtags search 'works-with-format::tex && interface::text-mode' | less
+
 # TODO: search for homepages that include 'sourceforge.net'
 # https://askubuntu.com/questions/650704/commands-to-search-by-project-homepage-tag
 
@@ -4230,6 +4245,8 @@ ncal -e
 
 # Show upcoming event information.
 pal -r 30 | less
+calendar
+
 
 # Running cmd.exe on Linux.
 wine cmd
@@ -4729,3 +4746,39 @@ qpdf out.qdf out.pdf
 fix-qdf out.qdf > out.pdf
 # Or
 fix-qdf < out.qdf > out.pdf
+
+# From this error:
+# Could not find the database of available applications, run update-command-not-found as root to fix this
+sudo update-command-not-found
+
+# time of sunrise/sunset in Chicago, Illinois.
+sunwait -p 41.836944N 87.684722W
+# right at Madison and State street, the origin of Chicago's grid system.
+sunwait -p 41.882N 87.628W
+# roughly close to Chicago.
+sunwait -p 41.8N 87.6W
+# time of sunrise/sunset in Anchorage, Alaska.
+sunwait -p  61.216667N 149.9W
+
+
+# TODO: date of solstice and equinox
+# http://www.mostlymaths.net/2010/04/gcal-ultra-powerful-command-line-gnu.html
+
+mr register
+# Registering git url: git://gitorious.org/frankenplot/frankenplot.git in /home/nathaniel/.mrconfig
+
+# If you keep your stow packages in ~/stow/,
+# link them like this.
+stow -t $HOME -d $HOME/stow -v qpdfview
+stow --target $HOME --dir $HOME/stow --verbose qpdfview
+# See what will happen without actually doing it.
+stow -t $HOME -d $HOME/stow -n -v qpdfview
+stow --target $HOME --dir $HOME/stow --simulate --verbose qpdfview
+
+# Check the stow packages in the home directory.
+chkstow -t $HOME -l
+chkstow --target $HOME --list
+
+# Show config directory for xchat.
+xchat -u --configdir
+# /home/nathaniel/.xchat2
