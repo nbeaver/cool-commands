@@ -217,6 +217,9 @@ type -a ls # print all the places that contain an executable named 'ls', includi
 # For example, `type -a ls` shows:
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
+type -a ipython
+# ipython is /home/nathaniel/.local/bin/ipython
+# ipython is /usr/bin/ipython
 
 # Run the "real" ls, in case it is aliased.
 command ls
@@ -313,10 +316,12 @@ wget --recursive "http://groovebackup.com/?lang=en" --reject index.html?lang=de,
 # http://stackoverflow.com/questions/10712344/mirror-http-website-excluding-certain-files
 # http://stackoverflow.com/questions/12704197/wget-reject-still-downloads-file
 
-# Use wget to check for broken links in an html file
+# Use wget to check for broken links in a local HTML file.
 cat file.html | wget --no-check-certificate --spider -nv -F -i -
 # or this:
 wget --no-check-certificate --spider -nv -F -i - < file.html
+
+linkchecker --verbose file.html --check-extern --timeout=5 --user-agent=Mozilla/4.0 --file-output=csv/utf_8/linkchecker-results.csv
 
 # Use wget to check for broken links in a remote webpage.
 wget --spider  -o wget.log  -e robots=off --wait 1 -r -p http://www.example.com
@@ -549,13 +554,13 @@ id | tr ',' '\n'
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
 # Locate all files ending with '.cif'
-locate *.cif
+locate '*.cif'
 # Slower way to do the same thing.
 locate -r '\.cif$'
 # Locate all base filenames starting with phys
-locate -b phys*
+locate -b 'phys*'
 # Locate using the ? for one or zero unknown letter, * for many unknown letters
-locate *.htm?
+locate '*.htm?'
 # Restrict locate to a single path
 locate --count /home/nathaniel/*/Makefile
 locate --count /home/nathaniel/*/Makefile
@@ -3006,8 +3011,14 @@ xinit -- :1
 camorama -d /dev/video1
 cheese -d /dev/video0
 
+
+update-alternatives --display editor
+update-alternatives --list x-terminal-emulator
+update-alternatives --list editor
+
 # Change default terminal emulator
 sudo update-alternatives --config x-terminal-emulator
+sudo update-alternatives --set editor /usr/bin/vim.basic
 
 # Using globstar.
 shopt -s globstar
@@ -3929,6 +3940,12 @@ import numpy
 numpy.base_repr(73, 3)
 # '2201'
 
+# See where code crashes.
+import ipdb; ipdb.set_trace()
+
+# Or use this:
+from IPython import embed; embed() 
+
 # Capture screenshot.
 scrot
 # Capture a window.
@@ -4475,6 +4492,9 @@ gvfs-info /etc/hosts
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
 
+# List mimetypes of all files, sorted by mimetype.
+mimetype * | sort -k 2 | less
+
 # Set the default application for ftp:// urls to be Thunar.
 xdg-mime default Thunar.desktop x-scheme-handler/ftp
 
@@ -4782,3 +4802,10 @@ chkstow --target $HOME --list
 # Show config directory for xchat.
 xchat -u --configdir
 # /home/nathaniel/.xchat2
+
+# List of packages that are available on every standard Debian installation.
+aptitude search ~pstandard ~prequired ~pimportant -F%p | less
+# https://unix.stackexchange.com/questions/90523/what-packages-are-installed-by-default-in-debian-is-there-a-term-for-that-set
+
+# Check if a variable is defined.
+test -v PYTHONPATH; echo $?
