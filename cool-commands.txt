@@ -391,6 +391,21 @@ vmstat
 
 pstree -H $(pgrep athena | head -n1) | less
 
+pstree 10326 | less
+# bash-+-bash---time---fdupes
+#      |-2*[bash---time---find]
+#      |-bash-+-time---find
+#      |      `-time---sort
+#      |-bash---time---find---bash---bash-+-cut
+#      |                                  |-pdffonts
+#      |                                  |-sort
+#      |                                  |-tail
+#      |                                  `-uniq
+#      `-bash-+-sort
+#             `-time---du
+pstree $(pgrep bash | head -n 1) | less
+pstree $(pgrep xterm | head -n 1) | less
+
 ps aux --sort=-%cpu # list processes using most CPU
 ps aux --sort=-%mem # list processes using most memory
 ps aux --sort=start_time # list processes from oldest to youngest
@@ -600,6 +615,11 @@ time factor 12764787846358441471 # factoring this will take on the order of a fe
 #   user	0m0.000s
 #   sys	0m0.000s
 
+{ time factor 12764787846358441471 ; } 2> time.txt
+{ time factor 12764787846358441471 ; } > all.txt 2>&1
+# Not that 2>&1 must come after, not before.
+# https://stackoverflow.com/questions/13176611/bash-script-write-executing-time-in-a-file
+# https://stackoverflow.com/questions/13356628/is-there-a-way-to-redirect-time-output-to-file-in-linux
 
 # Check if `factor` was built with GMP for bignum support:
 ldd "$(which factor)"
@@ -608,7 +628,8 @@ ldd "$(which factor)"
 #	/lib64/ld-linux-x86-64.so.2 (0x00007fd60e65d000)
 # Or just do this.
 factor 340282366920938463463374607431768211456
-# Nope. Here's why:
+# factor: ‘340282366920938463463374607431768211456’ is too large
+# Most Debian versions are not built with bignum support. Here's why:
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=608832
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=64527
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=121306
@@ -1442,6 +1463,8 @@ dlocate libc.so.6
 # Find which package rm is from.
 # The trailing $ is necessary to prevent e.g. matches to /bin/rmdir.
 dlocate "$(which rm)\$"
+# Similar:
+dlocate /usr/bin/time$
 
 #   $ time dpkg -S /usr/share/dict/words
 #   diversion by dictionaries-common from: /usr/share/dict/words
@@ -2451,6 +2474,79 @@ calendar -t 19700101
 # See if you've got any linux backports installed
 apt-cache policy linux-backports-modules-cw-* | grep Installed | uniq
 
+# See options for a virtual package.
+apt-cache show awk
+# N: Can't select versions from package 'awk' as it is purely virtual
+# N: No packages found
+
+# Only shows the options that are already installed.
+apt-cache showpkg awk
+# Package: awk
+# Versions: 
+# 
+# Reverse Depends: 
+#   base-files,awk
+# Dependencies: 
+# Provides: 
+# Reverse Provides: 
+# mawk:i386 1.3.3-17
+# gawk:i386 1:4.1.1+dfsg-1
+# original-awk 2012-12-20-2
+# mawk 1.3.3-17
+# gawk 1:4.1.1+dfsg-1
+
+aptitude search -F %p '~Pawk'
+# cpl-plugin-hawki-calib
+# cpl-plugin-hawki-doc
+# gawk
+# gawk:i386
+# mawk
+# mawk:i386
+# original-awk
+# original-awk:i386
+# python-tomahawk
+
+aptitude search -F %p '?provides(awk)'
+
+aptitude search -F %p '?provides(^awk$)'
+
+# Problem: it matches everything with the name awk in it.
+
+grep-available -F Provides -s Package awk
+# Package: original-awk
+# Package: mawk
+# Package: gawk
+# Package: python-tomahawk
+
+
+update-alternatives --display awk
+# awk - auto mode
+#   link currently points to /usr/bin/gawk
+# /usr/bin/gawk - priority 10
+#   slave awk.1.gz: /usr/share/man/man1/gawk.1.gz
+#   slave nawk: /usr/bin/gawk
+#   slave nawk.1.gz: /usr/share/man/man1/gawk.1.gz
+# /usr/bin/mawk - priority 5
+#   slave awk.1.gz: /usr/share/man/man1/mawk.1.gz
+#   slave nawk: /usr/bin/mawk
+#   slave nawk.1.gz: /usr/share/man/man1/mawk.1.gz
+# Current 'best' version is '/usr/bin/gawk'.
+
+namei "$(which awk)"
+# f: /usr/bin/awk
+#  d /
+#  d usr
+#  d bin
+#  l awk -> /etc/alternatives/awk
+#    d /
+#    d etc
+#    d alternatives
+#    l awk -> /usr/bin/gawk
+#      d /
+#      d usr
+#      d bin
+#      - gawk
+
 # Show network connections from the command line
 nmcli device status
 # Disconnect from eth0
@@ -2931,6 +3027,13 @@ less /var/log/syslog
 
 # See attached USB devices
 lsusb
+# Bus 002 Device 002: ID 8087:0024 Intel Corp. Integrated Rate Matching Hub
+# Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+# Bus 001 Device 003: ID 04f2:b221 Chicony Electronics Co., Ltd integrated camera
+# Bus 001 Device 002: ID 8087:0024 Intel Corp. Integrated Rate Matching Hub
+# Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+# You can tell there is not point in getting a USB 3.0 device for this machine,
+# because all the hubs are 2.0. Also USB 3 ports are blue.
 
 # Identify printer model.
 sudo escputil -d -r /dev/usb/lp0
@@ -2967,7 +3070,7 @@ lsof -i :22
 sudo lsof -i :631
 # COMMAND    PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
 # cups-brow  892 root    5u  IPv6 52509000      0t0  TCP localhost:58445->localhost:ipp (CLOSE_WAIT)
-# cups-brow  892 root    7u  IPv4    20672      0t0  UDP *:ipp 
+# cups-brow  892 root    7u  IPv4    20672      0t0  UDP *:ipp
 # cupsd     3284 root   10u  IPv6 53523258      0t0  TCP localhost:ipp (LISTEN)
 # cupsd     3284 root   11u  IPv4 53523259      0t0  TCP localhost:ipp (LISTEN)
 
@@ -3136,13 +3239,13 @@ gdb --args /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin
 # 3. Trouble is, anything set up by wrapper scripts won't work...
 
 # Probably a better way to run a process in gdb.
-1. Run the process.
-2. Look up the process with ps.
+# 1. Run the process.
+# 2. Look up the process with ps.
 ps aux | grep comsol
 1000       503  7.7  4.4 853340 179816 pts/9   Sl+  12:55   0:19 /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher --launcher.ini /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsol.ini
-3. Attach gdb to the process by process id (may need to be root).
+# 3. Attach gdb to the process by process id (may need to be root).
 sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/glnx86/comsollauncher 503
-4. Once in gdb, press c to continue execution of program.
+# 4. Once in gdb, press c to continue execution of program.
 # Another way to attach to a running process.
 gdb -p 503
 
@@ -3352,8 +3455,19 @@ wdiff a.txt b.txt
 wdiff --no-common a.txt b.txt
 wdiff -3 a.txt b.txt
 
-# List all fonts
+# List all installed fonts.
 fc-list
+# List all monospace fonts.
+fc-list :spacing=100 | less
+
+# List all FreeSerif fonts.
+fc-list :family=FreeSerif
+
+# List all fonts that support Arabic.
+fc-list :lang=ar
+
+# List all X server fonts.
+xlsfonts
 
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
@@ -3493,7 +3607,7 @@ convert in.png -fill white -opaque '#729FCF' out.png
 
 # Invert colors (like a negative).
 convert in.png -negate out.png
-mogrify -negate in.png 
+mogrify -negate in.png
 
 # Use imagemagick to reduce the size to 10% of all jpegs, over writing the originals (in place).
 mogrify -resize 10x10% *.jpg
@@ -3570,6 +3684,9 @@ apt-get install -t wheezy-backports pcmanfm
 
 # See installed linux kernel package
 apt-cache policy linux-headers-$(uname -r)
+# e.g. linux-headers-3.16.0-4-amd64
+# <foo>_<VersionNumber>-<DebianRevisionNumber>_<DebianArchitecture>
+# https://www.debian.org/doc/manuals/debian-faq/ch-pkg_basics.en.html#s-pkgname
 
 # Get a new ip address via DHCP.
 sudo dhclient -r eth0
@@ -3944,7 +4061,7 @@ numpy.base_repr(73, 3)
 import ipdb; ipdb.set_trace()
 
 # Or use this:
-from IPython import embed; embed() 
+from IPython import embed; embed()
 
 # Capture screenshot.
 scrot
@@ -4204,8 +4321,11 @@ aptitude versions recoll
 # List all origins for packages.
 apt-cache policy | sed -n 's/.*o=\([^,]\+\).*/\1/p' | uniq
 
+aptitude search -F %p '?name(^g\+\+$)'
+
 # List packages from an origin other than Debian.
-aptitude search "?installed?not(?origin(Debian))"
+aptitude search -F "%p %m" "?installed?not(?origin(Debian))"
+# e.g. /var/lib/apt/lists/linux.dropbox.com_debian_dists_jessie_Release
 
 # List dummy or transitional packages.
 aptitude search '~i ~d transitional'
@@ -4762,7 +4882,7 @@ qdf in.pdf --qdf out.qdf
 vim out.qdf
 # Finally generate the pdf.
 qpdf out.qdf out.pdf
-# Or 
+# Or
 fix-qdf out.qdf > out.pdf
 # Or
 fix-qdf < out.qdf > out.pdf
