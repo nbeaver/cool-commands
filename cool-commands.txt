@@ -740,6 +740,10 @@ grep --recursive --files-with-matches "blah" # list files with lines that match 
 # Can be useful if you want to, say, edit all these files with a text editor.
 vim "$(grep -rl "blah")"
 
+# Grep for matching lines, but show only matching filenames.
+grep -rL "blah" # list files that have no lines matching "blah"
+grep --recursive --files-without-matches "blah"
+
 # Making fun of IIT's marketing strategy.
 grep 'it.*it' /usr/share/dict/words | sed 's/it/IIT/g' | less
 
@@ -883,7 +887,15 @@ rsync --archive --recursive --verbose --partial --compress --progress --rsh=ssh 
 # If you're not sure what you're doing is the right thing, use --dry-run.
 rsync --archive --recursive --verbose --partial --compress --progress --dry-run --rsh=ssh iit@id1.mr.aps.anl.gov:/home/iit/2014-07-18/ /home/nathaniel/Dropbox/15_Summer_2014/XAFS/2014-07-18/
 
+# Local copy.
 rsync --recursive --archive /media/disk1/ /media/disk2
+# It's the trailing slash on the source directory that matters,
+# not the trailing slash on the trailing directory.
+# Forgetting the trailing slash will generate this:
+# /media/disk2/disk1/...
+# Because rsync will treat it like a file.
+rsync --archive --verbose --progress --human-readable --whole-file --no-compress /media/${USER}/FC30-3DA9/DCIM/ $HOME/Pictures/digital-photos/by-camera/Nikon_COOLPIX_L810/2015-03-20_and_following
+# http://devblog.virtage.com/2013/01/to-trailing-slash-or-not-to-trailing-slash-to-rsync-path/
 
 # Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
 rsync --recursive --progress --partial /origin/path /target/path
@@ -947,7 +959,38 @@ sudo fdisk -l
 # Partition 2 does not start on physical sector boundary.
 # /dev/sda5       967143424  1000214527    16535552   82  Linux swap / Solaris
 
-# Another easy way to see disks and partitions; does not require sudo.
+# Another example:
+
+# Disk /dev/sda: 931.5 GiB, 1000204886016 bytes, 1953525168 sectors
+# Units: sectors of 1 * 512 = 512 bytes
+# Sector size (logical/physical): 512 bytes / 4096 bytes
+# I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+# Disklabel type: dos
+# Disk identifier: 0x534b2987
+# 
+# Device     Boot      Start        End    Sectors   Size Id Type
+# /dev/sda1  *          2048 1937225727 1937223680 923.8G 83 Linux
+# /dev/sda2       1937227774 1953523711   16295938   7.8G  5 Extended
+# /dev/sda5       1937227776 1953523711   16295936   7.8G 82 Linux swap / Solaris
+# 
+# Partition 3 does not start on physical sector boundary.
+# 
+# 
+# Disk /dev/sdb: 477 GiB, 512110190592 bytes, 1000215216 sectors
+# Units: sectors of 1 * 512 = 512 bytes
+# Sector size (logical/physical): 512 bytes / 512 bytes
+# I/O size (minimum/optimal): 512 bytes / 512 bytes
+# Disklabel type: dos
+# Disk identifier: 0x0008fe9b
+# 
+# Device     Boot     Start        End   Sectors   Size Id Type
+# /dev/sdb1  *         2048  967141375 967139328 461.2G 83 Linux
+# /dev/sdb2       967143422 1000214527  33071106  15.8G  5 Extended
+# /dev/sdb5       967143424 1000214527  33071104  15.8G 82 Linux swap / Solaris
+
+
+# Another easy way to see disks and partitions whether they are mount or not
+# Does not require sudo.
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0   477G  0 disk
@@ -955,6 +998,41 @@ lsblk
 # ├─sda2   8:2    0     1K  0 part
 # └─sda5   8:5    0  15.8G  0 part [SWAP]
 # sr0     11:0    1  1024M  0 rom
+
+# More thorough listing for mounted partitions.
+findmnt
+# TARGET                                SOURCE      FSTYPE          OPTIONS
+# /                                     /dev/sda1   ext4            rw,relatime,errors=remount-ro,data=ordered
+# ├─/sys                                sysfs       sysfs           rw,nosuid,nodev,noexec,relatime
+# │ ├─/sys/kernel/security              securityfs  securityfs      rw,nosuid,nodev,noexec,relatime
+# │ ├─/sys/fs/cgroup                    tmpfs       tmpfs           ro,nosuid,nodev,noexec,mode=755
+# │ │ ├─/sys/fs/cgroup/systemd          cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,xattr,release_agent=/lib/systemd/systemd-cgroups-agent,name=s
+# │ │ ├─/sys/fs/cgroup/cpuset           cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,cpuset
+# │ │ ├─/sys/fs/cgroup/cpu,cpuacct      cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,cpu,cpuacct
+# │ │ ├─/sys/fs/cgroup/devices          cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,devices
+# │ │ ├─/sys/fs/cgroup/freezer          cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,freezer
+# │ │ ├─/sys/fs/cgroup/net_cls,net_prio cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,net_cls,net_prio
+# │ │ ├─/sys/fs/cgroup/blkio            cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,blkio
+# │ │ └─/sys/fs/cgroup/perf_event       cgroup      cgroup          rw,nosuid,nodev,noexec,relatime,perf_event
+# │ ├─/sys/fs/pstore                    pstore      pstore          rw,nosuid,nodev,noexec,relatime
+# │ ├─/sys/kernel/debug                 debugfs     debugfs         rw,relatime
+# │ └─/sys/fs/fuse/connections          fusectl     fusectl         rw,relatime
+# ├─/proc                               proc        proc            rw,nosuid,nodev,noexec,relatime
+# │ └─/proc/sys/fs/binfmt_misc          systemd-1   autofs          rw,relatime,fd=22,pgrp=1,timeout=300,minproto=5,maxproto=5,direct
+# │   └─/proc/sys/fs/binfmt_misc        binfmt_misc binfmt_misc     rw,relatime
+# ├─/dev                                udev        devtmpfs        rw,relatime,size=10240k,nr_inodes=490000,mode=755
+# │ ├─/dev/pts                          devpts      devpts          rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000
+# │ ├─/dev/shm                          tmpfs       tmpfs           rw,nosuid,nodev
+# │ ├─/dev/hugepages                    hugetlbfs   hugetlbfs       rw,relatime
+# │ └─/dev/mqueue                       mqueue      mqueue          rw,relatime
+# ├─/run                                tmpfs       tmpfs           rw,nosuid,relatime,size=787732k,mode=755
+# │ ├─/run/lock                         tmpfs       tmpfs           rw,nosuid,nodev,noexec,relatime,size=5120k
+# │ ├─/run/rpc_pipefs                   rpc_pipefs  rpc_pipefs      rw,relatime
+# │ ├─/run/user/118                     tmpfs       tmpfs           rw,nosuid,nodev,relatime,size=393868k,mode=700,uid=118,gid=126
+# │ └─/run/user/1000                    tmpfs       tmpfs           rw,nosuid,nodev,relatime,size=393868k,mode=700,uid=1000,gid=1000
+# │   └─/run/user/1000/gvfs             gvfsd-fuse  fuse.gvfsd-fuse rw,nosuid,nodev,relatime,user_id=1000,group_id=1000
+# └─/etc/machine-id                     tmpfs[/machine-id]
+#                                                   tmpfs           ro,relatime,size=787732k,mode=755
 
 # Show disk logical name (e.g. /dev/sda), model number, vendor, serial, and size.
 sudo lshw -class disk
@@ -1601,6 +1679,18 @@ cat /dev/urandom | hexdump
 exiftool -a -u -g1 IMG_3689.JPG
 exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
+# Mount an external drive.
+sudo mkdir /media/nathaniel/external
+sudo mount /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+# Can get errors like this:
+#mount: wrong fs type, bad option, bad superblock on /dev/sdb1,
+#       missing codepage or helper program, or other error
+#
+#       In some cases useful info is found in syslog - try
+#       dmesg | tail or so.
+
+
 # Unmount partitions and detach disk
 df # to see mounted partitions
 df -h # to see human readable sizes
@@ -1712,10 +1802,34 @@ python -m http.server 8000
 apt-get --simulate install list_of_packages
 aptitude --simulate install list_of_packages # this one also tells you how much space it will require
 
+# Show URIs and MD5sum.
+apt-get install --quiet --yes --print-uris 0ad
+# 'http://ftp.debian.org/debian/pool/main/0/0ad-data/0ad-data_0.0.17-1_all.deb' 0ad-data_0.0.17-1_all.deb 566073422 MD5Sum:b82e30c2927ed595cabbe8000ebb93b0
+# 'http://ftp.debian.org/debian/pool/main/0/0ad-data/0ad-data-common_0.0.17-1_all.deb' 0ad-data-common_0.0.17-1_all.deb 776702 MD5Sum:95e12da902488b00f3813ad352f706ca
+# 'http://ftp.debian.org/debian/pool/main/g/gloox/libgloox12_1.0.11-1_amd64.deb' libgloox12_1.0.11-1_amd64.deb 404626 MD5Sum:9978f9fa6141f6b53116a21f750eb230
+# 'http://ftp.debian.org/debian/pool/main/m/mozjs24/libmozjs-24-0_24.2.0-2_amd64.deb' libmozjs-24-0_24.2.0-2_amd64.deb 1662902 MD5Sum:7da4ce7f7e48a74029c5127c00d93b05
+# 'http://ftp.debian.org/debian/pool/main/n/nvidia-texture-tools/libnvtt2_2.0.8-1+dfsg-5+b1_amd64.deb' libnvtt2_2.0.8-1+dfsg-5+b1_amd64.deb 118260 MD5Sum:df53028977383ddec6981325eb742d56
+# 'http://ftp.debian.org/debian/pool/main/0/0ad/0ad_0.0.17-1_amd64.deb' 0ad_0.0.17-1_amd64.deb 2862930 MD5Sum:8b679b5afa15afc1de5b2faee1892faa
+
+apt-get download --print-uris php5-imagick
+# 'http://ftp.debian.org/debian/pool/main/p/php-imagick/php5-imagick_3.2.0~rc1-1_amd64.deb' php5-imagick_3.2.0~rc1-1_amd64.deb 100534 SHA256:c01825bb5190466e94e1ddae0ae6d5a54d796b89fb6ca3b0fe428e39c75c4fff
+
+# Get just the URI.
+apt-get download --print-uris php5-imagick | cut -d' ' -f1 | sed -e 's/^.//' -e 's/.$//'
+# http://ftp.debian.org/debian/pool/main/p/php-imagick/php5-imagick_3.2.0~rc1-1_amd64.deb
+
 # If you want to get the source code for a package, run this. It does not require root priveleges.
 apt-get source <package-name>
 # If you want to build it from source, do this:
-apt-get build-dep <package-name>
+sudo apt-get build-dep <package-name>
+apt-get -b source <package-name>
+# Alternatives that do the same thing:
+# apt-get --build source <package-name>
+# apt-get --compile source <package-name>
+
+# If you just want to see what packages are required to build from source:
+apt-cache showsrc coreutils  | grep 'Build-Depends:'
+
 # If you're having problems building from source:
 auto-apt run ./configure
 
@@ -1856,6 +1970,16 @@ unicode ಠ
 # U+0CA0 KANNADA LETTER TTHA
 # UTF-8: e0 b2 a0  UTF-16BE: 0ca0  Decimal: &#3232;
 Ctrl-Shift-U 0ca0 <Enter> # Insert ಠ
+
+# Find out which fonts support a particular glyph.
+# https://askubuntu.com/questions/368121/list-of-installed-fonts-that-support-a-certain-character
+hb-shape /usr/share/fonts/truetype/lohit-kannada/Lohit-Kannada.ttf ಠ
+# [U0CA0=0+645]
+hb-shape /usr/share/root/fonts/FreeSans.ttf ಠ
+# [.notdef=0+819]
+
+# Related:
+# https://stackoverflow.com/questions/4458696/finding-out-what-characters-a-font-supports
 
 # Show full path of a file with ls
 ls -d $PWD/*
@@ -2279,7 +2403,7 @@ printf 'tempF(212)\ntempC' | units -q
 # Load default units file ('') as well as a personal units file (personal units file can access standard units as well as its own).
 units -f '' -f ~/Dropbox/projects/units/my-units.dat
 
-# Trying to kill all those blasted error reports from when xscreensave dies.
+# Trying to kill all those blasted error reports from when xscreensaver dies.
 killall apport-gtk
 # Well, that got rid of the bug reporting windows. But what about those tray notifications that say,
 # 'crash reported detected'? You have to click on all of them individualy.
@@ -3148,6 +3272,12 @@ recoll -t '"moved permanently"'
 # Useful for timing queries.
 time recoll -t '"moved permanently"'
 
+recoll -t -l "dir:/usr/share/games/fortunes/ orphan" 2>/dev/null | less
+
+recoll -t 'dir:"home/nathaniel/SpiderOak Hive/writings/looseleaf/posts/" orphan' 2>/dev/null | less
+
+# https://askubuntu.com/questions/641386/in-recoll-how-to-view-the-list-of-files-that-have-been-indexed-in-a-specific-di
+
 # See ten newest processes
 ps k-start_time
 # List nine oldest processes.
@@ -3457,6 +3587,7 @@ wdiff -3 a.txt b.txt
 
 # List all installed fonts.
 fc-list
+
 # List all monospace fonts.
 fc-list :spacing=100 | less
 
@@ -3712,6 +3843,26 @@ update-alternatives --config x-www-browser
 
 # Search for all matches for a manpage, not just the first section found.
 man --all printf
+man -a printf
+
+# Search all sections for man page called exact string 'printf'.
+man -k '^printf$'
+man -k '^signal$'
+
+# See all repeated manpage sections.
+man -k . | cut -d' ' -f 1 | sort -f | uniq -i -c | sort -n | less
+man --apropos . | cut --delimiter=' ' --fields=1 | sort --ignore-case | uniq --ignore-case --count | sort --numeric-sort | less
+# e.g. intro has the most.
+#      4 locale
+#      4 printf
+#      4 queue
+#      4 rand
+#      4 random
+#      4 socket
+#      4 time
+#      4 uuid
+#      5 md5
+#      8 intro
 
 # Open manpage html page in chromium browser.
 man --html=/usr/bin/chromium man
@@ -4856,6 +5007,17 @@ nodejs
 # '[object Object][object Object]'
 # > 'wat' - 1
 # NaN
+js24 # from libmozjs-24-bin
+# js> [] + []
+# ""
+# js> [] + {}
+# "[object Object]"
+# js> {} + []
+# 0
+# js> {} + {}
+# NaN
+# js> 'wat' - 1
+# NaN
 
 # Update X server settings.
 xrdb -merge ~/.Xresources
@@ -4929,3 +5091,7 @@ aptitude search ~pstandard ~prequired ~pimportant -F%p | less
 
 # Check if a variable is defined.
 test -v PYTHONPATH; echo $?
+
+# Example of using GNU parallel.
+parallel -j 3 -- "sleep 2; echo '1st'" "sleep 1; echo '2nd'" "echo '3rd'"
+
