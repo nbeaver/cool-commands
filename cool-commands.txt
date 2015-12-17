@@ -1576,6 +1576,21 @@ apt-file search libc.so.6
 #   user	0m2.812s
 #   sys	0m0.228s
 
+apt-file search showkey
+# kbd: /usr/bin/showkey
+# kbd: /usr/share/man/man1/showkey.1.gz
+# manpages-es-extra: /usr/share/man/es/man1/showkey.1.gz
+# manpages-zh: /usr/share/man/zh_CN/man1/showkey.1.gz
+# manpages-zh: /usr/share/man/zh_TW/man1/showkey.1.gz
+# texlive-lang-polish: /usr/share/doc/texlive-doc/generic/tex-virtual-academy-pl/latex2e/macro/showkeys.html
+# texlive-latex-base: /usr/share/texlive/texmf-dist/tex/latex/tools/showkeys.sty
+# texlive-latex-base-doc: /usr/share/doc/texlive-doc/latex/tools/showkeys.pdf
+# texlive-latex-extra-doc: /usr/share/doc/texlive-doc/latex/dlfltxb/dlfltxbmarkup-showkeys.pdf
+# texlive-latex-extra-doc: /usr/share/doc/texlive-doc/latex/dlfltxb/dlfltxbmarkup-showkeys.tex
+# texlive-science: /usr/share/texlive/texmf-dist/tex/latex/chemcono/showkeysff.sty
+apt-file search -x '/showkey$'
+# kbd: /usr/bin/showkey
+
 # Guess the executable or command associated with a package.
 # This actually lists all the files installed, so we need to grep out the executables.
 # Caveat: will not tell you about wrapper scripts or arguments that need to be passed.
