@@ -3532,7 +3532,7 @@ date +"%Y-%m-%d_%T%p_%Z"
 # Seconds since the Unix epoch (1970-01-01), suitable for filenames and logfiles.
 date +%s
 # Example: 1441752464
-# Drawback: not very human-readable.
+# Drawback: not very human-readable, not portable.
 
 # Convert Unix epoch to human-readable time.
 date --date='@1441752464' +%c
@@ -3797,6 +3797,9 @@ dropbox status
 svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
 # or into a named directory:
 svn checkout http://svn.csrri.iit.edu/mx/trunk mx
+
+# Create a patch for using with subversion.
+svn patch
 
 # Set the screen brightness (backlight) from the command line
 xbacklight -set 100
@@ -5110,3 +5113,5 @@ test -v PYTHONPATH; echo $?
 # Example of using GNU parallel.
 parallel -j 3 -- "sleep 2; echo '1st'" "sleep 1; echo '2nd'" "echo '3rd'"
 
+# TODO: include these tricks.
+# http://www.etalabs.net/sh_tricks.html
