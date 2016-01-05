@@ -433,6 +433,13 @@ stat /proc/24088
 #        l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
 #        +    is in the foreground process group.
 
+# Run a command at lowest possible priority so that it doesn't use up so many resources.
+nice -n 19 recollindex
+
+# Adjust priority of existing processes.
+renice -n 19 -p 28590 28593
+# 28590 (process ID) old priority 0, new priority 19
+# 28593 (process ID) old priority 0, new priority 19
 
 startx -- :1 # start x session
 
@@ -1613,8 +1620,26 @@ grep "Exec" $(dpkg -L handbrake-gtk | grep '/usr/share/applications/.*\.desktop$
 dpkg -c /var/cache/apt/archives/example_1.0.0-1_all.deb
 dpkg --contents
 
-# Untar a debian file.
+# Unarchive a debian file.
 ar vx skype-debian_4.3.0.37-1_i386.deb
+
+# List contents of a debian file.
+ar t /var/cache/apt/archives/ack-grep_2.14-4_all.deb
+# debian-binary
+# control.tar.gz
+# data.tar.xz
+
+# List the contents of the tar.gz file.
+ar p /var/cache/apt/archives/ack-grep_2.14-4_all.deb control.tar.gz | tar --ungzip --list --to-stdout | less
+# ./
+# ./control
+# ./md5sums
+# ./preinst
+# ./postrm
+# ./postinst
+
+# Send the contents of debian control file to stdout.
+ar p /var/cache/apt/archives/ack-grep_2.14-4_all.deb control.tar.gz | tar -z -x --to-stdout ./control
 
 # Install a .deb file.
 sudo dpkg -i example-package.deb
@@ -2441,6 +2466,10 @@ egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d '<,>' | sort | uniq > sor
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
 grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})'
 
+# Find matching lines in all files below and eliminate duplicates.
+grep -hr 'mystring' | sort | uniq | less
+grep --no-filename --recursive 'mystring' | sort | uniq | less
+
 # Open that network manager connection editor that normally you click on the wifi icon to access.
 nm-connection-editor
 
@@ -3195,6 +3224,8 @@ netstat -tulpn | grep :80
 fuser 80/tcp
 lsof -i :80 | grep LISTEN
 # http://www.cyberciti.biz/faq/find-linux-what-running-on-port-80-command/
+
+lsof -iTCP | less
 
 # Show which process has particular port number open.
 lsof -i :8000
@@ -4876,6 +4907,14 @@ readelf -n `which ls` | grep 'Build ID'
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Developer_Guide/compiling-build-id.html
 # https://stackoverflow.com/questions/7744795/python-get-build-id-from-an-elf-file
 
+# Get all file information (keep going).
+file -kr frankenplot_2.3.2-1_all.deb 
+file --keep-going --raw frankenplot_2.3.2-1_all.deb 
+# frankenplot_2.3.2-1_all.deb: Debian binary package (format 2.0)
+# - current ar archive
+# - archive file
+
+
 # See the versions of all USB devices.
 cat /sys/bus/usb/devices/*/version
 
@@ -5115,3 +5154,11 @@ parallel -j 3 -- "sleep 2; echo '1st'" "sleep 1; echo '2nd'" "echo '3rd'"
 
 # TODO: include these tricks.
 # http://www.etalabs.net/sh_tricks.html
+
+# Eye dropper app.
+gcolor2
+gpick
+
+# Windows-only: using the Windows version of traceroute.
+tracert 8.8.8.8
+tracert 192.168.0.1
