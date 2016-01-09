@@ -476,6 +476,15 @@ sudo /etc/init.d/vsftpd restart
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
 sudo service lightdm restart
+# Requires the SysV init system?
+invoke-rc.d lightdm restart
+/etc/init.d/lightdm restart
+sudo pkill x
+
+# Ctrl-Alt-Backspace
+# Alt-PrtSc-k
+# http://www.sudo-juice.com/restart-x-shortcut-for-ubuntu/
+# https://unix.stackexchange.com/questions/87192/restarting-gnome-3-in-debian-wheezy
 
 # Magic SysRq key: rebooting when all else fails
 # hold down Alt-SysRq, then type  r e i s u b, then enter and ctrl-alt-del
@@ -2021,12 +2030,21 @@ hb-shape /usr/share/root/fonts/FreeSans.ttf ಠ
 # Related:
 # https://stackoverflow.com/questions/4458696/finding-out-what-characters-a-font-supports
 
-# Show full path of a file with ls
-ls -d $PWD/*
-
-# Show only directories.
-ls -d */
+# List only directories.
+ls -d1 */
 # https://www.reddit.com/r/bash/comments/2z4rzo/why_ls_d_and_not_ls_d/
+
+# Show full path of all folders and files in current directory.
+ls -d1 "$PWD"/*
+# or, if you want to include the directory as well:
+find "$PWD"/ -maxdepth 1
+# Note: does not resolve symlinks.
+# This does.
+readlink -f -- *
+readlink --canonicalize -- *
+
+# Directories only.
+ls -d1 "$PWD"/*
 
 # Use a text file as a command line argument
 w3m $(<temp.txt)
@@ -3066,7 +3084,7 @@ sudo update-flashplugin-nonfree --install
 # Browse gopher with lynx
 lynx gopher://gopher.floodgap.com/1/world
 
-# Get html with lynx.
+# TODO: Get html with lynx.
 
 # Link to USPS package tracking for three packages
 https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
