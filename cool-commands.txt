@@ -212,6 +212,8 @@ ls --almost-all --format=single-column
 sudo chmod -R +rwx .mozilla
 !! # repeat previous command
 
+chmod u+rw,g+r,o+r myfile.txt
+
 type ls # identify the kind of command ls is
 type -a ls # print all the places that contain an executable named 'ls', including aliases, functions, and builtins.
 # For example, `type -a ls` shows:
@@ -475,11 +477,12 @@ sudo /etc/init.d/vsftpd restart
 
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
-sudo service lightdm restart
-# Requires the SysV init system?
 invoke-rc.d lightdm restart
 /etc/init.d/lightdm restart
 sudo pkill x
+
+# For SystemV init system.
+sudo service lightdm restart
 
 # Ctrl-Alt-Backspace
 # Alt-PrtSc-k
@@ -797,7 +800,10 @@ tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 
 # decompress and unacrhive a tarred, gzipped file
-tar zxf keepassx-0.4.3.tar.gz # The - in front of the flags is not necessary.
+tar -zxf keepassx-0.4.3.tar.gz
+tar zxf keepassx-0.4.3.tar.gz # The - in front of the flags is not actually necessary.
+# Unfortunately, no easy way to make a parent directory.
+# https://unix.stackexchange.com/questions/198151/tar-extract-into-directory-with-same-base-name
 
 # list contents of a tarred file, i.e. tar archive
 tar -tf myfile.tar
@@ -869,6 +875,9 @@ find ./ -type d -empty -delete
 # http://robotbutler.org/article/31
 # http://www.thegeekstuff.com/2010/03/find-empty-directories-and-files/
 # http://itsmetommy.com/2013/07/11/useful-linux-find-commands/
+
+# Limit it to the current directory only.
+find . -maxdepth 1 -type d -empty
 
 # http://stackoverflow.com/questions/6085156/using-vs-with-exec-in-find
 find ./ -exec ls '{}' \;
@@ -1527,6 +1536,8 @@ bash
 # Also tells you if you have an old package and could install a newer candidate with apt-get upgrade.
 apt-cache policy gnash browser-plugin-gnash
 apt-cache policy ".*gnash.*"
+# Useful for scripts.
+dpkg -s browser-plugin-gnash
 
 # Gives much of the same info as policy (version, architecture) but also shows if e.g. config files are still installed.
 # Does not show if there is a newer package available or not.
@@ -1972,6 +1983,12 @@ iwconfig  wlan0 essid 'fermilevel'
 iwconfig  wlan0 key 1234567890
 ifconfig  wlan0 192.168.1.2
 
+# See what the frequency of the wifi card is.
+iwconfig wlan0 | grep Frequency
+
+#
+sudo iwlist wlan0 scan | less
+
 # Search for a particular process by name.
 ps u -C duplicity
 
@@ -2136,7 +2153,7 @@ hashlib.md5("This is only a test.\n").hexdigest()
 find . -type d -exec chmod g+x {} \;
 
 # Run a command 5 minutes later
-echo "Done" | at now + 5 minutes
+echo "echo blah" | at now + 5 minutes
 # or
 at now + 5 minutes
 # warning: commands will be executed using /bin/sh
@@ -2206,8 +2223,10 @@ sudo /etc/init.d/ssh restart
 
 # Restart the apache web server.
 sudo /etc/init.d/apache2 restart
-sudo service apache2 restart
 sudo apache2ctl graceful
+
+# If you have System V init installed:
+sudo service apache2 restart
 
 # Disable system speaker in X:
 xset -b
@@ -5114,7 +5133,7 @@ openshot myfile.mp4
 
 # Edit a pdf file with a text editor.
 # First, generate the qdf text file (may be large).
-qdf in.pdf --qdf out.qdf
+qpdf in.pdf --qdf out.qdf
 # Then, edit it in your favorite text editor.
 vim out.qdf
 # Finally generate the pdf.
@@ -5180,3 +5199,6 @@ gpick
 # Windows-only: using the Windows version of traceroute.
 tracert 8.8.8.8
 tracert 192.168.0.1
+
+# Turn off swap file (if you have enough RAM).
+sudo swapoff -a
