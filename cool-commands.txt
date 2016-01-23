@@ -1123,7 +1123,9 @@ pulseaudio --kill
 pulseaudio --start # start it up again as a daemon
 
 # Debugging wifi.
-# Get information about wifi adapter, including driver version and logical name (e.g. wlan0).
+# Get information about wifi adapter,
+# including driver version
+# and logical name (e.g. wlan0).
 sudo lshw -C network > wifi-card-info.txt
 # Get log of network manager.
 sudo service network-manager stop
@@ -4672,8 +4674,11 @@ script --timing=typescript.tm --flush "$logfile"
 more typescript
 less -r typescript
 # Alternative: use `screen`.
+C-a H
+# Begins/ends logging of the current window to the file screenlog.n
+# in the window's default directory,
+# where n is the number of the current window.
 # https://www.gnu.org/software/screen/manual/screen.html#Hardcopy
-C-a H # Begins/ends logging of the current window to the file screenlog.n in the window's default directory, where n is the number of the current window.
 
 gsettings list-keys  org.gnome.desktop.default-applications.terminal
 
