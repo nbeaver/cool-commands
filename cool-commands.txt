@@ -759,6 +759,8 @@ grep --recursive --files-with-matches "blah" # list files with lines that match 
 # Can be useful if you want to, say, edit all these files with a text editor.
 vim "$(grep -rl "blah")"
 
+grep -rl "blah|\blag" # list files with lines that match "blah" or "blag"
+
 # Grep for matching lines, but show only matching filenames.
 grep -rL "blah" # list files that have no lines matching "blah"
 grep --recursive --files-without-matches "blah"
@@ -1787,7 +1789,7 @@ less -R
 xscreensaver-command -lock
 # Choose display; normally :0.0 unless you have another x server running.
 # See the current one with `echo $DISPLAY`.
-xscreensaver-command --lock --display :1.0
+xscreensaver-command --lock --display :0.0
 # On xfce
 xflock4
 # For gnome
@@ -1889,6 +1891,10 @@ apt-get -b source <package-name>
 # apt-get --build source <package-name>
 # apt-get --compile source <package-name>
 
+# If you have the sources from other repos available,
+# you can download and try to build those instead.
+apt-get -b source zotero-standalone/unstable
+
 # If you just want to see what packages are required to build from source:
 apt-cache showsrc coreutils  | grep 'Build-Depends:'
 
@@ -1912,6 +1918,13 @@ grep -v '^$\|^\s*\#' /etc/sysctl.conf
 grep -v "^\($\|#\)" /etc/sysctl.conf
 # http://www.linuxjournal.com/content/tech-tip-view-config-files-without-comments
 # http://www.commandlinefu.com/commands/view/841/output-files-without-comments-or-empty-lines
+
+# Find files with "pattern1" OR "pattern2".
+grep -rl "pattern1\|pattern2"
+# Find files with "pattern1" AND "pattern2".
+find . -type f  -exec grep -lZ "pattern1" {} + | xargs -r0 grep -l "pattern2"
+# https://unix.stackexchange.com/questions/68138/use-grep-to-find-all-files-in-a-directory-with-two-strings
+# https://unix.stackexchange.com/questions/67794/how-to-search-files-where-two-different-words-exist
 
 # Copy hidden files (dotfiles)
 cp -r test/.[a-zA-Z0-9]* target_directory
@@ -2714,10 +2727,11 @@ aptitude search -F %p '~Pawk'
 # python-tomahawk
 
 aptitude search -F %p '?provides(awk)'
+# Problem: it matches everything with the name awk in it.
 
+# Solution:
 aptitude search -F %p '?provides(^awk$)'
 
-# Problem: it matches everything with the name awk in it.
 
 grep-available -F Provides -s Package awk
 # Package: original-awk
@@ -2796,6 +2810,7 @@ truncate --size=0 file
 # or
 truncate -s 0 file
 # https://superuser.com/questions/849413/why-would-you-cat-dev-null-var-log-messages
+# http://www.tech-recipes.com/rx/2993/how_to_empty_or_clear_the_contents_of_an_existing_unix_file/
 
 # Kill an unresponsive SSH session
 # http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
@@ -2811,6 +2826,11 @@ echo '~ # $ % ^ & _ { } < > \ |' | pandoc -t latex --listings
 
 # Convert files using pandoc, e.g. markdown to latex
 pandoc -f markdown -t latex myfile.markdown  > myfile.tex
+# Convert big files using pandoc.
+pandoc +RTS -K64M -RTS -f markdown -t latex big.md -o big.tex
+# For this error message (error code 2):
+#     Stack space overflow: current size 16777216 bytes.
+#     Use `+RTS -Ksize -RTS' to increase it.
 
 # Check if advanced globbing patterns are on
 shopt extglob
@@ -3954,8 +3974,10 @@ man --apropos . | cut --delimiter=' ' --fields=1 | sort --ignore-case | uniq --i
 
 # Open manpage html page in chromium browser.
 man --html=/usr/bin/chromium man
+
 # Open manpage html page in default browser.
 man --html=x-www-browser man
+man --html=sensible-browser man
 # Or set the $BROWSER variable.
 BROWSER=iceweasel man --html man
 
@@ -3993,7 +4015,9 @@ cat
 # Must be run in a virtual tty, not a graphical terminal, otherwise it will say:
 # "Couldn't get a file descriptor referring to the console"
 showkey
-#TODO: why doesn't --ascii work in debian?
+
+# Can also do:
+xev
 
 # See listing of ascii characters,
 # including caret notation if you look at Char in the corresponding last column.
@@ -4597,6 +4621,11 @@ aptitude search '?and(~i, ~Awheezy-backports)'
 aptitude -F'|%p|%d|' search '?section(hamradio)'
 # https://askubuntu.com/questions/469612/how-can-i-get-a-list-of-all-packages-in-a-repository-section-from-command-line
 
+# Find upgradable packages.
+aptitude search '~U'
+
+# Package names only.
+aptitude search -F '%p' --disable-columns '~U'
 
 printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
 # http://stackoverflow.com/questions/448126/lambda-functions-in-bash
