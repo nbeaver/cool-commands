@@ -7,13 +7,14 @@ xrandr
 # Reset screen resolution if another program goofs it up
 xrandr -s 1600x900
 xrand --size 1600x900
-# http://forums.debian.net/viewtopic.php?f=10&t=40955
+
 # Automatically turn on a second screen
 xrandr --output VGA --auto
 # Clone screens
 xrandr --output VGA --same-as LVDS
 # Extend screens
 xrandr --output VGA --left-of LVDS
+# http://forums.debian.net/viewtopic.php?f=10&t=40955
 
 # Finding in directories beneath
 # Find all files containing text 'NBMAX' and ending in .F90
@@ -35,11 +36,11 @@ find . -perm -g+s
 stat -c '%a %n' -- *
 stat --format='%a %n' -- *
 # Include the human-readable permissions.
-stat -c '%A %a %n' *
+stat -c '%a %A %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
 
 # Basically the same thing, but recursive.
-find . -type f -printf "%M %m %f\n" | less
+find . -type f -printf "%m %M %f\n" | less
 # https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
 
 # Find all files over a certain size (500MB in this case.)
@@ -86,6 +87,10 @@ echo !! > my-script.sh
 # (A non-useless use of cat).
 cat commands.sh >> ~/.bash_history
 
+# See what piped output looks like
+# (another non-useless use of cat).
+ls * | cat
+
 # Append a line to a non-empty file.
 sed -i '$ a\this is a line of text' myfile.txt
 
@@ -102,9 +107,13 @@ grep Offenbach .
 ls --recursive | grep kim *.f90
 grep --ignore-case --recursive "kim_api" . --include=*.f90
 grep --recursive "kim-str" .
+
 time grep "hi"
+
 ls /usr/bin | grep "csound"
+
 nano | ls | grep "ann"
+
 # Grepping literal, raw strings without having to escape everything.
 grep -F
 grep --fixed-strings
@@ -271,6 +280,9 @@ find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
 # https://askubuntu.com/questions/206277/find-files-in-linux-and-exclude-specific-directories
 # http://www.cyberciti.biz/faq/linux-unix-osx-bsd-find-command-exclude-directories/
 # https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
+
+find . -path ./.git -prune -o -type f -print0 | wc -l --files0-from=-
+# https://stackoverflow.com/questions/13727917/use-wc-on-all-subdirectories-to-count-the-sum-of-lines
 
 # Find a writable file owned by root.
 find / -xdev -user root -perm -u+w -name hello 2>/dev/null
@@ -470,10 +482,25 @@ sudo modprobe --remove rtl8192ce
 sudo modprobe rtl8192ce
 ping -c 4 google.com
 
+# Get list of interfaces.
+ls /sys/class/net/
+
+# Get list of driver paths for netork interfaces.
+readlink /sys/class/net/*/device/driver
+
+# Get name of wifi driver for wlan0 interface.
+basename "$(readlink /sys/class/net/wlan0/device/driver)"
+
+# Get driver names for all network interfaces.
+readlink /sys/class/net/*/device/driver | xargs -L 1 basename
+
 # Another method
 sudo /etc/init.d/networking restart
 sudo /etc/init.d/network-manager restart
 sudo /etc/init.d/vsftpd restart
+
+# Restart interface, wlan0 in this case.
+sudo ifdown wlan0 && sudo ifup wlan0
 
 # First, try Alt-F2 and xkill or Alt-F2 and gnome-terminal
 # Restart X server
@@ -648,11 +675,10 @@ ldd "$(which factor)"
 # Or just do this.
 factor 340282366920938463463374607431768211456
 # factor: ‘340282366920938463463374607431768211456’ is too large
-# Most Debian versions are not built with bignum support. Here's why:
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=608832
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=64527
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=121306
-# https://bugs.launchpad.net/ubuntu/+source/coreutils/+bug/696618
+# or this:
+echo '2^127' | bc | factor
+# factor: ‘170141183460469231731687303715884105728’ is too large
+# Most Debian versions are not built with bignum support.
 
 objdump -p /usr/bin/factor | grep NEEDED
 #   NEEDED               libc.so.6
@@ -735,6 +761,16 @@ echo {1..9}
 echo {01..16}
 # Fun with brace expansion
 for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
+# 16_61-64
+# 17_65-68
+# 18_69-72
+# 19_73-76
+# 20_77-80
+# 21_81-84
+# 22_85-88
+# 23_89-92
+# 24_93-96
+# 25_97-100
 
 # find Unicode/non-ascii characters in text file by numbered line
 LC_COLLATE=C grep -n '[^ -~]' --color=always utf8.txt | less -r
@@ -856,9 +892,10 @@ find . -type f -exec file '{}' \; | less
 find . -exec file '{}' + | less
 
 # Find broken symlinks in directories below
-find ./ -xtype l
+find . -xtype l
 find /usr/ -xtype l
 # http://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
+# ~/src/python/cmd-oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
 
 # Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
 find ./ -type l ! -exec test -r {} \; -print
@@ -994,22 +1031,22 @@ sudo fdisk -l
 # I/O size (minimum/optimal): 4096 bytes / 4096 bytes
 # Disklabel type: dos
 # Disk identifier: 0x534b2987
-# 
+#
 # Device     Boot      Start        End    Sectors   Size Id Type
 # /dev/sda1  *          2048 1937225727 1937223680 923.8G 83 Linux
 # /dev/sda2       1937227774 1953523711   16295938   7.8G  5 Extended
 # /dev/sda5       1937227776 1953523711   16295936   7.8G 82 Linux swap / Solaris
-# 
+#
 # Partition 3 does not start on physical sector boundary.
-# 
-# 
+#
+#
 # Disk /dev/sdb: 477 GiB, 512110190592 bytes, 1000215216 sectors
 # Units: sectors of 1 * 512 = 512 bytes
 # Sector size (logical/physical): 512 bytes / 512 bytes
 # I/O size (minimum/optimal): 512 bytes / 512 bytes
 # Disklabel type: dos
 # Disk identifier: 0x0008fe9b
-# 
+#
 # Device     Boot     Start        End   Sectors   Size Id Type
 # /dev/sdb1  *         2048  967141375 967139328 461.2G 83 Linux
 # /dev/sdb2       967143422 1000214527  33071106  15.8G  5 Extended
@@ -1494,6 +1531,9 @@ while read line; do whois "$line" | grep 'NetName'; done < list-of-ip-addresses.
 # Most commands already run over lines of a text file already,
 # so it's not often that this kind of command is necessary.
 
+# Whack-a-mole with an unwanted process.
+while true; do killall avahi-daemon; echo $?; sleep 10; done
+
 # Run a command until it fails.
 while popd; do :; done
 while ping -c 1 google.com; do sleep 1; done
@@ -1512,6 +1552,11 @@ sudo chmod a+r file
 sudo chmod o-r file
 # Turn off world-editable status.
 sudo chmod o-w file
+
+# Protect home directory from access by other users.
+chmod o-rwx $HOME
+# https://askubuntu.com/questions/46501/why-can-other-users-see-the-files-in-my-home-folder
+# ~/src/python/cmd-oysters/cmdoysters/2d031b99-6945-45bd-be31-71382d661d73.json
 
 # The default shell:
 echo $SHELL
@@ -1686,9 +1731,9 @@ dpkg -X /var/cache/apt/archives/example_1.0.0-1_all.deb ~/path/to/extracted/file
 dpkg --vextract
 
 # Make a screencast by capturing output.
-ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq output.mkv
-ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 -sameq output.mkv
-ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY -sameq output.mkv
+ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 output.mkv
+ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 output.mkv
+ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY output.mkv
 
 xdpyinfo | grep 'dimensions:' | awk '{print $2}'
 xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
@@ -1702,11 +1747,11 @@ gfortran myprogram.f95 -o myprogram
 
 # Show kernel information (e.g. 64-bit vs 32-bit)
 uname --all
+# Linux
+# Darwin
 # Only the kernel architecture, e.g. x86_64
 uname --machine
 uname -m
-# Linux
-# Darwin
 # ~/src/python/cmd-oysters/cmdoysters/f69252a3-a58b-48bc-9fd2-89e9e5d29f94.json
 
 # Shows kernal architecture as well,
@@ -1963,6 +2008,7 @@ mv */* ./
 # Move files in current directory to parent directory
 # Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
 mv -- * .[^.]* ..
+# ~/src/python/cmd-oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
 ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
@@ -2016,7 +2062,7 @@ zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort -r | less
 find /usr/share/ -path /usr/share/doc -prune -o -type d -name '*doc*' -print
 
 # Get an Artist - Song output from an m3u playlist
-cat playlist.m3u | grep EXT | cut -d, -f 2 | less
+grep EXT playlist.m3u | cut -d, -f 2 | less
 
 # Find out which shell session you're using
 ps -p $$
@@ -2214,6 +2260,7 @@ sed -n '4{s/,/\n/g;p;q}' file.csv | nl
 sed -n '/StartPattern/,/EndPattern/p' FileName
 # http://www.shellhacks.com/en/Using-SED-and-AWK-to-Print-Lines-Between-Two-Patterns
 # https://stackoverflow.com/questions/12443122/using-sed-to-print-between-two-patterns
+sed -n '/xenon/,/yak/p' /usr/share/dict/words
 
 # SSH without a password (using ssh keys). You only need to do this once.
 ssh-keygen -t rsa
@@ -2422,6 +2469,9 @@ sudo lsof -i
 sudo netstat -lptu
 sudo netstat -tulpn
 sudo netstat -tuplen
+# Check which ports are open on this machine, what states they are in, and what service owns them.
+nmap localhost
+
 
 # Using nmap
 # Print a list of target hosts
@@ -2702,13 +2752,13 @@ apt-cache show awk
 # Only shows the options that are already installed.
 apt-cache showpkg awk
 # Package: awk
-# Versions: 
-# 
-# Reverse Depends: 
+# Versions:
+#
+# Reverse Depends:
 #   base-files,awk
-# Dependencies: 
-# Provides: 
-# Reverse Provides: 
+# Dependencies:
+# Provides:
+# Reverse Provides:
 # mawk:i386 1.3.3-17
 # gawk:i386 1:4.1.1+dfsg-1
 # original-awk 2012-12-20-2
@@ -3251,6 +3301,12 @@ rdesktop -u PTStat -f 164.54.244.15
 
 # See cron updates and ssmtp status
 less /var/log/syslog
+tail -f /var/log/syslog
+
+# See all kinds of system information.
+tail -f /var/log/{messages,kern.log,dmesg,Xorg.0.log}
+# Log it as well.
+tail -f /var/log/{messages,kern.log,dmesg,Xorg.0.log} | tee log.txt
 
 # See attached USB devices
 lsusb
@@ -3888,6 +3944,14 @@ svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
 # or into a named directory:
 svn checkout http://svn.csrri.iit.edu/mx/trunk mx
 
+# Check out particular local revision.
+svn upgrade # prevent E155036
+svn update -r 1175
+
+# Checkout a particular revision.
+svn checkout -r 1175 https://subversion.xray.aps.anl.gov/EXPGUI/
+svn --quiet checkout -r 1175 https://subversion.xray.aps.anl.gov/EXPGUI/
+
 # Create a patch for using with subversion.
 svn patch
 
@@ -4005,7 +4069,7 @@ unoconv --format ods --show |& less
 # Convert from ODS to Excel XLS.
 unoconv --format=xls --output=out.xls in.ods
 
-# Show ascii keycodes/keystrokes; press Ctrl-D to end.
+# Show ascii keycodes/keystrokes/keypresses; press Ctrl-D to end.
 showkey -a
 showkey --ascii
 # Similar to just running
@@ -4340,6 +4404,10 @@ scrot -s
 import out.png
 xfce4-screenshooter --region
 
+# A primitive screenlogger.
+# Warning: don't leave this running accidentally.
+watch scrot
+
 # Diagnose inotify problems.
 # If you can run
 tail -f any-file.txt
@@ -4380,7 +4448,7 @@ fpcalc myfile.ogg
 # FINGERPRINT=AQAA2FqiJUmmLAE--AWOwO_QO0EPy0R49IHPI0fPQ36M8IV_HD7-CL3RH_6R7Bnyo8cfAT6BP_gH-GFx_PA74MeR8DTS6_jxXUJ_tMd7pO-Q_LiOHz9--DgS5PjxCLWoEn0Nhyrh5AhP6HgPPQ8uBR-FM9AuEmGINyJO_LhoEc3FBE-m4x_SI-GJo-eD5klxHt-BhEdeHA_8w8eFQEaqH__wBz78Iz-Sa4XVA9_x4_CLAz4qiseNIw_0KC9yckH1wEll4dnxNERJ4seRXEmOXCtR3cFV4UXyI20UGbW-oMcZPMqMH8kTpD9uTrhyXMcLHzmSC__w4_mA-_BzfLqQ9wpUH7eAL4QuiMcb_MH1oTIRJzi-4zwe41KI7zgTKUL5TUPD5MfJDN_w45cQ6_gioi9EffiRnnhg1DfuGOGLhoxy6EM4hsd1-PhxC36NC-cFW0Qy_cgn_EtRMjrCjC1eQSdCi_iH48ePMFQKlRsAschSyloBvACCAQSWBEoJRYQUlhkhIDNAPKKcEcIAZowQiCEDFEJKQIaAFNYZooERDAHCmGNKMWIBQQI5JcAAhhEnBHXiGAEOkIAZAxRDiCGEtFhyOUi6UIoYi6AxgRojmRRCMSMoMkYYhZAV4kGBmDIKACYMIcogqbBDCsCikCDMCSYAIQghhSgSkjEhggGAA6SUMwA4JAwhCgkhmHEMIQU
 #
 # real	0m0.171s
-# user	0m0.144s
+# user	0m0.144
 # sys	0m0.024s
 
 # Resize virtualbox hard drive to 50 GB = 50 * 1024 MB = 51200 MB.
@@ -4779,6 +4847,8 @@ no_color='\033[0m'
 
 # How many processors does this machine have?
 getconf _NPROCESSORS_ONLN
+# or
+nprocs
 
 # How long can paths be?
 getconf PATH_MAX /
@@ -4911,12 +4981,12 @@ cd my-virtualenv
 source bin/activate
 deactivate
 
-# Generate a uuid (a.k.a guid).
+# Generate a random (type 4) UUID (a.k.a GUID).
 uuidgen
 # or
 cat /proc/sys/kernel/random/uuid
 # or
-python  -c 'import uuid; print uuid.uuid1()'
+python  -c 'import uuid; print uuid.uuid4()'
 
 # Get external ip address.
 curl --proto https ifconfig.me
@@ -4979,8 +5049,8 @@ readelf -n `which ls` | grep 'Build ID'
 # https://stackoverflow.com/questions/7744795/python-get-build-id-from-an-elf-file
 
 # Get all file information (keep going).
-file -kr frankenplot_2.3.2-1_all.deb 
-file --keep-going --raw frankenplot_2.3.2-1_all.deb 
+file -kr frankenplot_2.3.2-1_all.deb
+file --keep-going --raw frankenplot_2.3.2-1_all.deb
 # frankenplot_2.3.2-1_all.deb: Debian binary package (format 2.0)
 # - current ar archive
 # - archive file
@@ -5236,3 +5306,24 @@ tracert 192.168.0.1
 
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
+
+# Nicely-formatted list of XFCE4 keyboard shortcuts.
+xfconf-query -c xfce4-keyboard-shortcuts -l -v | cut -d'/' -f4 | awk '{printf "%30s", $2; print "\t" $1}' | sort | uniq
+# http://wiki.robotz.com/index.php/Xfce#Customize_the_keyboard_layout_and_shortcut_keys
+# https://wiki.xfce.org/faq#keyboard
+
+# JSON formatting using jq.
+printf "[1, 2, 3, 4]" | jq .
+
+# JSON formatting using python.
+printf "[1, 2, 3, 4]" | python -m 'json.tool'
+# http://www.skorks.com/2013/04/the-best-way-to-pretty-print-json-on-the-command-line/
+# http://stackoverflow.com/questions/352098/how-can-i-pretty-print-json
+# http://stackoverflow.com/questions/20265439/how-can-i-pretty-print-json-from-the-command-line-from-a-file
+
+# Check that all UUIDs are version 4.
+ls * | cut -c 15 | uniq | grep -v '4'
+
+# Creat a 10 megabyte file.
+head -c 10m /dev/zero > bigfile
+head -c 10m /dev/urandom > bigfile
