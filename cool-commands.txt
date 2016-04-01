@@ -2979,11 +2979,11 @@ No mail.
 No Plan.
 # Find out who you are (username)
 whoami
-# Find out if you have root (sudoing) priveleges
+# Find out if you have root (sudoing) privileges
 sudo -v
 # or
 groups | grep sudo
-# Find out what you can do if you have sudo priveleges
+# Find out what you can do if you have sudo privileges
 sudo -l
 
 # Find out your full name.
