@@ -259,11 +259,13 @@ dcontrol --show-suite warsow | less
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
 # find all git repositories and run `git fsck` on them, saving the output to a log file.
-find '/home/nathaniel/SpiderOak Hive/' -name '.git' -print -execdir git fsck \; &> log.txt
+find "$HOME" -name '.git' -print -execdir git fsck \; &> log.txt
 # Don't do it like this:
-find '/home/nathaniel/SpiderOak Hive/' -name '.git' -print -execdir "git fsck" \; &> log.txt
+find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 # or you will get error messages like these:
 # find: `/usr/bin/git fsck ./': No such file or directory
+
+find . -type d -name '.git' -print -execdir git --git-dir={} fsck \;
 
 # Find all files not in .git/ and run `wc -l` on them.
 find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
@@ -427,6 +429,9 @@ ps aux --sort=start_time # list processes from oldest to youngest
 # See start time of a particular process.
 ls -ld /proc/24088
 stat /proc/24088
+
+# Get RAM usage.
+grep '^Size:' /proc/4469/smaps | awk '{print $2}' | sort -n | less
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
 # PROCESS STATE CODES
@@ -891,6 +896,9 @@ find . -type f -exec file '{}' \; | less
 # Execute /usr/bin/file on every file and directory below current directory
 find . -exec file '{}' + | less
 
+# Find all symblinks in directories below.
+find . -type l
+
 # Find broken symlinks in directories below
 find . -xtype l
 find /usr/ -xtype l
@@ -960,6 +968,12 @@ rsync --recursive --archive /media/disk1/ /media/disk2
 # Because rsync will treat it like a file.
 rsync --archive --verbose --progress --human-readable --whole-file --no-compress /media/${USER}/FC30-3DA9/DCIM/ $HOME/Pictures/digital-photos/by-camera/Nikon_COOLPIX_L810/2015-03-20_and_following
 # http://devblog.virtage.com/2013/01/to-trailing-slash-or-not-to-trailing-slash-to-rsync-path/
+
+# One-way merge directories without wiping out files in the target directory.
+rsync --archive --ignore-existing '/path/to/source/' '/path/to/target/'
+# See what will occur without running it.
+rsync --archive --ignore-existing --progress --dry-run '/path/to/source/' '/path/to/target/'
+
 
 # Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
 rsync --recursive --progress --partial /origin/path /target/path
@@ -1300,6 +1314,10 @@ nmap -p T:60000 chloride.phys.iit.edu
 
 # See what your browser is doing.
 nc -l -p 8000 -v
+
+# Check if port is open for e.g. SSH port.
+nc -vz localhost 9999
+# http://stackoverflow.com/a/24356001/1608986
 
 # After sshing in, any of these
 users
@@ -1788,6 +1806,12 @@ cat /dev/urandom | hexdump
 exiftool -a -u -g1 IMG_3689.JPG
 exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
+# Strip EXIF metadata.
+exiftool -all= IMG_3689.JPG
+mogrify -strip IMG_3689.JPG
+# http://www.hacktux.com/read/remove/exif
+# http://www.linux-magazine.com/Online/Blogs/Productivity-Sauce/Remove-EXIF-Metadata-from-Photos-with-exiftool
+
 # Mount an external drive.
 sudo mkdir /media/nathaniel/external
 sudo mount /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
@@ -1839,6 +1863,18 @@ xscreensaver-command --lock --display :0.0
 xflock4
 # For gnome
 gnome-screensaver-command --lock
+
+# Turn off power saving.
+xset -dpms
+# Turn on power saving.
+xset dpms
+# Turn off screensaver.
+xset s off
+# Turn on screensaver.
+
+# Do both (e.g. when watching a movie)
+xset -dpms; xset s off
+
 
 # See all keybindings
 bind -p | less
@@ -2238,6 +2274,11 @@ sed --in-place '/foo/!d' myfile
 # Make a backup of file while sed is working on it (makes a file called hello.txt.bak)
 sed --in-place=.bak --expression='s/hello/jello/' hello.txt
 
+# Remove lines like these:
+#1451597860
+# but retain a backup just in case.
+sed -i'.bak' '/^#[0-9]\+/d;' .bash_history
+
 # Remove byte order mark (BOM).
 sed -i '1 s/^\xef\xbb\xbf//' *.txt
 # https://stackoverflow.com/questions/1068650/using-awk-to-remove-the-byte-order-mark
@@ -2630,6 +2671,8 @@ host example.com
 # Just get ip address(es).
 dig +short example.com
 
+dig @8.8.8.8 www.google.com
+
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 
@@ -2734,6 +2777,10 @@ ncal -J -H 1752-09-13 September 1752
 ncal -H 1752-09-14 September 1752
 # "Wednesday 2 September 1752 was followed by Thursday 14 September 1752."
 # https://en.wikipedia.org/wiki/Calendar_%28New_Style%29_Act_1750
+
+# Using the BSD calendar.
+cal sept 1752
+# https://unix.stackexchange.com/questions/17903/is-cal-broken-what-happened-in-september-1752
 
 # Events and holidays on January 1st, 1970.
 calendar -t 19700101
@@ -2970,14 +3017,16 @@ aptitude why coreutils
 lspci -nnk | grep -A3 "Network controller"
 
 # The venerable finger command
-iit@bm1:~$ finger iit
-Login: iit            			Name: IIT General Usage Account
-Directory: /home/iit                	Shell: /bin/bash
-Office: IIT - MRCAT, 630.252.1710 -
-On since Tue Jun 18 18:35 (CDT) on pts/0 from 107-210-253-34.lightspeed.cicril.sbcglobal.net
-No mail.
-No Plan.
+finger iit
+# iit@bm1:~$ finger iit
+# Login: iit            			Name: IIT General Usage Account
+# Directory: /home/iit                	Shell: /bin/bash
+# Office: IIT - MRCAT, 630.252.1710 -
+# On since Tue Jun 18 18:35 (CDT) on pts/0 from 107-210-253-34.lightspeed.cicril.sbcglobal.net
+# No mail.
+# No Plan.
 # Find out who you are (username)
+
 whoami
 # Find out if you have root (sudoing) privileges
 sudo -v
@@ -2988,6 +3037,9 @@ sudo -l
 
 # Find out your full name.
 getent passwd "$USER" | cut -d ':' -f 5
+
+# Change your full name.
+chfn -f "Joe Blow" jblow
 
 # Find out host information, including FQDN, etc.
 getent hosts
@@ -3044,6 +3096,8 @@ echo "Hi" | xsel
 # Clear xsel clipboard
 xsel -c -p; xsel -c -s; xsel -c -b;
 
+# Pipeline with clipboard.
+xsel -bo | base64 | xsel -b
 
 # Copy working directory to clipboard
 pwd | xsel -b
@@ -3103,6 +3157,9 @@ sudo rsync --verbose --progress --archive --compress --rsh ssh --rsync-path="sud
 
 # Access stuff like bluetooth settings if you can't remember how to launch it graphically.
 gnome-control-center network
+
+# List bluetooth devices.
+hciconfig
 
 # Trace the route/path of the connection to an ip address or website
 tracepath google.com
@@ -3316,7 +3373,7 @@ lsusb
 # Bus 001 Device 002: ID 8087:0024 Intel Corp. Integrated Rate Matching Hub
 # Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 # You can tell there is not point in getting a USB 3.0 device for this machine,
-# because all the hubs are 2.0. Also USB 3 ports are blue.
+# because all the hubs are 2.0. Also, when looking at the physical machine, USB 3 ports are painted blue.
 
 # Identify printer model.
 sudo escputil -d -r /dev/usb/lp0
@@ -3605,7 +3662,16 @@ cat --show-all <<< "$IFS"
 
 # Do a one-liner, e.g. from the command line.
 # In this case, append a newline to each file.
-for f in *; do echo -e '\n' > "$f"; done
+for f in *; do echo -e '\n' >> "$f"; done
+
+# Append file2 onto file1.
+cat file2 >> file1
+# If you need to use sudo.
+cat file2 | sudo tee -a file1 > /dev/null
+# Only works in zsh.
+< file2 >> file1
+>> file1 < file2
+# 
 
 # find duplicate files (assuming that identical file size means they're the same)
 duff *
@@ -3780,6 +3846,9 @@ reportbug --kudos
 # Report a bug with mutt (note that --attach will not transfer to mutt)
 reportbug --mutt
 
+# Test local mail by sending a message to yourself.
+echo "This is a test email from $USER" | mailx -I -s 'test #2' -v "$USER@localhost"
+
 # Entering unicode on Linux.
 Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
 Ctrl-Shift-U b0   <Enter> # Insert ° (degree symbol)
@@ -3866,6 +3935,12 @@ apt-mark showhold
 
 # Use imagemagick to find out information about several files
 identify *.jpg
+
+# Use imagemagick to combine/stitch/concatenate/append two images together, top to bottom.
+convert in1.png in2.png -append out.png
+
+# Use imagemagick to combine/stitch/concatenate/append two images together, left to right.
+convert in1.png in2.png -append out.png
 
 # Use imagemagick to convert png to jpeg
 convert file.png file.jpeg
@@ -4716,6 +4791,9 @@ date --date='January 19, 2038 03:14:08 UTC'
 # Display date of Easter (for Western Christian churches).
 ncal -e
 
+# Start week with Monday instead of Sunday.
+ncal -M -b
+
 # Show upcoming event information.
 pal -r 30 | less
 calendar
@@ -5022,6 +5100,13 @@ sftp://itcsubmit.wustl.edu
 pdfinfo file.pdf | grep 'Pages'
 pdftk file.pdf dump_data | grep 'NumberOfPages'
 
+# Use top in batch mode to get a report.
+top -n 1 -b > top.txt
+# For a single process.
+top -n 1 -b -p 4469 > top1.txt
+# For multiple processes
+top -n 1 -b -p 4469,4530 > top2.txt
+
 # Uses BSD top, not procps (Linux) top.
 top -stats pid,command,cpu,idlew,power -o power -d
 # compatible SHA1: 628e7d9dbf5d39de5e45cdd4613d4f16f34c991e  /usr/bin/top
@@ -5321,9 +5406,27 @@ printf "[1, 2, 3, 4]" | python -m 'json.tool'
 # http://stackoverflow.com/questions/352098/how-can-i-pretty-print-json
 # http://stackoverflow.com/questions/20265439/how-can-i-pretty-print-json-from-the-command-line-from-a-file
 
+# Escape text from stdin to json-escaped string.
+printf 'α β γ δ' | python -c 'import sys; import json; json.dump(sys.stdin.read(), sys.stdout)'
+# "\u03b1 \u03b2 \u03b3 \u03b4"
+
 # Check that all UUIDs are version 4.
 ls * | cut -c 15 | uniq | grep -v '4'
 
 # Creat a 10 megabyte file.
-head -c 10m /dev/zero > bigfile
-head -c 10m /dev/urandom > bigfile
+head -c 10MB /dev/zero > bigfile
+# Random bytes instead of null bytes.
+head -c 10MB /dev/urandom > bigfile
+
+
+SpiderOakONE --userinfo
+# nbeaver @ thinkpad-april-2016 on posix/linux2 (encoding utf_8) (Device #5)
+# Other devices:
+# thinkpad-debian on posix/linux2 (encoding utf_8) (Device #4)
+# thinkpad-reborn on posix/linux2 (encoding utf_8) (Device #3) (REMOVED)
+# thinkpad-stable on posix/linux2 (encoding utf_8) (Device #2) (REMOVED)
+# thinkpad on posix/linux2 (encoding utf_8) (Device #1) (REMOVED)
+
+SpiderOakONE --restore ~/SpiderOak\ Hive/src/ --point-in-time 2016-04-08 --device 4 --output ~/spideroakone/ --verbose
+
+
