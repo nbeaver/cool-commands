@@ -32,6 +32,19 @@ find . -perm -g+s
 # http://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # http://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 
+# Show permissions of a directory.
+ls -ld /var/log
+# drwxr-xr-x 23 root root 4096 May 23 08:18 /var/log
+stat /var/log
+#   File: ‘/var/log’
+#   Size: 4096      	Blocks: 8          IO Block: 4096   directory
+# Device: 801h/2049d	Inode: 30416373    Links: 23
+# Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+# Access: 2016-05-23 09:59:45.411033488 -0500
+# Modify: 2016-05-23 08:18:12.333311420 -0500
+# Change: 2016-05-23 08:18:12.333311420 -0500
+#  Birth: -
+
 # Show permisisons in octal.
 stat -c '%a %n' -- *
 stat --format='%a %n' -- *
@@ -266,6 +279,9 @@ find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 # find: `/usr/bin/git fsck ./': No such file or directory
 
 find . -type d -name '.git' -print -execdir git --git-dir={} fsck \;
+
+# Example of fsck on a borked drive.
+fsck -y /dev/sda
 
 # Find all files not in .git/ and run `wc -l` on them.
 find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
@@ -537,7 +553,8 @@ date --date='-5 hours -15 minutes -2 seconds'
 
 # find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
-# Standard American date
+
+# Standard American date format (mm/dd/yyyy).
 date +%m/%d/%Y
 # Standard American date one week from now
 date --date='next week' +%m/%d/%Y
@@ -1119,6 +1136,8 @@ sudo hdparm -I /dev/sda
 # Show disk model number, serial number, firmware revision, size, and SMART disk health data.
 sudo smartctl -a /dev/sda
 sudo smartctl --all /dev/sda
+smartctl --info /dev/sda
+
 
 # Show how much RAM there is.
 sudo dmidecode --type memory | grep -i size
@@ -1151,6 +1170,9 @@ safecopy /dev/dvd out.iso
 # https://askubuntu.com/questions/138152/software-to-copy-a-scratched-cd-dvd-blueray-to-an-iso-file
 
 isoinfo -d -i /dev/cdrom
+
+# Copy an ISO to a USB flash drive on /dev/sdg
+cp debian.iso /dev/sdg
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -1725,6 +1747,11 @@ ar p /var/cache/apt/archives/ack-grep_2.14-4_all.deb control.tar.gz | tar --ungz
 # ./postrm
 # ./postinst
 
+# Example of script that will run after a package is installed.
+/var/lib/dpkg/info/apt.postinst
+/var/lib/dpkg/info/linux-base.postinst
+/var/lib/dpkg/info/linux-image-3.16.0-4-amd64.postinst
+
 # Send the contents of debian control file to stdout.
 ar p /var/cache/apt/archives/ack-grep_2.14-4_all.deb control.tar.gz | tar -z -x --to-stdout ./control
 
@@ -1828,6 +1855,7 @@ sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf
 df # to see mounted partitions
 df -h # to see human readable sizes
 df -T # to see filesystem types
+
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
 
 # Unmount a fuse filesystem
@@ -2083,8 +2111,25 @@ ifconfig  wlan0 192.168.1.2
 # See what the frequency of the wifi card is.
 iwconfig wlan0 | grep Frequency
 
+rfkill list
+# 0: phy0: Wireless LAN
+# 	Soft blocked: no
+# 	Hard blocked: no
+# 3: hci0: Bluetooth
+# 	Soft blocked: no
+# 	Hard blocked: no
+
+
 #
 sudo iwlist wlan0 scan | less
+
+# Check what channel nearby wifi is using
+# to change router and reduce interference. 
+sudo iwlist wlan0 scan | grep Channel
+# https://www.reddit.com/r/LifeProTips/comments/4jcp2o/lpt_download_wifi_analyzer_to_determine_what/
+
+# See supported frequencies for wifi card (e.g. is it 2.4 Ghz or 5 GHz?)
+iwlist wlan0 freq
 
 # Search for a particular process by name.
 ps u -C duplicity
@@ -2216,6 +2261,39 @@ iostat -xkdz 1
 
 # Show mounted drives in near little table
 mount | column -t
+
+# Show packages and Debian version numbers in neat columsn.
+dpkg-query --show | column -t | less
+
+# From column(1) man page.
+(printf "PERM LINKS OWNER GROUP SIZE MONTH DAY HH:MM/YEAR NAME\n"; ls -l | sed 1d) | column -t
+# PERM        LINKS  OWNER  GROUP  SIZE   MONTH  DAY  HH:MM/YEAR  NAME
+# drwxr-xr-x  2      root   root   4096   Apr    9    15:18       bin
+# drwxr-xr-x  3      root   root   4096   Apr    10   10:14       boot
+# drwxr-xr-x  20     root   root   3480   May    12   09:35       dev
+# drwxr-xr-x  223    root   root   16384  May    12   13:07       etc
+# drwxr-xr-x  4      root   root   4096   May    9    17:22       home
+# lrwxrwxrwx  1      root   root   31     Apr    8    13:06       initrd.img  ->  /boot/initrd.img-3.16.0-4-amd64
+# drwxr-xr-x  21     root   root   4096   May    8    08:47       lib
+# drwxr-xr-x  2      root   root   4096   Apr    9    14:18       lib32
+# drwxr-xr-x  2      root   root   4096   Apr    8    13:07       lib64
+# drwxr-xr-x  2      root   root   4096   Apr    2    15:34       live-build
+# drwx------  2      root   root   16384  Apr    8    13:06       lost+found
+# drwxr-xr-x  4      root   root   4096   Apr    8    13:15       media
+# drwxr-xr-x  2      root   root   4096   Apr    2    15:14       mnt
+# drwxr-xr-x  4      root   root   4096   May    9    20:52       opt
+# dr-xr-xr-x  299    root   root   0      May    8    08:54       proc
+# drwx------  9      root   root   4096   May    10   11:42       root
+# drwxr-xr-x  36     root   root   1440   May    12   09:41       run
+# drwxr-xr-x  2      root   root   12288  Apr    9    14:49       sbin
+# drwxr-xr-x  2      root   root   4096   Apr    2    15:14       srv
+# dr-xr-xr-x  13     root   root   0      May    8    08:54       sys
+# drwxrwxrwt  34     root   root   4096   May    12   13:25       tmp
+# drwxr-xr-x  13     root   root   4096   Apr    9    14:51       usr
+# drwxr-xr-x  12     root   root   4096   Apr    9    13:36       var
+# lrwxrwxrwx  1      root   root   27     Apr    8    13:09       vmlinuz     ->  boot/vmlinuz-3.16.0-4-amd64
+
+
 
 # Kill stopped jobs
 kill $(jobs -ps)
@@ -4030,6 +4108,9 @@ svn --quiet checkout -r 1175 https://subversion.xray.aps.anl.gov/EXPGUI/
 # Create a patch for using with subversion.
 svn patch
 
+# See current revision number.
+svn info
+
 # Set the screen brightness (backlight) from the command line
 xbacklight -set 100
 # See current brightness
@@ -4123,7 +4204,7 @@ BROWSER=iceweasel man --html man
 # Convert Excel file (xls) to CSV
 ssconvert -O 'separator=;' my-spreadsheet.xls out.csv
 
-# Convert ODS to CSV.
+# Convert ODS to Excel.
 ssconvert --export-type=Gnumeric_Excel:xlsx2 in.ods out.xlsx
 
 # Convert all docx to pdf with LibreOffice from the command line
@@ -4975,6 +5056,13 @@ stty -a
 # opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
 # isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
 
+# Get number of columns in current terminal.
+echo $COLUMNS
+# or
+tput columns
+# or
+stty size | cut -d ' ' -f 2
+
 
 # Keybindings for the terminal.
 stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
@@ -5427,6 +5515,12 @@ SpiderOakONE --userinfo
 # thinkpad-stable on posix/linux2 (encoding utf_8) (Device #2) (REMOVED)
 # thinkpad on posix/linux2 (encoding utf_8) (Device #1) (REMOVED)
 
+# Restore a directory to a an output directory at a particular point in time.
 SpiderOakONE --restore ~/SpiderOak\ Hive/src/ --point-in-time 2016-04-08 --device 4 --output ~/spideroakone/ --verbose
+
+# Using eqn preprocessor and groff/troff markup engine.
+eqn -Tpdf example.ms | groff -Tpdf -dpaper=a4l -P-pa4 > example.pdf
+# Using the man formatting of the groff/troff markup engine.
+groff -Tpdf -man mxserver.8 > mxserver.8.pdf
 
 
