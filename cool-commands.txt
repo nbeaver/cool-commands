@@ -2624,6 +2624,14 @@ xprop _NET_WM_PID
 xprop WM_CLASS
 # Search for the process number, e.g. 1400
 ps -p 1400
+#   PID TTY          TIME CMD
+# 23594 ?        00:00:00 xclip
+
+# Show more information about the process.
+ps -p 23594 -f
+# UID        PID  PPID  C STIME TTY          TIME CMD
+# nathani+ 23594 23593  0 16:39 ?        00:00:00 xclip -out
+
 
 ps -p $(xprop _NET_WM_PID | cut -d' ' -f 3)
 
@@ -4049,6 +4057,10 @@ convert in.png -fill white -draw 'color 0,0 replace' out.png
 
 convert in.png -fill white -opaque 'rgb(114,159,207' out.png
 convert in.png -fill white -opaque '#729FCF' out.png
+
+# Create a png of solid red.
+convert -size '100x100' 'xc:#FF0000' red.png
+# http://stackoverflow.com/questions/7771975/imagemagick-create-a-png-file-which-is-just-a-solid-rectangle
 
 # Invert colors (like a negative).
 convert in.png -negate out.png
@@ -5523,4 +5535,5 @@ eqn -Tpdf example.ms | groff -Tpdf -dpaper=a4l -P-pa4 > example.pdf
 # Using the man formatting of the groff/troff markup engine.
 groff -Tpdf -man mxserver.8 > mxserver.8.pdf
 
-
+# List all soundcards and digital audio devices
+aplay -l
