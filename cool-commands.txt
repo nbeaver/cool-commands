@@ -913,7 +913,7 @@ find . -type f -exec file '{}' \; | less
 # Execute /usr/bin/file on every file and directory below current directory
 find . -exec file '{}' + | less
 
-# Find all symblinks in directories below.
+# Find all symlinks in directories below.
 find . -type l
 
 # Find broken symlinks in directories below
