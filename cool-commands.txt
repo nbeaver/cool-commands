@@ -187,6 +187,11 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 rename 'y/ /_/' * # replace spaces with underscores
 # http://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
 
+# Replace colons with dashes.
+rename 's|:|-|g' *
+# Do it hierarchically.
+find . -name "*:*" -exec rename 's|:|-|g' {} \;
+
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
 
@@ -207,6 +212,12 @@ grep -i '^s.*m.*b' /usr/share/dict/words
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
+
+# Words that can be spelled with hexadecimal alone, like 0xDEADBEEF.
+egrep -i "^[a-fA-F]+$" /usr/share/dict/words
+# https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Magic_debug_values
+# http://www.urbandictionary.com/define.php?term=0xDEADBEEF
+# http://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
 
 # words that end in "gry"
 grep -i '.*gry$' /usr/share/dict/words
@@ -1245,6 +1256,10 @@ lpstat -s
 lpstat -v
 cat /etc/printcap | tr "|" "\t" | cut -f 1 | grep -v "#"
 tr "|" "\t" < /etc/printcap | cut -f 1 | grep -v "#"
+
+# Detailed printer info.
+lpstat -l -p canon_laserjet
+
 # Print document from the command line to a network printer by printer's name
 lpr -P "Brother-HL-4070CDW" doc.pdf
 # Print in double-sided
@@ -1943,6 +1958,19 @@ rename 's/\ /_/g' *
 # Rename files by removing spaces entirely.
 rename 's/ //g' *
 
+# Remove asterisks from filenames in current directory.
+rename 's/\*//g' ./*
+
+# Recursively remove asterisks from filenames.
+find . -name '*\**' -print -exec rename -n 's/\*//g' '{}' \;
+find . -name '*\**' -exec rename 's/\*//g' '{}' \;
+
+# Remove some illegal characters on Windows.
+rename 'y/ *"<>:\\|?/_/' ./*
+# Do it recursively.
+find . -name '*[\*"><?:\\|]*' -print -exec rename -n 's/[\*"><\?:|]//g' '{}' \;
+find . -name '*[\*"><?:\\|]*' -exec rename 's/[\*"><\?:|]//g' '{}' \;
+
 # Change all spaces in file names into underscores, even files with weird names
 find . -depth | rename 's/\ /_/g'
 
@@ -2124,7 +2152,7 @@ rfkill list
 sudo iwlist wlan0 scan | less
 
 # Check what channel nearby wifi is using
-# to change router and reduce interference. 
+# to change router and reduce interference.
 sudo iwlist wlan0 scan | grep Channel
 # https://www.reddit.com/r/LifeProTips/comments/4jcp2o/lpt_download_wifi_analyzer_to_determine_what/
 
@@ -2549,6 +2577,10 @@ tail Sn_Ni3Sn4_nano_02-21-2013.002 -n +18 | column -t | less
 
 # Run through a bunch of text files like cat, but with the filenames visible
 tail --lines=+1 *.txt | less
+
+# Get the head and tail of a file.
+(head; tail) < /usr/share/dict/words
+# https://stackoverflow.com/questions/8624669/unix-head-and-tail-of-file?rq=1
 
 # Diff two man pages by running one into stdout and the other to stderr.
 # (Not the same as named pipes, as far as I can tell.)
@@ -3757,7 +3789,7 @@ cat file2 | sudo tee -a file1 > /dev/null
 # Only works in zsh.
 < file2 >> file1
 >> file1 < file2
-# 
+#
 
 # find duplicate files (assuming that identical file size means they're the same)
 duff *
@@ -4416,8 +4448,6 @@ wine program.exe
 winedbg program.exe
 # Uninstalling wine software.
 wine uninstaller
-# Using winetricks to install VB6 runtime.
-wintricks vb6run
 
 # TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
 # TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
@@ -4829,6 +4859,14 @@ aptitude search -F "%p %m" "?installed?not(?origin(Debian))"
 # List dummy or transitional packages.
 aptitude search '~i ~d transitional'
 dpkg -l | grep 'dummy\|transitional\|obsolete' | less
+
+# List obsolete packages.
+aptitude --disable-columns search '?obsolete'
+# https://askubuntu.com/questions/98223/how-do-i-get-a-list-of-obsolete-packages
+apt-show-versions | grep 'No available version'
+
+# Remove obsolete packages.
+apt-get --purge remove $(aptitude search ?obsolete -F %p)
 
 # List installed backports to wheezy.
 aptitude search '?narrow(?installed,?archive(wheezy-backports))'
@@ -5537,3 +5575,30 @@ groff -Tpdf -man mxserver.8 > mxserver.8.pdf
 
 # List all soundcards and digital audio devices
 aplay -l
+
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+# powersave
+# powersave
+# powersave
+# powersave
+echo 'performance' | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+wine error_calc.exe
+# Could not load wine-gecko. HTML rendering will be disabled.
+# Could not load wine-gecko. HTML rendering will be disabled.
+# wine: configuration in '/home/nathaniel/.wine64' has been updated.
+# err:module:import_dll Library MSVBVM60.DLL (which is needed by L"Z:\\home\\nathaniel\\exe\\error-calc\\error_calc.exe") not found
+# err:module:LdrInitializeThunk Main exe initialization for L"Z:\\home\\nathaniel\\exe\\error-calc\\error_calc.exe" failed, status c0000135
+# 53
+winetricks vb6run
+
+# /bin/tar: Removing leading `/' from member names
+# http://hacktux.com/tar/removing/leading/from/member/names
+
+# List 32-bit packages.
+dpkg --get-selections | grep ':i386'
+aptitude search ~i~ri386
+
+# err:wincodecs:JpegDecoder_CreateInstance Failed reading JPEG because unable to find libjpeg.so.62
+sudo apt-get install libjpeg62-turbo:i386
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=783812
