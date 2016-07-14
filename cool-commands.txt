@@ -726,43 +726,8 @@ chmod u+w myfile.txt
 # Make file read-only.
 chmod -w myfile.txt
 
-# In python interpretive shell
-globals() locals() vars() dir()
 # Run python, ending with an interactive shell to fiddle with
 python -i myscript.py
-# Find out about an object
-dir(object)
-# Get help on a method
-help(object.method)
-# Get help on a package
-help(numpy)
-# Get help on opening files.
-help(open)
-help(file)
-print file.__doc__
-# To drop into an interactive shell from a script:
-import code
-code.interact(local=locals())
-# random phone number
-rand = random.randint(1000000000,9999999999)
-# Put the hyphens in
-s = str(rand)
-s[:3] +"-"+ s[3:6] +"-"+ s[6:]
-# print docstring
-print file.__doc__
-# print in scientific notation
-print "%e" % 2**32
-print '{:e}'.format(2**32)
-print "{:f}".format(0.5)
-# python3 version
-print("%e" % 2**32)
-print('{:e}'.format(2**32))
-reduce(lambda x, y: x*y, [1, 2, 3, 4, 5])
-
-# Very hard to get help on * operator, e.g.
-# print(*mylist)
-
-builtins.int.bit_length()
 
 # Profile a python script
 python -m cProfile script.py > profile.log
