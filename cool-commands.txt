@@ -59,6 +59,10 @@ find . -type f -printf "%m %M %f\n" | less
 # Find all files over a certain size (500MB in this case.)
 find . -size +500M
 
+# Find smallest text files.
+find . -name '*.txt' -printf '%s %f\n' | sort -n | head
+find . -name '*.txt' -printf '%s ' -print | less
+
 # Find executables.
 find . -type f -executable -print
 # Find non-executables.
@@ -79,6 +83,9 @@ f
 # (navigate to %MEM)
 s
 q
+
+# Get batch output from top.
+top -b -n 1 -H -p 10104 > top.txt
 
 # Changing sound settings
 alsamixer
@@ -188,9 +195,15 @@ rename 'y/ /_/' * # replace spaces with underscores
 # http://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
 
 # Replace colons with dashes.
-rename 's|:|-|g' *
+rename 's/:/-/g' *
 # Do it hierarchically.
-find . -name "*:*" -exec rename 's|:|-|g' {} \;
+find . -name "*:*" -exec rename 's/:/-/g' {} \+
+
+# Remove the colons entirely.
+find . -name '*:*' -exec rename -n 's/://g' '{}' \+
+
+# Do the same with pipe characters.
+find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
 
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
@@ -259,6 +272,11 @@ type -a ipython
 # Run the "real" ls, in case it is aliased.
 command ls
 \ls
+
+# See a list of all functions.
+compgen -A function
+# List of all functions, aliases, and variables.
+declare
 
 # See where the function `quote` was defined.
 shopt -s extdebug; declare -F quote; shopt -u extdebug
@@ -926,6 +944,8 @@ find ./ -exec ls '{}' \;
 # ls file3
 find ./ -exec ls '{}' \+
 # ls file1 file2 file3
+
+find * -name Makefile -exec grep -r 'mx_config' '{}' \+
 
 ssh -D 9999 iit@id1.mr.aps.anl.gov # secure shell into the APS sector 10 insertion device beamline account for IIT
 ssh -D 9999 iit@bm1.mr.aps.anl.gov # secure shell into the APS sector 10 bending magnet beamline account for IIT
@@ -2355,6 +2375,10 @@ sed -i '1 s/^\xef\xbb\xbf//' *.txt
 # https://stackoverflow.com/questions/1068650/using-awk-to-remove-the-byte-order-mark
 # http://stackoverflow.com/a/3622153/1608986
 # Note: idempotent.
+
+# Add newline to a file if it doesn't have it already (idempotent).
+sed -i -e '$a\' file
+# http://unix.stackexchange.com/questions/31947/how-to-add-a-newline-to-the-end-of-a-file
 
 # Get a numbered list of headers in from the 1st line of a csv file.
 sed 's/,/\n/g;q' file.csv | nl
@@ -4149,6 +4173,8 @@ sudo apt-get install recoll=1.17.3-2
 apt-get -t squeeze-backports install freecad
 # The -t can go afterward, too.
 apt-get install -t wheezy-backports pcmanfm
+# Install newer kernel.
+apt-get -t jessie-backports install linux-image-amd64
 
 # See installed linux kernel package
 apt-cache policy linux-headers-$(uname -r)
@@ -5491,6 +5517,8 @@ gpick
 # Windows-only: using the Windows version of traceroute.
 tracert 8.8.8.8
 tracert 192.168.0.1
+
+
 
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
