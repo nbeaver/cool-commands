@@ -623,6 +623,10 @@ sudo usermod --append --groups wireshark $USER
 # Now log out and log back in again.
 gnome-session-quit --logout --no-prompt
 
+# '/media/sf_shared': Permission denied.
+# Access shared folder.
+sudo usermod -aG vboxsf $USER
+
 # Access USB devices through VirtualBox.
 sudo usermod -aG vboxusers $USER
 sudo usermod --append --groups vboxusers $USER
@@ -4635,11 +4639,31 @@ fpcalc myfile.ogg
 # user	0m0.144
 # sys	0m0.024s
 
+VBoxManage list vms
+# "win7" {89e8e167-7139-4f94-9394-ed1e61735065}
+# "sid" {0354993f-42d6-4aab-a317-1562496224d4}
+# "ubuntu" {b98242c0-6aea-4ed6-aec3-83b75763f0c0}
+# "jessie" {c43eb485-a240-4569-bb24-93a909c2ab7c}
+
+VBoxManage showvminfo b98242c0-6aea-4ed6-aec3-83b75763f0c0
+VBoxManage showvminfo ubuntu
+
+# Move a VirtualBox vm.
+VBoxManage unregistervm ubuntu # Must do this one at a time.
+mv ~/VirtualBox\ VMs/ubuntu/ ~/vm/virtualbox/
+VBoxManage registervm ~/vm/virtualbox/ubuntu/ubuntu.vbox # Must use full path.
+
+# When getting this error:
+#    Cannot register the hard disk ... {uuid} because a hard disk ‘...’ with UUID {uuid} already exists.
+# do this:
+VBoxManage internalcommands sethduuid $PWD/win7.vdi
+
 # Resize virtualbox hard drive to 50 GB = 50 * 1024 MB = 51200 MB.
 VBoxManage modifyhd Win7.vdi --resize 51200
 # http://jonmifsud.com/blog/increase-virtualbox-disk-size/
 # http://stackoverflow.com/questions/1688690/how-can-i-easily-add-storage-to-a-virtualbox-machine-with-xp-installed
 
+wget http://download.virtualbox.org/virtualbox/4.3.32/Oracle_VM_VirtualBox_Extension_Pack-4.3.32-103443.vbox-extpack
 sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.28-100309.vbox-extpack
 
 # Enable multiarch, specifically i386 packages.
