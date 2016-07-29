@@ -4451,6 +4451,8 @@ strace -c /bin/foo
 # Pipe stderr to stdout so you can use less.
 strace foo 2>&1 | less
 
+strace -o strace.log -ffp 3713
+
 # http://www.cyberciti.biz/tips/linux-strace-command-examples.html
 # http://www.hokstad.com/5-simple-ways-to-troubleshoot-using-strace
 
