@@ -2715,6 +2715,11 @@ sudo vim /etc/default/apport # This might be even better if the error reporting 
 # and you don't want to change it.
 env VISUAL=pico crontab -e
 
+# Save environment variables to a text file.
+env > myenv.txt
+# Run a script in that environment.
+env - $(cat myenv.txt) /path/to/myscript
+
 # Find symlinks to a file. From http://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
 find -L /haystack -xtype l -samefile name-of-file
 
