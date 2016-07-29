@@ -5561,8 +5561,6 @@ gpick
 tracert 8.8.8.8
 tracert 192.168.0.1
 
-
-
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
 
