@@ -142,8 +142,6 @@ grep -rF '[*'
 # instead of
 grep -r '\[\*'
 
-git diff --word-diff | grep -F '[-[ ]-]{+[*]+}'
-
 find | grep NBMAX *.F90
 
 # View error messages in less by redirecting stderr to stdout
@@ -602,9 +600,6 @@ str='David MacKenzie'; man --global-apropos "$str" | grep --count "$str"
 man -K 'maintained as a Texinfo manual' | grep 'maintained as a Texinfo manual' | wc -l
 str='maintained as a Texinfo manual'; man -K "$str" --sections=1 | grep --count "$str"
 # returns 271, last I checked.
-
-# case-insensitive, find all commits where word 'rhubarb' was added or removed (pickaxe search)
-git grep -i 'rhubarb' "$(git rev-list --all)"
 
 # search for commands and aliases named 'my-command'.
 compgen -ac | grep my-command
