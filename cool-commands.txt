@@ -3290,6 +3290,15 @@ find ~ -type f -mtime 0
 # If you know it's an mp3...
 find ~ -type f -mtime 0 -iname '*.mp3'
 
+# Find all files modified in the last 15 minutes.
+find . -type f -mmin -15
+
+# Find most recently modified files. (Assumes no newlines in filename.)
+find . -printf "%T@ %Tc %p\n" | sort -n
+
+# Find most recently modified files, list only path to file. (Assumes no newlines in filename.)
+find . -printf "%T@\t%p\n" | sort -n | cut -f '2-
+
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
 # http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
