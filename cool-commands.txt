@@ -1164,6 +1164,14 @@ cdrdao
 safecopy /dev/dvd out.iso
 # https://askubuntu.com/questions/138152/software-to-copy-a-scratched-cd-dvd-blueray-to-an-iso-file
 
+isohybrid systemrescuecd-x86-4.8.0.iso
+# After formatting USB to FAT32 or ext3:
+sudo cp systemrescuecd-x86-4.8.0.iso /dev/sdb
+sudo sync
+sudo file -s /dev/sdb
+# /dev/sdb: DOS/MBR boot sector ISO 9660 CD-ROM filesystem data 'sysrcd-4.8.0' (bootable); partition 1 : ID=0x17, active, start-CHS (0x0,0,1), end-CHS (0x1d1,63,32), startsector 0, 954368 sectors
+sudo qemu-system-x86_64 -hda /dev/sdb
+
 isoinfo -d -i /dev/cdrom
 
 # Copy an ISO to a USB flash drive on /dev/sdg
