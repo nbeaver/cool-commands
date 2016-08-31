@@ -503,6 +503,9 @@ renice -n 19 -p 28590 28593
 # 28590 (process ID) old priority 0, new priority 19
 # 28593 (process ID) old priority 0, new priority 19
 
+# Adjust disk I/O of a process so it only runs when the disk is idle.
+ionice -c 3 -p 15569
+
 startx -- :1 # start x session
 
 ls -lSrh # list biggest files
@@ -918,6 +921,9 @@ find /usr/ -xtype l
 # Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
 find ./ -type l ! -exec test -r {} \; -print
 
+# Run `pathchk` to check for unportable filenames.
+find . -exec pathchk -P '{}' \;
+
 # Index all files in a directory with recoll
 find ./ -print -exec recollindex -i '{}' \;
 
@@ -1176,6 +1182,8 @@ isoinfo -d -i /dev/cdrom
 
 # Copy an ISO to a USB flash drive on /dev/sdg
 cp debian.iso /dev/sdg
+# Or, more realistically:
+sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -3129,6 +3137,11 @@ apt-cache --installed rdepends gcc
 apt-cache --installed --recurse rdepends gcc
 # Do it recursively and choose which kinds of dependencies to show.
 apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances ipython-notebook | grep apache2 | less
+
+# Looks for build-deps (source packages).
+grep-dctrl -F Build-Depends autoconf -s Package /var/lib/apt/lists/*Sources
+grep-dctrl -F Build-Depends cmake -s Package /var/lib/apt/lists/*Sources
+
 # Show why a package is installed.
 aptitude why apache2
 aptitude why coreutils
@@ -3297,7 +3310,10 @@ find . -type f -mmin -15
 find . -printf "%T@ %Tc %p\n" | sort -n
 
 # Find most recently modified files, list only path to file. (Assumes no newlines in filename.)
-find . -printf "%T@\t%p\n" | sort -n | cut -f '2-
+find . -printf "%T@\t%p\n" | sort -n | cut -f '2-'
+
+# Find oldest file in directory tree.
+find -type f -printf '%T+ %p\n' | sort | head -n 1
 
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
@@ -3610,6 +3626,8 @@ gcc -Wall -o "testing" "testing.c" # compile into 'testing' binary and show warn
 gcc -Wall -o "testing" "testing.c" -lm # compile with math.h
 gcc -Wall -o "testing" "testing.c" --llapack # compile with lapack
 
+# Show what gcc defines.
+gcc -dM -E - < /dev/null
 
 # use the recoll command from the terminal
 recoll -t oatmeal | less -S
@@ -4467,13 +4485,15 @@ wine uninstaller
 # TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
 
 # URL for tracking a UPS package:
-http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
+# http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
 
 # Edit piped data with your favorite text editor.
-vipe
+echo 'hi' | vipe
 
 # Determine probable character encoding of a text document.
 chardet myfile
+# chardet /usr/share/dict/words
+# /usr/share/dict/words: utf-8 with confidence 0.99
 
 # Get the keyboard layout.
 setxkbmap -query
@@ -4696,6 +4716,9 @@ sudo dpkg --add-architecture i386
 dpkg --print-foreign-architectures
 # See the main one.
 dpkg --print-architecture
+
+# Show dependencies of a .deb file.
+dpkg -I ~/Downloads/skype-debian_4.3.0.37-1_i386.deb
 
 # See which distros have a package, e.g. warsow.
 whohas warsow
@@ -5091,7 +5114,7 @@ no_color='\033[0m'
 # How many processors does this machine have?
 getconf _NPROCESSORS_ONLN
 # or
-nprocs
+nproc
 
 # How long can paths be?
 getconf PATH_MAX /
@@ -5564,6 +5587,13 @@ tracert 192.168.0.1
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
 
+# Turn it back on.
+sudo swapon -a
+
+# Reduce swappiness to only start around 80-90% of RAM usage.
+sudo sysctl vm.swappiness=10
+# http://askubuntu.com/questions/103915/how-do-i-configure-swappiness#103916
+
 # Nicely-formatted list of XFCE4 keyboard shortcuts.
 xfconf-query -c xfce4-keyboard-shortcuts -l -v | cut -d'/' -f4 | awk '{printf "%30s", $2; print "\t" $1}' | sort | uniq
 # http://wiki.robotz.com/index.php/Xfce#Customize_the_keyboard_layout_and_shortcut_keys
@@ -5636,3 +5666,21 @@ aptitude search ~i~ri386
 # err:wincodecs:JpegDecoder_CreateInstance Failed reading JPEG because unable to find libjpeg.so.62
 sudo apt-get install libjpeg62-turbo:i386
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=783812
+
+# Allow as many core dumps as necessary.
+ulimit -c unlimited
+
+# See core dump settings.
+ulimit -a
+
+# Find words in vim dictionary additions that aren't in system dictionary.
+diff --new-line-format="" --unchanged-line-format="" <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
+comm -23 <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
+grep -F -x -v -f <(sort /usr/share/dict/words) <(sort ~/.vim/spell/en.utf-8.add)
+# http://stackoverflow.com/questions/18204904/fast-way-of-finding-lines-in-one-file-that-are-not-in-another
+# http://unix.stackexchange.com/questions/28158/is-there-a-tool-to-get-the-lines-in-one-file-that-are-not-in-another
+
+# Find words in vim dictionary additions that are in system dictionary.
+diff --new-line-format="" --old-line-format="" <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
+comm -12 <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
+# http://stackoverflow.com/questions/18204904/fast-way-of-finding-lines-in-one-file-that-are-not-in-another
