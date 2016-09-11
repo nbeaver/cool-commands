@@ -4082,6 +4082,11 @@ apt-mark showhold
 # Use imagemagick to find out information about several files
 identify *.jpg
 
+# Use imagemagick to get even more metadata.
+identify -verbose *.jpg
+# http://xahlee.info/img/metadata_in_image_files.html
+# http://superuser.com/questions/219642/what-software-can-i-use-to-read-png-metadata
+
 # Use imagemagick to combine/stitch/concatenate/append two images together, top to bottom.
 convert in1.png in2.png -append out.png
 
@@ -4182,6 +4187,9 @@ svn patch
 
 # See current revision number.
 svn info
+
+# Discard local changes.
+svn revert file.txt
 
 # Set the screen brightness (backlight) from the command line
 xbacklight -set 100
@@ -4312,6 +4320,16 @@ showkey
 
 # Can also do:
 xev
+
+# Info about mouse and keyboards:
+xinput --list
+
+# Record all keystrokes.
+xinput test-xi2 --root
+# http://unix.stackexchange.com/questions/129159/record-every-keystroke-and-store-in-a-file/129171
+
+# Record all keystrokes on device 13.
+xinput --test-xi2 --root 13
 
 # See listing of ascii characters,
 # including caret notation if you look at Char in the corresponding last column.
@@ -4481,8 +4499,11 @@ winedbg program.exe
 # Uninstalling wine software.
 wine uninstaller
 
-# TODO: how to run `sudo time updatedb`? `time sudo updatedb` doesn't work either.
-# TODO: if you run `sudo apt-get update && apt-get install package`, does the sudo carry over? I don't think so...
+time sudo updatedb
+# If you do
+sudo time updatedb
+# it will use /bin/sh, not /bin/bash,
+# so it will run /usr/bin/time instead of the bash built-in.
 
 # URL for tracking a UPS package:
 # http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=1Z1234567910111213
@@ -5694,3 +5715,11 @@ grep -F -x -v -f <(sort /usr/share/dict/words) <(sort ~/.vim/spell/en.utf-8.add)
 diff --new-line-format="" --old-line-format="" <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
 comm -12 <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
 # http://stackoverflow.com/questions/18204904/fast-way-of-finding-lines-in-one-file-that-are-not-in-another
+
+# Recursive search for a git repository that errors when running git status.
+find . -type d -name .git -execdir sh -c 'if git status 2>&1 >/dev/null; then exit; else pwd; fi;' \;
+# Redirects error to stdout so can be piped to less.
+
+# Loop over only files that are not symlinks,
+# and count the number of lines in them.
+for path in * ; do if ! test -L "$path"; then wc -l "$path"; fi; done | sort -rn | less
