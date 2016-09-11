@@ -5667,11 +5667,21 @@ aptitude search ~i~ri386
 sudo apt-get install libjpeg62-turbo:i386
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=783812
 
-# Allow as many core dumps as necessary.
+# Allow core dump files to be of unlimited size.
 ulimit -c unlimited
+# Affects this shell and child shells only.
 
-# See core dump settings.
+# See core dump settings for this shell.
 ulimit -a
+
+# Edit global core dump settings.
+edit /etc/security/limits.conf
+
+# http://www.akadia.com/services/ora_enable_core.html
+# http://askubuntu.com/questions/642656/core-file-size-with-ulimit
+# http://serverfault.com/questions/637212/increasing-ulimit-on-centos
+# http://unix.stackexchange.com/questions/108603/do-changes-in-etc-security-limits-conf-require-a-reboot
+# http://superuser.com/questions/328069/coredumps-dont-work-after-enabling-them-in-etc-security-limits-conf-on-debian
 
 # Find words in vim dictionary additions that aren't in system dictionary.
 diff --new-line-format="" --unchanged-line-format="" <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
