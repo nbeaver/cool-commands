@@ -691,7 +691,7 @@ sudo updatedb
 stat -c %y /var/lib/mlocate/mlocate.db
 # Find out when the last time the database was queried.
 stat -c %x /var/lib/mlocate/mlocate.db
-# ~/src/python/cmd-oysters/cmdoysters/308423e6-95a4-4001-9e76-501ad79b2e93.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/308423e6-95a4-4001-9e76-501ad79b2e93.json
 # TODO: write a command that shows how long its been (in days) since the database was updated.
 
 
@@ -805,7 +805,7 @@ grep -nP '[^[:ascii:]]' --color=always myfile.txt | less -R
 grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less --RAW-CONTROL-CHARS
 # http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
 # http://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
-# ~/src/python/cmd-oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
 
 # Grep for matching lines, but show only matching filenames.
 grep -rl "blah" # list files with lines that match "blah"
@@ -881,7 +881,7 @@ gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
 gzip < file > file.gz
 # http://unix.stackexchange.com/a/58814
 gzip -k -- file
-# ~/src/python/cmd-oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
 
 cat /bin/cat # mojibake-fy the screen
 reset # fix it
@@ -916,7 +916,7 @@ find . -type l
 find . -xtype l
 find /usr/ -xtype l
 # http://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
-# ~/src/python/cmd-oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
 
 # Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
 find ./ -type l ! -exec test -r {} \; -print
@@ -1545,7 +1545,7 @@ ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 # Ping google.com instead, and use Mac OS X 'say' command:
 ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 # https://news.ycombinator.com/item?id=8861819
-# ~/src/python/cmd-oysters/cmdoysters/07248c2f-4809-4b19-9ff0-6fa8e554b8f6.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/07248c2f-4809-4b19-9ff0-6fa8e554b8f6.json
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -1611,7 +1611,7 @@ sudo chmod o-w file
 # Protect home directory from access by other users.
 chmod o-rwx $HOME
 # https://askubuntu.com/questions/46501/why-can-other-users-see-the-files-in-my-home-folder
-# ~/src/python/cmd-oysters/cmdoysters/2d031b99-6945-45bd-be31-71382d661d73.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/2d031b99-6945-45bd-be31-71382d661d73.json
 
 # The default shell:
 echo $SHELL
@@ -1633,7 +1633,7 @@ export SHELL=/bin/bash
 bash
 # This will require you to hit Ctrl-D twice when one want to log out,
 # once when you exit bash and once when you exit dash.
-# ~/src/python/cmd-oysters/cmdoysters/7a49c243-47f7-4a5a-a42a-87357d134b0d.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7a49c243-47f7-4a5a-a42a-87357d134b0d.json
 
 # Find out whether a package is installed or not.
 # Also tells you the version and whether it's installed from a ppa.
@@ -1812,7 +1812,7 @@ uname --all
 # Only the kernel architecture, e.g. x86_64
 uname --machine
 uname -m
-# ~/src/python/cmd-oysters/cmdoysters/f69252a3-a58b-48bc-9fd2-89e9e5d29f94.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/f69252a3-a58b-48bc-9fd2-89e9e5d29f94.json
 
 # Shows kernal architecture as well,
 # theoretically the same as uname -m.
@@ -1836,7 +1836,7 @@ lscpu
 lscpu | grep 'Architecture:'
 # Show only the architecture name, e.g. x86_64
 lscpu | grep '^Architecture:' | awk '{print $2}'
-# ~/src/python/cmd-oysters/cmdoysters/101630e8-efc4-4566-bbc8-78e6ac76120f.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/101630e8-efc4-4566-bbc8-78e6ac76120f.json
 
 # Try to fix wifi
 sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -1978,7 +1978,7 @@ find . -depth | rename 's/\ /_/g'
 pdfimages -j mypdf ./
 # A somewhat neater solution for all pdfs in current directory.
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
-# ~/src/python/cmd-oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
 
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
@@ -2100,7 +2100,7 @@ mv */* ./
 # Move files in current directory to parent directory
 # Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
 mv -- * .[^.]* ..
-# ~/src/python/cmd-oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
 ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
@@ -2325,7 +2325,7 @@ dpkg-query --show | column -t | less
 
 # Kill stopped jobs
 kill $(jobs -ps)
-# ~/src/python/cmd-oysters/cmdoysters/dbadb0c9-5590-46af-b846-095c44a66e2c.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/dbadb0c9-5590-46af-b846-095c44a66e2c.json
 
 # Use a string as if it were a file.
 # Note that it adds a newline at the end.
@@ -2548,7 +2548,7 @@ avconv -i image.iso
 
 # Blank the screen temporarily (turn off display)
 xset dpms force standby
-# ~/src/python/cmd-oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
 
 # Use less on multiple files
 less file1 file2 file3
@@ -3263,7 +3263,7 @@ xclip -selection clipboard -t image/png -o > out.png
 # Have not seen it work with image/tiff yet.
 # http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
 # http://ubuntuforums.org/showthread.php?t=1335075
-# ~/src/python/cmd-oysters/cmdoysters/5a413ea5-d4f0-46d9-b7c8-b7170a74b847.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5a413ea5-d4f0-46d9-b7c8-b7170a74b847.json
 
 # Lookup information about a website or ip address
 whois iit.edu
@@ -3318,7 +3318,7 @@ find -type f -printf '%T+ %p\n' | sort | head -n 1
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
 # http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
-# ~/src/python/cmd-oysters/cmdoysters/2b0656bc-9ea5-466b-8734-dcc1570be067.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/2b0656bc-9ea5-466b-8734-dcc1570be067.json
 
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
@@ -3351,7 +3351,7 @@ du --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 du -hd 1 ~ | sort -hr | less
 du --human --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 # http://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
-# ~/src/python/cmd-oysters/cmdoysters/64c52fa6-cdde-4e8b-9671-1b74978cdc2c.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/64c52fa6-cdde-4e8b-9671-1b74978cdc2c.json
 
 # Suspend the computer to RAM and wake up 60 seconds later
 sudo rtcwake -m mem -s 60
@@ -3408,7 +3408,7 @@ ls -d .??*
 echo .??*
 # http://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
 # http://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
-# ~/src/python/cmd-oysters/cmdoysters/924d5f3a-512b-4c0e-8219-6a47002d9014.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/924d5f3a-512b-4c0e-8219-6a47002d9014.json
 
 # Graphically change timezone
 time-admin
@@ -4156,7 +4156,7 @@ rmdir "$dir"
 # On one line:
 dir="$(mktemp -d --tmpdir=.)" && unzip -q file.odt -d "$dir" && cd "$dir" && mogrify -resize 10x10% Pictures/* && zip -qrm ../resized.odt * && cd .. && rmdir "$dir"
 # TODO: delete dir variable.
-# ~/src/python/cmd-oysters/cmdoysters/361f2d3b-beeb-4a29-bcf6-070edaec63a9.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/361f2d3b-beeb-4a29-bcf6-070edaec63a9.json
 
 # restart xfce4 panels
 xfce4-panel -r
@@ -5017,7 +5017,7 @@ grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
 # https://unix.stackexchange.com/questions/79702/how-to-test-whether-the-file-is-crlf-or-lf-without-modyfing-it
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
-# ~/src/python/cmd-oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
 
 # Save a transcript of terminal session.
 script
