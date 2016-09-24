@@ -1370,8 +1370,17 @@ write nbeaver <enter>
 wall <enter>
 # Type message, Ctrl-D
 
-# Grep wifi connections for passkeys or passwords (uses grep "OR" \|)
-sudo cat /etc/NetworkManager/system-connections/* | grep 'psk=\|password='
+# Grep wifi connections for WPA passkeys.
+sudo grep -r '^psk=' /etc/NetworkManager/system-connections/
+
+# Passkeys, prepended with 'psk='.
+sudo grep -hr '^psk=' /etc/NetworkManager/system-connections/
+
+# Just the passkeys.
+sudo sed -n 's/^psk=//gp' /etc/NetworkManager/system-connections/*
+
+# Grep wifi connections for passkeys and passwords (uses grep "OR" \|)
+sudo grep -r '^psk=\|^password=' /etc/NetworkManager/system-connections/
 
 # Encrypt file with gpg (will prompt for passphrase)
 gpg --symmetric super-secret-file.txt
@@ -1847,6 +1856,12 @@ cat /dev/urandom | hexdump
 # Get EXIF metadata for an image, including duplicate and unknown tags, sorted by group (for family 1).
 exiftool -a -u -g1 IMG_3689.JPG
 exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
+
+# All GPS metadata.
+exiftool -n -GPS'*' img_0001.jpg
+
+# Just GPS position.
+exiftool -n -GPSPosition img_0001.jpg
 
 # Strip EXIF metadata.
 exiftool -all= IMG_3689.JPG
