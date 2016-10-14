@@ -661,6 +661,7 @@ sudo usermod -a -G lpadmin $USER
 
 # Add a user to the list of sudoers (as root).
 usermod -a -G sudo nathaniel
+# Error message: "$USER" is not in the sudoers file. This incident will be reported.
 
 # See what groups you are in, in a line-by-line fashion.
 id | tr ',' '\n'
@@ -1878,7 +1879,8 @@ sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf
 #       missing codepage or helper program, or other error
 #
 #       In some cases useful info is found in syslog - try
-#       dmesg | tail or so.
+#       dmesg -w
+
 
 
 # Unmount partitions and detach disk
@@ -2437,6 +2439,9 @@ scp /home/nathaniel/.ssh/id_rsa.pub nbeaver@chloride.phys.iit.edu:~/.ssh/authori
 # This will overwrite the file authorized_keys, so only do this if it doesn't already exist.
 # There is actually a builtin command to do this sensibly (surprise, surprise!):
 ssh-copy-id -i ~/.ssh/id_rsa.pub nbeaver@chloride.phys.iit.edu
+
+for keyfile in ~/.ssh/id_*; do ssh-keygen -l -f "${keyfile}"; done | uniq
+# https://blog.g3rt.nl/upgrade-your-ssh-keys.html
 
 # How to tell if someone is ssh'ed into this machine:
 last
@@ -3677,6 +3682,8 @@ quvi 'http://youtu.be/otXf1VukQkU'   # quvi is a library that other languages ca
 clive  'http://youtu.be/otXf1VukQkU' # stands for 'command live video extraction'
 cclive 'http://youtu.be/otXf1VukQkU' # rewrite of clive in C++
 
+youtube-dl --write-info-json 'https://www.youtube.com/watch?v=T0noDEI2nLY'
+
 # When gvfsd-metadata spazzes out on you, run this.
 rm -rf ~/.local/share/gvfs-metadata
 # This is a well-known bug.
@@ -4104,9 +4111,12 @@ identify -verbose *.jpg
 
 # Use imagemagick to combine/stitch/concatenate/append two images together, top to bottom.
 convert in1.png in2.png -append out.png
+# http://www.imagemagick.org/Usage/layers/
+# http://superuser.com/questions/290656/combine-multiple-images-using-imagemagick
 
 # Use imagemagick to combine/stitch/concatenate/append two images together, left to right.
-convert in1.png in2.png -append out.png
+convert in1.png in2.png +append out.png
+
 
 # Use imagemagick to convert png to jpeg
 convert file.png file.jpeg
@@ -4138,9 +4148,12 @@ convert in.png -fill white -draw 'color 0,0 replace' out.png
 convert in.png -fill white -opaque 'rgb(114,159,207' out.png
 convert in.png -fill white -opaque '#729FCF' out.png
 
-# Create a png of solid red.
-convert -size '100x100' 'xc:#FF0000' red.png
+# Create a png of unifrom, solid red.
+convert -size '100x100' 'canvas:#FF0000' red.png
+convert -size '100x100' 'canvas:red' red.png
 # http://stackoverflow.com/questions/7771975/imagemagick-create-a-png-file-which-is-just-a-solid-rectangle
+# http://superuser.com/questions/294943/is-there-a-utility-to-create-blank-images
+# http://www.imagemagick.org/Usage/canvas/#solid
 
 # Invert colors (like a negative).
 convert in.png -negate out.png
@@ -4183,6 +4196,10 @@ xfce4-panel -r
 
 # see status of dropbox daemon
 dropbox status
+
+# Get shareable links of file.
+dropbox sharelink temp.txt
+# https://www.dropbox.com/s/svviiznki24rc7r/temp.txt?dl=0
 
 # Copy contents of subversion repository into current directory
 svn co svn://anonscm.debian.org/debichem/unstable/gelemental/ ./
@@ -4622,6 +4639,10 @@ ico -faces -sleep 0.05
 # Takes a long time.
 SpiderOak --destroy-shelved-x
 SpiderOak --repair
+
+# Get shareable link.
+SpiderOakONE --share-single-file=temp.txt
+# https://spideroak.com/storage/NZRGKYLWMVZA/shared/811021-5-55547/temp.txt?f9ce28081c95feece929334c41995cb9
 
 # TODO: figure out how to watch(1) aliases and shell functions.
 
@@ -5265,6 +5286,9 @@ gvfs-mime --query x-scheme-handler/thunderlink
 # List mimetypes of all files, sorted by mimetype.
 mimetype * | sort -k 2 | less
 
+# Follow symlinks and actually check every file in case the extension is wrong.
+mimetype -LM * | sort -k 2 | less
+
 # Set the default application for ftp:// urls to be Thunar.
 xdg-mime default Thunar.desktop x-scheme-handler/ftp
 
@@ -5738,3 +5762,14 @@ find . -type d -name .git -execdir sh -c 'if git status 2>&1 >/dev/null; then ex
 # Loop over only files that are not symlinks,
 # and count the number of lines in them.
 for path in * ; do if ! test -L "$path"; then wc -l "$path"; fi; done | sort -rn | less
+
+# Follow kernel error messages, like tail -f
+dmesg -w
+
+# Include timestamp, though not accurate for e.g. laptops that use sleep mode.
+dmesg -wT
+
+# Write to the dmesg ring buffer (as root).
+echo $(date) > /dev/kmsg
+# Or do this:
+echo $(date) | sudo tee /dev/kmsg
