@@ -634,11 +634,19 @@ sudo usermod -aG vboxsf $USER
 sudo usermod -aG vboxusers $USER
 sudo usermod --append --groups vboxusers $USER
 
+# See what groups you are in, in a line-by-line fashion.
+id | tr ',' '\n'
+
 # Check if current user is in a group like dialout or lpadmin.
 id | grep dialout
 id | grep lpadmin
+groups $USER | grep dialout
+groups $USER | grep dialout
+id -Gn | grep -o '\bdialout\b'
+id -Gn | grep -wo 'dialout'
 grep dialout /etc/group | grep $USER
 grep lpadmin /etc/group | grep $USER
+# http://stackoverflow.com/questions/18431285/bash-check-if-a-user-is-in-a-group
 
 # dialout is necessary for running e.g. Cura for 3d printing,
 # lpadmin is necessary for adding new printers,
@@ -662,9 +670,6 @@ sudo usermod -a -G lpadmin $USER
 # Add a user to the list of sudoers (as root).
 usermod -a -G sudo nathaniel
 # Error message: "$USER" is not in the sudoers file. This incident will be reported.
-
-# See what groups you are in, in a line-by-line fashion.
-id | tr ',' '\n'
 
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
@@ -1483,7 +1488,7 @@ vim info.txt
 # Update pdf metadata
 pdftk book.pdf update_info  info.txt output out-book.pdf
 # Dump all metadata
-for f in *.pdf; do echo ">>>>>$f<<<<<" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
+for f in *.pdf; do echo "=====$f=====" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
 
 # Copy all files in a remote directory to this computer.
 scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
@@ -2817,6 +2822,9 @@ host example.com
 
 # Just get ip address(es).
 dig +short example.com
+
+# Run a trace.
+dig +trace w3.org
 
 dig @8.8.8.8 www.google.com
 
@@ -5650,8 +5658,10 @@ sudo swapoff -a
 # Turn it back on.
 sudo swapon -a
 
-# Reduce swappiness to only start around 80-90% of RAM usage.
+# Reduce swappiness to recommended levels.
 sudo sysctl vm.swappiness=10
+# https://scottlinux.com/2010/06/23/adjust-your-swappiness/
+# http://askubuntu.com/questions/184217/why-most-people-recommend-to-reduce-swappiness-to-10-20
 # http://askubuntu.com/questions/103915/how-do-i-configure-swappiness#103916
 
 # Nicely-formatted list of XFCE4 keyboard shortcuts.
@@ -5773,3 +5783,52 @@ dmesg -wT
 echo $(date) > /dev/kmsg
 # Or do this:
 echo $(date) | sudo tee /dev/kmsg
+
+# Look at OOM killer scores for various processes.
+tail -n +1 /proc/*/oom_score | less
+# http://unix.stackexchange.com/questions/153585/how-oom-killer-decides-which-process-to-kill-first
+# http://serverfault.com/questions/571319/how-is-kernel-oom-score-calculated
+
+# Get memory statistics.
+vmstat -s
+#      8059240 K total memory
+#      7919284 K used memory
+#      3651716 K active memory
+#      3772776 K inactive memory
+#       139956 K free memory
+#        20340 K buffer memory
+#      1354500 K swap cache
+#     16536572 K total swap
+#       540632 K used swap
+#     15995940 K free swap
+#     53046374 non-nice user cpu ticks
+#     20451375 nice user cpu ticks
+#     10516909 system cpu ticks
+#     97472040 idle cpu ticks
+#     10731834 IO-wait cpu ticks
+#            0 IRQ cpu ticks
+#        78696 softirq cpu ticks
+#            0 stolen cpu ticks
+#    361465874 pages paged in
+#   1286946655 pages paged out
+#      5683933 pages swapped in
+#      7691695 pages swapped out
+#   1187933550 interrupts
+#    155010074 CPU context switches
+#   1474985461 boot time
+#      2039260 forks
+
+# Get disk statistics.
+vmstat -D
+#            2 disks
+#            3 partitions
+#     21425856 total reads
+#      6174959 merged reads
+#    673559356 read sectors
+#    361735468 milli reading
+#     12964415 writes
+#     77668609 merged writes
+#   2574192130 written sectors
+#   2291626508 milli writing
+#            0 inprogress IO
+#       207803 milli spent IO
