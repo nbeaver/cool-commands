@@ -5832,3 +5832,8 @@ vmstat -D
 #   2291626508 milli writing
 #            0 inprogress IO
 #       207803 milli spent IO
+
+# View eps files.
+evince example.eps
+gv example.eps
+display example.eps
