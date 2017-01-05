@@ -3099,6 +3099,9 @@ mv folder1 folder2/
 # Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
 mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
 
+# All files in /usr/share/applications/ that aren't desktop files.
+echo /usr/share/applications/!(*.desktop)
+
 # Get current beamline status at APS
 w3m http://www.aps.anl.gov/aod/blops/status/srStatus.html | grep "Operations Status"
 
@@ -3847,7 +3850,7 @@ cat file2 | sudo tee -a file1 > /dev/null
 # Only works in zsh.
 < file2 >> file1
 >> file1 < file2
-#
+# http://stackoverflow.com/questions/4969641/append-one-file-to-another-in-linux
 
 # find duplicate files (assuming that identical file size means they're the same)
 duff *
@@ -4077,6 +4080,10 @@ stat /var/cache/apt/
 ffmpeg -i file.mp3 -ar 16000 -ac 1 file.wav
 # Convert the wavefile to text
 pocketsphinx_continuous -infile file.wav > file.txt
+
+# Concatenate / combine mp3s files.
+ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy output.mp3
+# http://superuser.com/questions/314239/how-to-join-merge-many-mp3-files#314245
 
 # Gnuplot png output
 set term png # or pngcairo
@@ -5019,6 +5026,8 @@ aptitude -F'|%p|%d|' search '?section(hamradio)'
 
 # Find upgradable packages.
 aptitude search '~U'
+apt list --upgradable
+# http://askubuntu.com/questions/99834/how-do-you-see-what-packages-are-available-for-update
 
 # Package names only.
 aptitude search -F '%p' --disable-columns '~U'
@@ -5107,6 +5116,8 @@ C-a H
 # in the window's default directory,
 # where n is the number of the current window.
 # https://www.gnu.org/software/screen/manual/screen.html#Hardcopy
+
+gsettings list-schemas | less
 
 gsettings list-keys  org.gnome.desktop.default-applications.terminal
 
@@ -5299,6 +5310,9 @@ mimetype -LM * | sort -k 2 | less
 
 # Set the default application for ftp:// urls to be Thunar.
 xdg-mime default Thunar.desktop x-scheme-handler/ftp
+
+# Get default PDF reader.
+xdg-mime query default application/pdf 
 
 # Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
 ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
@@ -5837,3 +5851,9 @@ vmstat -D
 evince example.eps
 gv example.eps
 display example.eps
+
+# In case of MemoryError.
+pip --no-cache-dir install matplotlib
+# http://stackoverflow.com/questions/29466663/memory-error-while-using-pip-install-matplotlib
+
+sysctl kernel.dmesg_restrict=0
