@@ -2184,6 +2184,9 @@ iwlist wlan0 freq
 # Search for a particular process by name.
 ps u -C duplicity
 
+# Add upp memory usage by name.
+printf '%s%%\n' $(ps -C chromium --no-headers -o pmem | paste -sd+ | bc)
+
 # Recently installed packages.
 zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
 # Full list of recently installed packages.
@@ -5857,3 +5860,9 @@ pip --no-cache-dir install matplotlib
 # http://stackoverflow.com/questions/29466663/memory-error-while-using-pip-install-matplotlib
 
 sysctl kernel.dmesg_restrict=0
+
+./configure --prefix /my/install/dir
+make
+make install
+
+update-desktop-database ~/.local/share/applications/ 
