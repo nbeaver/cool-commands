@@ -5866,3 +5866,6 @@ make
 make install
 
 update-desktop-database ~/.local/share/applications/ 
+
+# Get size of log files.
+locate '*.log' --null | du --files0-from=- | less
