@@ -2187,6 +2187,8 @@ ps u -C duplicity
 # Add upp memory usage by name.
 printf '%s%%\n' $(ps -C chromium --no-headers -o pmem | paste -sd+ | bc)
 
+printf '%s%%\n' $(ps -C chromium --no-headers -o pmem | paste -sd+ | bc)
+
 # Recently installed packages.
 zcat -f /var/log/dpkg.log* | grep "\ install\ " | sort | tail
 # Full list of recently installed packages.
@@ -2261,7 +2263,8 @@ ls -d1 "$PWD"/*
 # Use a text file as a command line argument
 w3m $(<temp.txt)
 
-# Get the fonts used by a pdf; useful to determine if it's OCR'ed or not.
+# Get the fonts used by a pdf; useful to determine if it's OCR'ed or not,
+# and also if the fonts are embedded or not.
 pdffonts file.pdf
 
 # Get only the fonts from the first page. If it's not OCR'ed, the output will be this: [none]
@@ -4691,6 +4694,15 @@ import numpy
 numpy.base_repr(73, 3)
 # '2201'
 
+# Convert integer to character.
+chr(32)
+
+# Convert character to integer.
+ord(' ')
+
+# Get partial ascii table.
+[(chr(i), unicodedata.name(chr(i))) for i in range(32, 127)]
+
 # See where code crashes.
 import ipdb; ipdb.set_trace()
 
@@ -5869,3 +5881,12 @@ update-desktop-database ~/.local/share/applications/
 
 # Get size of log files.
 locate '*.log' --null | du --files0-from=- | less
+
+# Get a nice table, like column -t, but properly parsing CSV files.
+csvtool readable myfile.csv | less
+
+# Use grace plotting program.
+xmgrace -hdevice EPS -hardcopy -printfile out.eps myfile.agr
+# Pipe it to eps2eps (note that this will lose text):
+xmgrace -hdevice EPS -hardcopy -printfile - myfile.agr | eps2eps - out.eps
+
