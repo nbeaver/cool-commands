@@ -2271,6 +2271,9 @@ pdffonts file.pdf
 pdffonts -l 1 *.pdf | tail -n +3 | cut -d' ' -f1 | sort | uniq
 find . -type f -name "*.pdf" -print -exec pdffonts -l 1 '{}' ';' | less
 
+# Check if fonts are embedded or not.
+pdffonts myfile.pdf | tail -n +3 | cut -b 73-75
+
 # Get return (error) value of last command.
 echo $?
 # Get return (error) values of all commands from last pipeline.
@@ -4794,6 +4797,9 @@ VBoxManage modifyhd Win7.vdi --resize 51200
 # http://jonmifsud.com/blog/increase-virtualbox-disk-size/
 # http://stackoverflow.com/questions/1688690/how-can-i-easily-add-storage-to-a-virtualbox-machine-with-xp-installed
 
+# Convert raw disk image to VMDK.
+VBoxManage convertfromraw --format VDI openwrt.img openwrt.vmdk
+
 wget http://download.virtualbox.org/virtualbox/4.3.32/Oracle_VM_VirtualBox_Extension_Pack-4.3.32-103443.vbox-extpack
 sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.28-100309.vbox-extpack
 
@@ -5644,6 +5650,9 @@ sunwait -p  61.216667N 149.9W
 mr register
 # Registering git url: git://gitorious.org/frankenplot/frankenplot.git in /home/nathaniel/.mrconfig
 
+# Check for unpushed git repos.
+mr --directory ~/Dropbox/ run git status --porcelain --branch | grep 'ahead' -B 1
+
 # If you keep your stow packages in ~/stow/,
 # link them like this.
 stow -t $HOME -d $HOME/stow -v qpdfview
@@ -5890,3 +5899,5 @@ xmgrace -hdevice EPS -hardcopy -printfile out.eps myfile.agr
 # Pipe it to eps2eps (note that this will lose text):
 xmgrace -hdevice EPS -hardcopy -printfile - myfile.agr | eps2eps - out.eps
 
+# http://stackoverflow.com/questions/8141412/fit-to-page-size-in-ghostscript-with-a-possibly-corrupt-input
+gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dEmbedAllFonts=true -dDEVICEWIDTHPOINTS=792  -dDEVICEHEIGHTPOINTS=612 -dPDFFitPage -sOutputFile=reciprocal.pdf reciprocal.eps
