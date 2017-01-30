@@ -936,6 +936,11 @@ find ./ -print -exec recollindex -i '{}' \;
 # Much like any other find exec command, but more efficient
 # because it uses the fact that rm can take multiple arguments to runs rm fewer times.
 find ./ -type f -name "*.deadtime" -exec rm '{}' +
+# Or for recent versions, use -delete flag.
+find ./ -type f -name "*.deadtime" -delete
+
+# Delete all files and directories, including hidden files.
+find . -delete
 
 # Print all empty directories under current directory.
 find ./ -type d -empty
@@ -1399,6 +1404,10 @@ vim + myfile.txt
 
 # Edit stdin in vim
 vim -
+
+# Time a slow start-up.
+vim --startuptime vim.log ~/path/to/file/to/edit
+vim --startuptime $(tempfile) ~/path/to/file/to/edit
 
 # On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
 Ctrl-X Ctrl-E
@@ -3499,6 +3508,9 @@ convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 convert -density 600 temp.pdf out.jpeg
 
 convert -density 300 temp.pdf out.png
+
+# Downscale a big JPEG to 999kB or less.
+convert big.jpg -define jpeg:extent=999kb smaller.jpg
 
 # Oh my gosh, I just entered my password in the terminal
 # and now it will be in the bash history! What can I do?
