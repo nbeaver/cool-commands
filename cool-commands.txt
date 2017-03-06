@@ -474,7 +474,8 @@ ls -ld /proc/24088
 stat /proc/24088
 
 # Get RAM usage.
-grep '^Size:' /proc/4469/smaps | awk '{print $2}' | sort -n | less
+pmap 3241 | tail -n 1
+top -p 3241
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
 # PROCESS STATE CODES
@@ -1570,6 +1571,14 @@ ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 # https://news.ycombinator.com/item?id=8861819
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/07248c2f-4809-4b19-9ff0-6fa8e554b8f6.json
+
+# Trace the route/path of the connection to an ip address or website
+tracepath google.com
+tracepath 10.96.21.19
+
+# Windows-only: using the Windows version of traceroute.
+tracert 8.8.8.8
+tracert 192.168.0.1
 
 # Check network connectivity for dropped packets
 ping -f -i 1 8.8.8.8
@@ -3342,10 +3351,6 @@ gnome-control-center network
 # List bluetooth devices.
 hciconfig
 
-# Trace the route/path of the connection to an ip address or website
-tracepath google.com
-tracepath 10.96.21.19
-
 # Cool use of the find command: http://www.tuxradar.com/content/command-line-tricks-smart-geeks
 # Find all files in home directory modified or created today.
 find ~ -type f -mtime 0
@@ -3356,7 +3361,8 @@ find ~ -type f -mtime 0 -iname '*.mp3'
 find . -type f -mmin -15
 
 # Find most recently modified files. (Assumes no newlines in filename.)
-find . -printf "%T@ %Tc %p\n" | sort -n
+find . -printf "%T@ %Tc %p\n" | sort -n | less
+find -type f -printf '%T+ %p\n' | sort | less
 
 # Find most recently modified files, list only path to file. (Assumes no newlines in filename.)
 find . -printf "%T@\t%p\n" | sort -n | cut -f '2-'
@@ -4280,9 +4286,10 @@ echo package-name hold | sudo dpkg --set-selections
 sudo aptitude hold package-name
 
 # Install a specific package version
-sudo apt-get install iceweasel=30.0~b5-2
-sudo apt-get install recoll=1.17.3-2
+sudo apt-get install 'iceweasel=30.0~b5-2'
+sudo apt-get install 'recoll=1.17.3-2'
 # e.g. "The following packages will be DOWNGRADED:"
+sudo apt-get  install --reinstall 'linux-image-amd64=3.16+63'
 
 # Install a package from a specific distribution.
 apt-get -t squeeze-backports install freecad
@@ -4560,6 +4567,11 @@ strace -o strace.log -ffp 3713
 # http://www.cyberciti.biz/tips/linux-strace-command-examples.html
 # http://www.hokstad.com/5-simple-ways-to-troubleshoot-using-strace
 
+# Get a line-by-line trace and summary at the end.
+strace -o "strace.log" -rCw mycommand args
+# Only the summary at the end.
+strace -o "strace.log" -cw mycommand args
+
 # Using wine.
 wine program.exe
 # Debugging wine.
@@ -4822,7 +4834,7 @@ dpkg --print-foreign-architectures
 # See the main one.
 dpkg --print-architecture
 
-# Show dependencies of a .deb file.
+# Show dependencies and other information of a .deb file.
 dpkg -I ~/Downloads/skype-debian_4.3.0.37-1_i386.deb
 
 # See which distros have a package, e.g. warsow.
@@ -5698,10 +5710,6 @@ parallel -j 3 -- "sleep 2; echo '1st'" "sleep 1; echo '2nd'" "echo '3rd'"
 gcolor2
 gpick
 
-# Windows-only: using the Windows version of traceroute.
-tracert 8.8.8.8
-tracert 192.168.0.1
-
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
 
@@ -5756,6 +5764,9 @@ SpiderOakONE --restore ~/SpiderOak\ Hive/src/ --point-in-time 2016-04-08 --devic
 eqn -Tpdf example.ms | groff -Tpdf -dpaper=a4l -P-pa4 > example.pdf
 # Using the man formatting of the groff/troff markup engine.
 groff -Tpdf -man mxserver.8 > mxserver.8.pdf
+
+# Read a local man file.
+man ./my_file.man
 
 # List all soundcards and digital audio devices
 aplay -l
@@ -5913,3 +5924,7 @@ xmgrace -hdevice EPS -hardcopy -printfile - myfile.agr | eps2eps - out.eps
 
 # http://stackoverflow.com/questions/8141412/fit-to-page-size-in-ghostscript-with-a-possibly-corrupt-input
 gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dEmbedAllFonts=true -dDEVICEWIDTHPOINTS=792  -dDEVICEHEIGHTPOINTS=612 -dPDFFitPage -sOutputFile=reciprocal.pdf reciprocal.eps
+
+# Slow dpkg.
+sudo dpkg --clear-avail && sudo dpkg --forget-old-unavail && sudo sync-available
+# http://antti-juhani.kaijanaho.fi/newblog/archives/521
