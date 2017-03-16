@@ -3698,6 +3698,8 @@ recoll -t -l "dir:/usr/share/games/fortunes/ orphan" 2>/dev/null | less
 
 recoll -t 'dir:"home/nathaniel/SpiderOak Hive/writings/looseleaf/posts/" orphan' 2>/dev/null | less
 
+recoll -t dir:posts whack
+
 # https://askubuntu.com/questions/641386/in-recoll-how-to-view-the-list-of-files-that-have-been-indexed-in-a-specific-di
 
 # See ten newest processes
@@ -4768,6 +4770,9 @@ cat /proc/sys/fs/inotify/max_queued_events
 # See what processes are doing it.
 find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print | less
 ps -p $(find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print 2> /dev/null | sed -e 's/^\/proc\/\([0-9]*\)\/.*/\1/') | less
+
+# Check if a process is using inotify.
+find /proc/13913 -type l -lname 'anon_inode:inotify' -print
 
 # https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
 # Increase number of watches temporarily.
@@ -5928,3 +5933,6 @@ gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dEmbedAllFonts=true -dDEVICEWIDTHPOINTS=
 # Slow dpkg.
 sudo dpkg --clear-avail && sudo dpkg --forget-old-unavail && sudo sync-available
 # http://antti-juhani.kaijanaho.fi/newblog/archives/521
+
+ctags -R .
+# Create ctags file 'tags' in current directory, working recursively.
