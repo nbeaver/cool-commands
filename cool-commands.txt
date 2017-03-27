@@ -52,7 +52,7 @@ stat --format='%a %n' -- *
 stat -c '%a %A %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
 
-# Basically the same thing, but recursive.
+# Show human-readable and octal permissions of files recursively.
 find . -type f -printf "%m %M %f\n" | less
 # https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
 
@@ -2033,7 +2033,7 @@ cat in.tsv | tr '\t' ',' > out.csv
 # 2. Run
 python -m SimpleHTTPServer
 # or, for python 3.0,
-python -m http.server 8000
+python3 -m http.server 8000
 # 3. Find ip address and tell it to receiving machine.
 # (On receiving machine)
 # 4. In web browser, go to http://IP_OF_SERVER:8000
