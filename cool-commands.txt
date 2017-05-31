@@ -763,7 +763,7 @@ python -m cProfile script.py > profile.log
 plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
 VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
 
-# Create images from LaTeX DVI document
+# Create PNG images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
 
 sudo pm-suspend # manually sleep
@@ -884,6 +884,9 @@ tar --extract --verbose --file myfile.tar --directory /path/to/my/directory
 
 # Gzip a single file
 gzip myfile.txt # produces myfile.txt.gz and removes myfile.txt
+# Un-gzip a single file.
+gunzip myfile.txt.gz # produces myfile.txt and removes myfile.txt.gz
+
 # Gzip a file without removing the original.
 gzip < file > file.gz
 # http://unix.stackexchange.com/a/58814
@@ -939,6 +942,10 @@ find ./ -print -exec recollindex -i '{}' \;
 find ./ -type f -name "*.deadtime" -exec rm '{}' +
 # Or for recent versions, use -delete flag.
 find ./ -type f -name "*.deadtime" -delete
+
+# Number starting with 0.
+find . -type f -exec nl -v 0 '{}' \; | less
+
 
 # Delete all files and directories, including hidden files.
 find . -delete
@@ -1156,8 +1163,60 @@ smartctl --info /dev/sda
 sudo dmidecode --type memory | grep -i size
 # Alternately, use this; does not required root.
 grep MemTotal: /proc/meminfo
-# Ram form factor
+# RAM form factor
 sudo dmidecode --type memory
+## dmidecode 2.12
+#SMBIOS 2.6 present.
+#
+#Handle 0x0005, DMI type 16, 15 bytes
+#Physical Memory Array
+#	Location: System Board Or Motherboard
+#	Use: System Memory
+#	Error Correction Type: None
+#	Maximum Capacity: 16 GB
+#	Error Information Handle: Not Provided
+#	Number Of Devices: 2
+#
+#Handle 0x0006, DMI type 17, 28 bytes
+#Memory Device
+#	Array Handle: 0x0005
+#	Error Information Handle: Not Provided
+#	Total Width: 64 bits
+#	Data Width: 64 bits
+#	Size: 4096 MB
+#	Form Factor: SODIMM
+#	Set: None
+#	Locator: ChannelA-DIMM0
+#	Bank Locator: BANK 0
+#	Type: DDR3
+#	Type Detail: Synchronous
+#	Speed: 1333 MHz
+#	Manufacturer: 0443
+#	Serial Number: 41C43E65
+#	Asset Tag: 9876543210
+#	Part Number: RMT3020EC58E9F1333
+#	Rank: Unknown
+#
+#Handle 0x0007, DMI type 17, 28 bytes
+#Memory Device
+#	Array Handle: 0x0005
+#	Error Information Handle: Not Provided
+#	Total Width: 64 bits
+#	Data Width: 64 bits
+#	Size: 4096 MB
+#	Form Factor: SODIMM
+#	Set: None
+#	Locator: ChannelB-DIMM0
+#	Bank Locator: BANK 2
+#	Type: DDR3
+#	Type Detail: Synchronous
+#	Speed: 1333 MHz
+#	Manufacturer: 04CD
+#	Serial Number: 00000000
+#	Asset Tag: 9876543210
+#	Part Number: F3-12800CL11-4GBSQ
+#	Rank: Unknown
+
 
 
 # Check hard drive partitions
@@ -1426,6 +1485,7 @@ Esc-F
 Esc-B
 # On bash command line, reverse incremental search through previous commands
 Ctrl-R
+Ctrl-S # forward
 # While using reverse incremental search:
 Enter  # Executes command immediately
 Ctrl-J # Copies command to prompt, allowing further editing
@@ -2239,6 +2299,9 @@ pgrep x-www-browser
 # not "pgrep firefox" or "pgrep chromium".
 # Unfortunately, only the proc/$PID/exe can tell you that.
 
+ps --sort=-size -Fp $(pgrep dbus-daemon)
+ps --sort=-rss -Fp $(pgrep dbus-daemon)
+
 # Compress and tar a directory called 'meansum'
 tar -czvf meansum.tgz meansum/
 tar --create --gzip --verbose --file meansum.tgz meansum/
@@ -2927,6 +2990,7 @@ export TZ=Asia/Dhaka && date && unset TZ
 TZ=Asia/Dhaka date
 TZ=America/Argentina/Buenos_Aires date
 TZ=Asia/Hong_Kong date
+# /usr/share/zoneinfo/zone.tab
 # http://www.cyberciti.biz/tips/date-command-set-tz-environment-variable.html
 # https://unix.stackexchange.com/questions/48101/how-can-i-have-date-output-the-time-from-a-different-timezone
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -3696,6 +3760,8 @@ time recoll -t '"moved permanently"'
 
 recoll -t -l "dir:/usr/share/games/fortunes/ orphan" 2>/dev/null | less
 
+recoll -t -l "ext:py dir:archive/ import logging" 2>/dev/null | less
+
 recoll -t 'dir:"home/nathaniel/SpiderOak Hive/writings/looseleaf/posts/" orphan' 2>/dev/null | less
 
 recoll -t dir:posts whack
@@ -4123,6 +4189,8 @@ set term wxt
 # Seeing the changes in a package before updating
 apt-get install apt-listchanges
 sudo dpkg-reconfigure apt-listchanges
+# https://unix.stackexchange.com/questions/46509/disable-changelogs
+
 # See bugs in a package before updating
 apt-get install apt-listbugs
 
@@ -4395,6 +4463,10 @@ cat
 # "Couldn't get a file descriptor referring to the console"
 showkey
 
+# Shows all keys going to the X server.
+screenkey
+# Useful for e.g. screencasts or Vim demonstrations.
+
 # Can also do:
 xev
 
@@ -4597,6 +4669,12 @@ echo 'hi' | vipe
 chardet myfile
 # chardet /usr/share/dict/words
 # /usr/share/dict/words: utf-8 with confidence 0.99
+
+# Determine probable character encoding of a text document
+# (faster than chardet and empirically better at guessing).
+uchardet file.txt
+# windows-1252
+# ~/writings/looseleaf/posts/5b8783ac-8a41-4370-b89b-5bf431d0e8cd.rst
 
 # Get the keyboard layout.
 setxkbmap -query
@@ -5018,6 +5096,9 @@ man $(whichman whicman)
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt > utf-8.txt
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt --output utf-8.txt
 iconv -f iso-8859-1 -t utf-8 latin-1.txt -o utf-8.txt
+
+# Alternative conversion method.
+recode windows-1252..utf-8 < in.txt > out.txt
 
 # See all available versions for a packages.
 rmadison recoll
@@ -5717,6 +5798,8 @@ gpick
 
 # Turn off swap file (if you have enough RAM).
 sudo swapoff -a
+# Run it without hogging the disk too much.
+ionice -c 3 sudo swapoff -a
 
 # Turn it back on.
 sudo swapon -a
@@ -5936,3 +6019,33 @@ sudo dpkg --clear-avail && sudo dpkg --forget-old-unavail && sudo sync-available
 
 ctags -R .
 # Create ctags file 'tags' in current directory, working recursively.
+
+# Get e.g. MemTotal, MemFree
+cat /proc/meminfo
+man proc
+
+# Limit charging.
+sudo apt-get install tp-smapi-dkms
+sudo modprobe tp_smapi
+echo 40 | sudo tee /sys/devices/platform/smapi/BAT0/start_charge_thresh
+echo 80 | sudo tee /sys/devices/platform/smapi/BAT0/stop_charge_thresh
+# https://askubuntu.com/questions/34452/how-can-i-limit-battery-charging-to-80-capacity
+# https://unix.stackexchange.com/questions/48534/how-to-adjust-charging-thresholds-of-laptop-battery
+
+# Find python files with dashes in them.
+locate -b '*.py' | grep -- '/[^/]*-[^/]*\.py$' | less
+# http://stackoverflow.com/questions/761519/is-it-ok-to-use-dashes-in-python-files-when-trying-to-import-them
+# http://stackoverflow.com/questions/2740026/why-are-filename-underscores-better-than-hyphens
+# http://stackoverflow.com/questions/7583652/python-module-with-a-dash-or-hyphen-in-its-name
+# http://stackoverflow.com/questions/8350853/how-to-import-module-when-module-name-has-a-dash-or-hyphen-in-it
+
+# Show PID, memory usage (RSS), and command executable.
+ps -p 29161 -o pid,rss,cmd
+
+# Get process ID of program running apt-get or dpkg.
+fuser /var/lib/dpkg/lock
+
+# Pad image to certain size.
+convert in.jpg -gravity center -background black -extent 400x400 out.jpg
+# http://www.imagemagick.org/discourse-server/viewtopic.php?t=15123
+# http://www.imagemagick.org/Usage/crop/#extent
