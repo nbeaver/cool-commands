@@ -3328,17 +3328,6 @@ hostname -i
 # Find words in the dictionary starting with certain letters
 look xa
 
-# Using screen
-screen # start a new screen session; press enter at welcome screen
-Ctrl-a, d # detach current screen; you can log out and it will keep going
-screen -r # reconnect to a previous screen session
-Ctrl-a, c # create new screen window
-Ctrl-a, a # move to other screen window
-Ctrl-a, w # list open screen windows
-# Figure out if you're using screen
-echo $STY
-# Or just press Ctrl-a ?
-
 # Convert an image from a pdf to one that LaTeX can work with, a png
 pnmtopng park-2009-synthesis.ppm > park-2009-synthesis.png
 
