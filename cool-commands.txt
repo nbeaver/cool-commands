@@ -975,6 +975,9 @@ ssh -D 9999 iit@id1.mr.aps.anl.gov # secure shell into the APS sector 10 inserti
 ssh -D 9999 iit@bm1.mr.aps.anl.gov # secure shell into the APS sector 10 bending magnet beamline account for IIT
 ssh -D 9999 nbeaver@216.47.138.69  # secure shell into desktop at physics office
 
+# Run browser through SOCKS proxy.
+chromium --proxy-server="socks5://localhost:9999" --host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"
+
 # in python, save interactive history in current directory:
 import readline
 readline.write_history_file("my_history.txt")
@@ -6038,3 +6041,8 @@ fuser /var/lib/dpkg/lock
 convert in.jpg -gravity center -background black -extent 400x400 out.jpg
 # http://www.imagemagick.org/discourse-server/viewtopic.php?t=15123
 # http://www.imagemagick.org/Usage/crop/#extent
+
+# Convert QR code.
+import - | zbarimg :-
+# TODO: why does zbarimg need `:-` instead of `-`?
+# https://www.reddit.com/r/Bitcoin/comments/1rsujs/scan_qr_codes_on_your_screen_with_imagemagick_and/
