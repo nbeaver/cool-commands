@@ -4454,13 +4454,13 @@ cat
 # Must be run in a virtual tty, not a graphical terminal, otherwise it will say:
 # "Couldn't get a file descriptor referring to the console"
 showkey
+# Can also do:
+xev
 
 # Shows all keys going to the X server.
 screenkey
 # Useful for e.g. screencasts or Vim demonstrations.
 
-# Can also do:
-xev
 
 # Info about mouse and keyboards:
 xinput --list
