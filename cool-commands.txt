@@ -6046,3 +6046,6 @@ convert in.jpg -gravity center -background black -extent 400x400 out.jpg
 import - | zbarimg :-
 # TODO: why does zbarimg need `:-` instead of `-`?
 # https://www.reddit.com/r/Bitcoin/comments/1rsujs/scan_qr_codes_on_your_screen_with_imagemagick_and/
+
+# Browse samba shares.
+smbtree
