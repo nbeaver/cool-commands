@@ -6032,7 +6032,10 @@ locate -b '*.py' | grep -- '/[^/]*-[^/]*\.py$' | less
 # http://stackoverflow.com/questions/8350853/how-to-import-module-when-module-name-has-a-dash-or-hyphen-in-it
 
 # Show PID, memory usage (RSS), and command executable.
-ps -p 29161 -o pid,rss,cmd
+ps -o pid,cmd,rss -p 29161
+
+# Show time and date started and elapsed time.
+ps -o pid,cmd,lstart,etime -p 29443
 
 # Get process ID of program running apt-get or dpkg.
 fuser /var/lib/dpkg/lock
@@ -6049,3 +6052,11 @@ import - | zbarimg :-
 
 # Browse samba shares.
 smbtree
+
+# Fix permissions recursively.
+find . -perm 777 -exec chmod 755 '{}' \;
+
+# Get files modified in the last day.
+find -mtime -1
+# Only in current directory.
+find -maxdepth 1 -mtime -1
