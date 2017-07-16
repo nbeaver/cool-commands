@@ -223,6 +223,8 @@ grep -i '^s.*m.*b' /usr/share/dict/words
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
+# All words without vowels.
+grep -iv '[aeiouy]' /usr/share/dict/words
 
 # Words that can be spelled with hexadecimal alone, like 0xDEADBEEF.
 egrep -i "^[a-fA-F]+$" /usr/share/dict/words
@@ -4584,6 +4586,10 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 06BBDC2602DFE7E7
 
 # Backup keys.
 sudo apt-key exportall > Repo.key
+
+# Show MAC address.
+ethtool -P eth0
+ethtool -P wlan0
 
 # Change your MAC address (i.e. hardware address)
 sudo macchanger --mac 12:34:56:78:91:01 eth0
