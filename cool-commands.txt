@@ -4624,13 +4624,21 @@ exo-open
 
 # See what syscalls (system calls) a program makes, what files it reads, and so on.
 strace echo "Hello."
+
 # Attach strace to a running process. Useful for e.g. seeing if a process is respoding,
 # and sending kill signals and seeing if it gets them.
 strace -p 2792
+
 # Put the strace log in a file.
 strace -o /tmp/strace.log ls
+
 # See profiling information (what is this process spending time doing?)
 strace -c /bin/foo
+# Also do it for child processes.
+strace -f -c /bin/foo
+# Also log output.
+strace -o strace.log -f -c /bin/foo
+
 # Pipe stderr to stdout so you can use less.
 strace foo 2>&1 | less
 
@@ -5916,6 +5924,9 @@ comm -12 <(sort ~/.vim/spell/en.utf-8.add) <(sort /usr/share/dict/words)
 find . -type d -name .git -execdir sh -c 'if git status 2>&1 >/dev/null; then exit; else pwd; fi;' \;
 # Redirects error to stdout so can be piped to less.
 
+# Get status of git repositories.
+find . -type d -name .git -print -execdir git status \; -print
+
 # Loop over only files that are not symlinks,
 # and count the number of lines in them.
 for path in * ; do if ! test -L "$path"; then wc -l "$path"; fi; done | sort -rn | less
@@ -6066,3 +6077,7 @@ find . -perm 777 -exec chmod 755 '{}' \;
 find -mtime -1
 # Only in current directory.
 find -maxdepth 1 -mtime -1
+
+# Sort and show sum of memory usage.
+atop -pM
+# https://unix.stackexchange.com/questions/209689/sum-the-memory-usages-of-all-the-processes-of-a-program/209915
