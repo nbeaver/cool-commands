@@ -715,6 +715,10 @@ time factor 12764787846358441471 # factoring this will take on the order of a fe
 # user    0m14.533s
 # sys 0m0.004s
 
+/usr/bin/time --verbose factor 12764787846358441471
+
+/usr/bin/time --output=time.log --verbose factor 12764787846358441471
+
 # This is what I see on my laptop now.
 #   $ time factor 12764787846358441471
 #   12764787846358441471: 12764787846358441471
@@ -5865,6 +5869,10 @@ man ./my_file.man
 # List all soundcards and digital audio devices
 aplay -l
 
+# Test sound output.
+aplay /usr/share/sounds/alsa/Front_Center.wav
+# https://help.ubuntu.com/community/SoundTroubleshooting
+
 cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 # powersave
 # powersave
@@ -6081,3 +6089,34 @@ find -maxdepth 1 -mtime -1
 # Sort and show sum of memory usage.
 atop -pM
 # https://unix.stackexchange.com/questions/209689/sum-the-memory-usages-of-all-the-processes-of-a-program/209915
+
+# Measure disk seek rate.
+sudo ioping -R /dev/sda
+# --- /dev/sda (block device 931.5 GiB) ioping statistics ---
+# 117 requests completed in 3.01 s, 468 KiB read, 38 iops, 155.6 KiB/s
+# generated 118 requests in 3.05 s, 472 KiB, 38 iops, 154.9 KiB/s
+# min/avg/max/mdev = 6.66 ms / 25.7 ms / 98.6 ms / 18.4 ms
+
+# Run in current directory as well as saving a log.
+ioping . | tee ioping.log
+
+# Run in batch mode, printing statistics at the end.
+ioping -B .
+# 7 113003542 62 253727 121023 16143363 40439352 14882082 8 7818494244
+
+# Get disk sequential speed in bytes per second.
+sudo ioping -RLB . | awk '{print $4}'
+# 94805395
+
+# Run on /tmp/ directory.
+$ ioping -c 10 -s 1M /tmp/
+# 1 MiB <<< /tmp/ (ext4 /dev/sda1): request=1 time=5.11 ms (warmup)
+# 1 MiB <<< /tmp/ (ext4 /dev/sda1): request=2 time=18.6 ms
+# 1 MiB <<< /tmp/ (ext4 /dev/sda1): request=3 time=3.92 ms
+# 1 MiB <<< /tmp/ (ext4 /dev/sda1): request=4 time=3.63 ms
+# 1 MiB <<< /tmp/ (ext4 /dev/sda1): request=5 time=3.87 ms
+# ^C
+# --- /tmp/ (ext4 /dev/sda1) ioping statistics ---
+# 4 requests completed in 30.1 ms, 4 MiB read, 133 iops, 133.1 MiB/s
+# generated 5 requests in 4.90 s, 5 MiB, 1 iops, 1.02 MiB/s
+# min/avg/max/mdev = 3.63 ms / 7.51 ms / 18.6 ms / 6.42 ms
