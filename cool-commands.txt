@@ -5825,6 +5825,11 @@ xfconf-query -c xfce4-keyboard-shortcuts -l -v | cut -d'/' -f4 | awk '{printf "%
 # http://wiki.robotz.com/index.php/Xfce#Customize_the_keyboard_layout_and_shortcut_keys
 # https://wiki.xfce.org/faq#keyboard
 
+xfconf-query --channel xfwm4 --property /general/zoom_desktop
+# boolean, so will be false or true
+xfconf-query -c xfwm4 -p /general/zoom_desktop
+# short version
+
 # JSON formatting using jq.
 printf "[1, 2, 3, 4]" | jq .
 
@@ -6120,3 +6125,6 @@ $ ioping -c 10 -s 1M /tmp/
 # 4 requests completed in 30.1 ms, 4 MiB read, 133 iops, 133.1 MiB/s
 # generated 5 requests in 4.90 s, 5 MiB, 1 iops, 1.02 MiB/s
 # min/avg/max/mdev = 3.63 ms / 7.51 ms / 18.6 ms / 6.42 ms
+
+modprobe -r psmouse && modprobe psmouse proto=imps
+# https://bugs.launchpad.net/ubuntu/+source/gnome-settings-daemon/+bug/868400
