@@ -312,6 +312,9 @@ find . -type d -name '.git' -print -execdir git --git-dir={} fsck \;
 # Example of fsck on a borked drive.
 fsck -y /dev/sda
 
+# When running in the (initramfs) prompt using the ash shell:
+fsck -y /dev/sda1 && exit
+
 # Find all files not in .git/ and run `wc -l` on them.
 find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
 # -o means 'or', so either prune .git or if they are files (not directories) run wc -l filename on them.
@@ -673,6 +676,10 @@ sudo usermod -a -G lpadmin $USER
 # Add a user to the list of sudoers (as root).
 usermod -a -G sudo nathaniel
 # Error message: "$USER" is not in the sudoers file. This incident will be reported.
+
+# Change the root password.
+sudo passwd root
+# https://unix.stackexchange.com/questions/35929/how-can-we-change-root-password#35938
 
 # Locate all files with a path or name containing 'file'
 locate --ignore-case file
@@ -1249,6 +1256,12 @@ cdrdao
 # http://www.1stbyte.com/2012/10/19/create-iso-image-from-cd-or-dvd-disk-in-linux/
 safecopy /dev/dvd out.iso
 # https://askubuntu.com/questions/138152/software-to-copy-a-scratched-cd-dvd-blueray-to-an-iso-file
+# do a quick first-run.
+safecopy --stage1 /dev/sr0 safecopy.iso
+safecopy --stage2 /dev/sr0 safecopy.iso
+safecopy /dev/cdrom out.iso
+safecopy /dev/dvd out.iso
+safecopy /dev/sr0 safecopy.iso
 
 isohybrid systemrescuecd-x86-4.8.0.iso
 # After formatting USB to FAT32 or ext3:
@@ -2985,6 +2998,9 @@ sudo shutdown -r now
 # If you are SSH'd into the machine,
 # you will be prompted for the hostname.
 
+# Cancel shutdown.
+shutdown -h
+
 # See what the time is anywhere in the world, interactively.
 tzselect
 # See what the time is in India.
@@ -3787,6 +3803,8 @@ clive  'http://youtu.be/otXf1VukQkU' # stands for 'command live video extraction
 cclive 'http://youtu.be/otXf1VukQkU' # rewrite of clive in C++
 
 youtube-dl --write-info-json 'https://www.youtube.com/watch?v=T0noDEI2nLY'
+
+youtube-dl --write-auto-sub --write-info-json --sub-lang en 'https://www.youtube.com/watch?v=QncdLPYLPkA'
 
 # When gvfsd-metadata spazzes out on you, run this.
 rm -rf ~/.local/share/gvfs-metadata
@@ -6126,5 +6144,9 @@ $ ioping -c 10 -s 1M /tmp/
 # generated 5 requests in 4.90 s, 5 MiB, 1 iops, 1.02 MiB/s
 # min/avg/max/mdev = 3.63 ms / 7.51 ms / 18.6 ms / 6.42 ms
 
-modprobe -r psmouse && modprobe psmouse proto=imps
+sudo modprobe -r psmouse && modprobe psmouse proto=imps
 # https://bugs.launchpad.net/ubuntu/+source/gnome-settings-daemon/+bug/868400
+
+dconf read /org/gnome/desktop/peripherals/touchpad/tap-to-click
+
+# TODO: find out how to send a notification when /var/cache/apt/archives/lock is released.
