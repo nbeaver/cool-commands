@@ -480,6 +480,8 @@ stat /proc/24088
 
 # Get RAM usage.
 pmap 3241 | tail -n 1
+# Get detailed RAM usage, including RSS.
+pmap -x 3241 | tail
 top -p 3241
 
 # What do the statuses in ps mean, e.g. Rl Sl S+ Sl+ in the STAT (status) field?
@@ -1352,6 +1354,9 @@ tr "|" "\t" < /etc/printcap | cut -f 1 | grep -v "#"
 
 # Detailed printer info.
 lpstat -l -p canon_laserjet
+
+# List of completed print jobs.
+lpstat -W completed | less
 
 # Print document from the command line to a network printer by printer's name
 lpr -P "Brother-HL-4070CDW" doc.pdf
@@ -4066,6 +4071,13 @@ faketime 'last Friday 5 pm' /bin/date
 faketime '2008-12-24 08:15:42' /bin/date
 datefudge "2007-04-01 10:23" date -R
 
+# Easter egg in 'man'.
+faketime 00:30:00 man
+# gimme gimme gimme
+# What manual page do you want?
+# https://unix.stackexchange.com/questions/405783/why-does-man-print-gimme-gimme-gimme-at-0030/405874#comment726280_405874
+# https://git.savannah.nongnu.org/cgit/man-db.git/commit/src/man.c?id=002a6339b1fe8f83f4808022a17e1aa379756d99
+
 # Launch ipython notebook.
 ipython notebook
 
@@ -4873,6 +4885,7 @@ cat /proc/sys/fs/inotify/max_user_instances
 cat /proc/sys/fs/inotify/max_queued_events
 
 # http://unix.stackexchange.com/questions/15509/whos-consuming-my-inotify-resources
+# https://stackoverflow.com/questions/13758877/how-do-i-find-out-what-inotify-watches-have-been-registered/
 # See what processes are doing it.
 find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print | less
 ps -p $(find /proc/*/fd/* -type l -lname 'anon_inode:inotify' -print 2> /dev/null | sed -e 's/^\/proc\/\([0-9]*\)\/.*/\1/') | less
@@ -5501,6 +5514,9 @@ uuidgen
 cat /proc/sys/kernel/random/uuid
 # or
 python  -c 'import uuid; print uuid.uuid4()'
+
+# http://www.ossp.org/pkg/lib/uuid/
+uuid -v3 ns:URL http://www.ossp.org/
 
 # Get external ip address.
 curl --proto https ifconfig.me
@@ -6150,3 +6166,8 @@ sudo modprobe -r psmouse && modprobe psmouse proto=imps
 dconf read /org/gnome/desktop/peripherals/touchpad/tap-to-click
 
 # TODO: find out how to send a notification when /var/cache/apt/archives/lock is released.
+
+echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
+
+# Generate a core dump of the init file.
+gcore $(pgrep -o init)
