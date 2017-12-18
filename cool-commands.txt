@@ -1565,6 +1565,8 @@ netstat -pln
 # See list of things that are listening remotely
 netstat -tnlp | grep -v 127.0.0 | grep -v ::1:
 
+sudo netstat -lnp | less
+
 # Disk usage of current directory (total only)
 du -sh
 du --summarize --human-readable
@@ -3892,6 +3894,8 @@ sudo gdb /home/nathaniel/local_programs/COMSOL/COMSOL43b_install/COMSOL43b/bin/g
 # Another way to attach to a running process.
 gdb -p 503
 
+# Debug a core dump created by a perl process.
+gdb /usr/bin/perl -c ./core
 
 # Filter out control sequences like backspace, return, etc.
 cat myfile.txt | col -b > filtered.txt
@@ -4686,6 +4690,16 @@ strace -o "strace.log" -rCw mycommand args
 # Only the summary at the end.
 strace -o "strace.log" -cw mycommand args
 
+# Shows that sleep takes up very little CPU.
+strace -o $(date +%s).log -rC sleep 2
+# Shows that the actual time is spent in nanosleep syscall.
+strace -o $(date +%s).log -rC sleep 2
+# https://stackoverflow.com/questions/16757475/the-meaning-of-strace-timestamp
+
+strace -o $(date +%s).log -rC sleep 2
+strace -o $(date +%s).log -rTC sleep 2
+# https://unix.stackexchange.com/questions/325622/difference-between-strace-r-and-strace-t-options
+
 # Using wine.
 wine program.exe
 # Debugging wine.
@@ -5474,6 +5488,12 @@ gvfs-info /etc/hosts
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
 
+
+# Check what mimetype a file is.
+xdg-mime query filetype /tmp/foobar.png
+
+mimetype /tmp/foobar.png
+
 # List mimetypes of all files, sorted by mimetype.
 mimetype * | sort -k 2 | less
 
@@ -5485,6 +5505,9 @@ xdg-mime default Thunar.desktop x-scheme-handler/ftp
 
 # Get default PDF reader.
 xdg-mime query default application/pdf 
+
+# Trace the file that gives the mimetype association.
+XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default application/pdf
 
 # Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
 ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
@@ -6126,7 +6149,10 @@ find -mtime -1
 find -maxdepth 1 -mtime -1
 
 # Sort and show sum of memory usage.
-atop -pM
+atop -apM
+# -a : all processes, not just active ones
+# -p : add up by process name, e.g. combine multiple chromium threads
+# -M : sort by memory usage
 # https://unix.stackexchange.com/questions/209689/sum-the-memory-usages-of-all-the-processes-of-a-program/209915
 
 # Measure disk seek rate.
@@ -6169,5 +6195,12 @@ dconf read /org/gnome/desktop/peripherals/touchpad/tap-to-click
 
 echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
 
-# Generate a core dump of the init file.
+# Generate a core dump of the init process.
 gcore $(pgrep -o init)
+
+# Convert Roman numerals to Arabic numerals.
+echo 'MDCCL' | numconv -f roman
+# 1750
+
+# Check wifi quality.
+watch cat /proc/net/wireless
