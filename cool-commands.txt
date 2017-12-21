@@ -6204,3 +6204,6 @@ echo 'MDCCL' | numconv -f roman
 
 # Check wifi quality.
 watch cat /proc/net/wireless
+
+# Show type of source file for each one.
+sloccount --details .
