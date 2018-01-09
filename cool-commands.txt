@@ -6207,3 +6207,30 @@ watch cat /proc/net/wireless
 
 # Show type of source file for each one.
 sloccount --details .
+
+
+# See paths of all the applicable man pages.
+man -wa core
+# /usr/share/man/man3/core.3tcl.gz
+# /usr/share/man/man5/core.5.gz
+# /usr/share/man/man3/Core.3.gz
+# /usr/share/man/man3/CORE.3perl.gz
+
+# http://superuser.com/questions/318555/ddg#318559
+
+# Long flags version.
+man --where --all core
+
+# Alternately:
+whereis core
+# core: /home/nathaniel/local/plan9port/plan9port-20140306/bin/core /usr/share/man/man3/core.3tcl.gz /usr/share/man/man5/core.5.gz
+
+# Read the man page directly from the file.
+man /usr/share/man/man5/core.5.gz
+
+# Make a new /dev/null
+sudo mknod -m 666 /dev/null c 1 3
+chown root:root /dev/null
+# https://askubuntu.com/questions/435887/i-can-read-from-dev-null-how-to-fix-it
+# https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation
+
