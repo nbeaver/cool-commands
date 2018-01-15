@@ -760,6 +760,11 @@ objdump -p /usr/bin/factor | grep NEEDED
 objdump -p /usr/bin/factor | grep 'file format'
 # /usr/bin/factor:     file format elf64-x86-64
 
+# Inspect a core dump.
+objdump ./core | less
+# https://unix.stackexchange.com/questions/89933/how-to-view-core-files-for-debugging-purposes-in-linux
+
+
 # Make a file executable (defaults to current user)
 chmod +x zab.py
 # Make a file writeable (defaults to current user)
@@ -6234,3 +6239,18 @@ chown root:root /dev/null
 # https://askubuntu.com/questions/435887/i-can-read-from-dev-null-how-to-fix-it
 # https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation
 
+# View fonts.
+gnome-font-viewer /usr/share/fonts/opentype/freefont/FreeSans.otf
+fontforge /usr/share/fonts/opentype/freefont/FreeSans.otf
+display /usr/share/fonts/opentype/freefont/FreeSans.otf
+
+# Dislpay format of core dump filename.
+sysctl kernel.core_pattern
+cat /proc/sys/kernel/core_pattern
+
+# Send a notification at a later time.
+printf 'DISPLAY=:0.0 zenity --info --text "check your email"' | at now + 1 minutes
+at now +1 minutes <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
+
+# Test it before doing it.
+at now <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
