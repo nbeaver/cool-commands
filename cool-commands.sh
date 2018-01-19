@@ -1,4 +1,7 @@
-#! /usr/bin/env bash
+#! /usr/bin/env false
+# Use this to prevent this from being run.
+exit 1
+
 # Wireless access points
 sudo iwlist scanning | less
 
