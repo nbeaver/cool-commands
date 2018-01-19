@@ -1,5 +1,5 @@
 #! /usr/bin/env false
-# Use this to prevent this from being run.
+# Prevent this file from being run as a shell script.
 exit 1
 
 # Wireless access points
