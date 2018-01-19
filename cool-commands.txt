@@ -834,6 +834,9 @@ grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less
 # http://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
 
+# Find python files with Unicode.
+grep -rlnP '[^[:ascii:]]' --include='*.py'
+
 # Grep for matching lines, but show only matching filenames.
 grep -rl "blah" # list files with lines that match "blah"
 grep --recursive --files-with-matches "blah" # list files with lines that match "blah"
@@ -2645,9 +2648,9 @@ ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
 # Split up video into segments
 # http://superuser.com/questions/31135/split-mpeg-video-from-command-line
 # http://unix.stackexchange.com/questions/1670/how-can-i-use-ffmpeg-to-split-mpeg-video-into-10-minute-chunks-for-youtube-uploa
-ffmpeg -i source-file.foo -ss 0 -t 600 first-10-min.m4v
-ffmpeg -i source-file.foo -ss 600 -t 600 second-10-min.m4v
-ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 out1.mpg -ss
+ffmpeg -i source-file.foo -ss 0 -t 600 -c copy first-10-min.m4v
+ffmpeg -i source-file.foo -ss 600 -t 600 -c copy second-10-min.m4v
+ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 -c copy out1.mpg -ss
 
 # Get audio file from video
 ffmpeg -i myvid.mp4 ./out.mp3
@@ -6254,3 +6257,7 @@ at now +1 minutes <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
 
 # Test it before doing it.
 at now <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
+
+# Get a view of a truetype glyph as a PNG image
+# https://stackoverflow.com/questions/17142331/convert-truetype-glyphs-to-png-image#24754489
+# https://stackoverflow.com/questions/2672144/dump-characters-glyphs-from-truetype-font-ttf-into-bitmaps
