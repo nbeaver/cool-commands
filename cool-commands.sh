@@ -4568,9 +4568,6 @@ man 1 xterm
 # See information about filesystem hierarchy.
 man 7 hier
 
-# See what the terminal interprets.
-stty --all
-
 # Disable IPv6
 # http://superuser.com/questions/575684/how-to-disable-ipv6-on-a-specific-interface-in-linux
 # https://wiki.debian.org/DebianIPv6
@@ -4666,10 +4663,14 @@ For more information see man pm-action.
 
 # open a file; desktop-independent command
 xdg-open
+gvfs-open
 # equivalent desktop-specific commands:
 gnome-open
 kde-open
 exo-open
+gtk-launch
+# https://bugzilla.gnome.org/show_bug.cgi?id=343896
+# https://askubuntu.com/questions/5172/running-a-desktop-file-in-the-terminal
 
 # See what syscalls (system calls) a program makes, what files it reads, and so on.
 strace echo "Hello."
@@ -5229,6 +5230,10 @@ apt list --upgradable
 # Package names only.
 aptitude search -F '%p' --disable-columns '~U'
 
+# Get required packages.
+aptitude search '?priority(required)'
+# https://askubuntu.com/questions/110123/how-do-i-find-a-list-of-packages-with-priority-required
+
 printf "$HOME/.bashrc\n$HOME/.profile\n" | while read -r; do file "$REPLY"; done
 # http://stackoverflow.com/questions/448126/lambda-functions-in-bash
 
@@ -5427,6 +5432,12 @@ bind -P | grep line
 # revert-line can be found on "\e\C-r", "\er".
 # shell-expand-line can be found on "\e\C-e".
 # unix-line-discard can be found on "\C-u".
+
+# See what the terminal interprets.
+# https://www.gnu.org/software/coreutils/manual/html_node/Characters.html
+# http://manpages.ubuntu.com/manpages/precise/en/man3/termios.3.html
+# https://www.quora.com/What-are-all-of-the-keyboard-shortcuts-for-sending-signals-from-the-shell?share=1
+stty --all
 stty -a
 # speed 38400 baud; rows 21; columns 159; line = 0;
 # intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = M-^?; eol2 = M-^?; swtch = M-^?; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W;
@@ -5436,6 +5447,10 @@ stty -a
 # opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
 # isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
 
+# Keybindings for the terminal.
+stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
+# https://news.ycombinator.com/item?id=9810823
+
 # Get number of columns in current terminal.
 echo $COLUMNS
 # or
@@ -5443,10 +5458,6 @@ tput columns
 # or
 stty size | cut -d ' ' -f 2
 
-
-# Keybindings for the terminal.
-stty -a | awk 'BEGIN{RS="[;\n]+ ?"}; /= ..$/'
-# https://news.ycombinator.com/item?id=9810823
 
 # Information about a file or directory.
 gvfs-info /etc/hosts
@@ -6264,3 +6275,6 @@ at now <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
 # Get a view of a truetype glyph as a PNG image
 # https://stackoverflow.com/questions/17142331/convert-truetype-glyphs-to-png-image#24754489
 # https://stackoverflow.com/questions/2672144/dump-characters-glyphs-from-truetype-font-ttf-into-bitmaps
+
+# Man pages with the --dry-run flag.
+man -wK -- '--dry-run'
