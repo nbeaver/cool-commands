@@ -5197,8 +5197,10 @@ apt-get --purge remove $(aptitude search ?obsolete -F %p)
 
 # List installed backports to wheezy.
 aptitude search '?narrow(?installed,?archive(wheezy-backports))'
+
+# List installed backports to current version.
 aptitude search '?narrow(?installed,?origin(Debian Backports))'
-aptitude search '?narrow(?version(CURRENT),?origin(Debian Backports))'
+aptitude search '?narrow(?version(CURRENT),?origin(Debian Backports))' -F '%100p' | less
 # http://forums.debian.net/viewtopic.php?f=10&t=120739
 # http://backports.debian.org/FAQ/
 
@@ -6278,3 +6280,7 @@ at now <<< 'DISPLAY=:0.0 zenity --info --text "check your email"'
 
 # Man pages with the --dry-run flag.
 man -wK -- '--dry-run'
+
+# List locallly installed packages.
+apt list --installed | grep '\[installed,local\]'
+
