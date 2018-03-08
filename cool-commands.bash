@@ -780,7 +780,10 @@ chmod -w myfile.txt
 python -i myscript.py
 
 # Profile a python script
-python -m cProfile script.py > profile.log
+python -m cProfile myscript.py > profile.log
+
+# Trace function calls.
+python3 -m trace --listfuncs -- /path/to/myscript.py
 
 # sage command
 plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
@@ -4056,7 +4059,7 @@ date +%s
 # Example: 1441752464
 # Drawback: not very human-readable, not portable.
 
-# Convert Unix epoch to human-readable time.
+# Convert Unix epoch (timestamp) to human-readable time.
 date --date='@1441752464' +%c
 # Tue 08 Sep 2015 05:47:44 PM CDT
 
@@ -6284,3 +6287,32 @@ man -wK -- '--dry-run'
 # List locallly installed packages.
 apt list --installed | grep '\[installed,local\]'
 
+# Get UID in a non-bash shell that doesn't have it as an automatic variable.
+id -u $USER
+
+# Quick move into a subdirectory call 'needle'.
+cd */needle
+
+# Find files not owned by the current user in the current directory.
+find . \! -user $USER
+
+# Fix files owned by root.
+find . \! -user $USER -exec sudo chown $USER:$(id -gn) '{}' \+
+
+# The part that changes who owns it.
+chown $USER:$(id -gn) myfile.txt
+
+# Grepping red text.
+shatag -l | grep '\[31;1m'
+
+# Show attached storage systems.
+lsblk -f
+# Example output:
+# NAME   FSTYPE LABEL          UUID                                 MOUNTPOINT
+# sda                                                               
+# ├─sda1 ext4                  0f650fbc-1ff4-4f24-8fa9-63dbcc1269fc /
+# ├─sda2                                                            
+# └─sda5 swap                  acc8416d-4167-43d9-8b8e-0e28182fbf3f 
+# sdb                                                               
+# └─sdb1 ext4   hgst-tb-backup 47bf6ced-03fe-4086-90c7-5d71c57979dd 
+# sr0                                                               
