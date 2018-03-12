@@ -6316,3 +6316,7 @@ lsblk -f
 # sdb                                                               
 # └─sdb1 ext4   hgst-tb-backup 47bf6ced-03fe-4086-90c7-5d71c57979dd 
 # sr0                                                               
+
+# Look at repo status, but only recurse one level down.
+mr -q -n 1 status
+mr --quiet --no-recurse 1 status
