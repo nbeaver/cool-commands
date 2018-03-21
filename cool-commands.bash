@@ -5259,6 +5259,8 @@ date --date='January 19, 2038 03:14:08 UTC'
 
 # Display date of Easter (for Western Christian churches).
 ncal -e
+# Use a specific year.
+ncal -e -y 2038
 
 # Start week with Monday instead of Sunday.
 ncal -M -b
@@ -6320,3 +6322,6 @@ lsblk -f
 # Look at repo status, but only recurse one level down.
 mr -q -n 1 status
 mr --quiet --no-recurse 1 status
+
+# Show list of virtual machines.
+virsh list --all
