@@ -4708,11 +4708,15 @@ strace -o "strace.log" -cw mycommand args
 # Shows that sleep takes up very little CPU.
 strace -o $(date +%s).log -rC sleep 2
 # Shows that the actual time is spent in nanosleep syscall.
-strace -o $(date +%s).log -rC sleep 2
+strace -o $(date +%s).log -rTC sleep 2
 # https://stackoverflow.com/questions/16757475/the-meaning-of-strace-timestamp
 
 strace -o $(date +%s).log -rC sleep 2
+# Looks like this:
+#     0.000000 execve("/bin/sleep", ["sleep", "2"], [/* 59 vars */]) = 0
 strace -o $(date +%s).log -rTC sleep 2
+# Looks like this:
+#     0.000000 execve("/bin/sleep", ["sleep", "2"], [/* 59 vars */]) = 0 <0.000499>
 # https://unix.stackexchange.com/questions/325622/difference-between-strace-r-and-strace-t-options
 
 # Using wine.
@@ -6325,3 +6329,6 @@ mr --quiet --no-recurse 1 status
 
 # Show list of virtual machines.
 virsh list --all
+
+# Get list of exec keys.
+grep -h '^Exec=' /etc/xdg/autostart/*.desktop
