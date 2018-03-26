@@ -4685,6 +4685,9 @@ strace -p 2792
 # Put the strace log in a file.
 strace -o /tmp/strace.log ls
 
+# See what files a program tries to open.
+strace -o /tmp/strace.log -e trace=open ls
+
 # See profiling information (what is this process spending time doing?)
 strace -c /bin/foo
 # Also do it for child processes.
