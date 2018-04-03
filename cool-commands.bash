@@ -1290,9 +1290,10 @@ sudo qemu-system-x86_64 -hda /dev/sdb
 isoinfo -d -i /dev/cdrom
 
 # Copy an ISO to a USB flash drive on /dev/sdg
-cp debian.iso /dev/sdg
+cp debian.iso /dev/sdg && sync
 # Or, more realistically:
-sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg
+sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg && sync
+# https://www.debian.org/CD/faq/#write-usb
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -2035,6 +2036,11 @@ echo $PATH | tr ':' '\n'
 # Process each directory in $PATH using a for loop.
 IFS=':'; for dir in $PATH; do printf -- "$dir\n"; done;
 # Note the lack of quotes around $PATH to ensure it gets split.
+# Fancy version:
+printf '%s\n' "$PATH" | tr ':' '\n'
+
+# Do the same for manpath(1) (see manpath(5)).
+manpath | tr ':' '\n'
 
 # View colored output in less
 less --RAW-CONTROL-CHARS
@@ -2766,6 +2772,8 @@ v
 # Diff gzipped files (diffuse is my favorite graphical diff at the moment).
 diffuse <(zcat file1.gzip) <(zcat file2.gzip)
 # Uses process substitution.
+
+diffuse ~/.local/share/man/man1/youtube-dl.1 <(zcat /usr/share/man/man1/youtube-dl.1)
 
 # IRC chat command to register nickname
 /msg NickServ register [password] email@email-provider.com
