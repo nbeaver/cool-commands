@@ -318,11 +318,12 @@ fsck -y /dev/sda
 # When running in the (initramfs) prompt using the ash shell:
 fsck -y /dev/sda1 && exit
 
-# Find all files not in .git/ and run `wc -l` on them.
-find . -path ./.git -prune -o -type f -exec 'wc' '-l' '{}' \;
-# -o means 'or', so either prune .git or if they are files (not directories) run wc -l filename on them.
-# Same, but skip .zim as well.
-find . -path ./.git -prune -o -path ./.zim -prune -o -type f -exec 'wc' '-l' '{}' \;
+# Find all files not in a git repository and run `wc -l` on them.
+find . -name '*.git' -prune -o -type f -exec 'wc' '-l' '{}' \+
+# -o means 'or', so either prune '*.git' or if they are files (not directories) run wc -l filename on them.
+# Same, but skip mercurial repositories (*.hg) as well.
+find . -name '*.git' -prune -o -name '*.hg' -prune -o -type f -exec 'wc' '-l' '{}' \+
+
 # Find all files that the current user has write-access to; a kind of crude security audit.
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print | less
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print 2> /dev/null | less
@@ -334,7 +335,7 @@ find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
 # http://www.cyberciti.biz/faq/linux-unix-osx-bsd-find-command-exclude-directories/
 # https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
 
-find . -path ./.git -prune -o -type f -print0 | wc -l --files0-from=-
+find . -name '*.git' -prune -o -type f -print0 | wc -l --files0-from=-
 # https://stackoverflow.com/questions/13727917/use-wc-on-all-subdirectories-to-count-the-sum-of-lines
 
 # Find a writable file owned by root.
@@ -588,9 +589,9 @@ date -d 'April 19, 2014 + 12 weeks'
 # https://www.gnu.org/software/coreutils/manual/html_node/Examples-of-date.html
 
 # Time in the past.
-date --date='5 hours 15 minutes 2 seconds ago'
-# TODO: why don't these match?
+date --date='5 hours ago 15 minutes ago 2 seconds ago'
 date --date='-5 hours -15 minutes -2 seconds'
+# https://www.gnu.org/software/coreutils/manual/html_node/Relative-items-in-date-strings.html
 
 # find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
