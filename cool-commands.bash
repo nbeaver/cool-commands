@@ -346,6 +346,8 @@ cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 
 # transfer ownership to nathaniel instead of root
 sudo chown nathaniel: .xdvirc
+# The trailing colon makes it owned by the default group.
+
 # Had to do this when copying over files from old install.
 cat precise.txt | grep root > to-chown.txt
 # Unnecessary use of cat.
@@ -592,6 +594,7 @@ date -d 'April 19, 2014 + 12 weeks'
 date --date='5 hours ago 15 minutes ago 2 seconds ago'
 date --date='-5 hours -15 minutes -2 seconds'
 # https://www.gnu.org/software/coreutils/manual/html_node/Relative-items-in-date-strings.html
+# info:/coreutils/Relative items in date strings
 
 # find number of days' difference between two dates
 echo $(( ( $(date -d "09/07/2012" +%s) - $(date -d "07/05/2012" +%s) ) /(24 * 60 * 60 ) ))
@@ -2761,6 +2764,9 @@ diff <(man chattr) <(man chmod)
 tail -f myfile.log
 less +F myfile.log
 # http://serverfault.com/questions/445899/less-with-update-file-like-functionality
+
+# See unique lines immediately.
+tail -f access.log | stdbuf -oL cut -d ' ' -f1 | uniq
 
 # Pause/freeze/halt/stop the terminal output using the shell.
 Ctrl-S
@@ -5665,7 +5671,7 @@ file --keep-going --raw frankenplot_2.3.2-1_all.deb
 cat /sys/bus/usb/devices/*/version
 
 # Change the permissions of a recently created partition on an external drive.
-sudo chown -R nathaniel:nathaniel /media/nathaniel/TB-backup/laptop-backup/
+sudo chown -R nathaniel: /media/nathaniel/TB-backup/laptop-backup/
 
 # Restore a duplicity file.
 duplicity restore file:///path_to_folder_contains_backups/ path_where_to_extract_it/
@@ -6275,7 +6281,7 @@ man /usr/share/man/man5/core.5.gz
 
 # Make a new /dev/null
 sudo mknod -m 666 /dev/null c 1 3
-chown root:root /dev/null
+chown root: /dev/null
 # https://askubuntu.com/questions/435887/i-can-read-from-dev-null-how-to-fix-it
 # https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation
 
@@ -6315,10 +6321,10 @@ cd */needle
 find . \! -user $USER
 
 # Fix files owned by root.
-find . \! -user $USER -exec sudo chown $USER:$(id -gn) '{}' \+
+find . \! -user $USER -exec sudo chown $USER: '{}' \+
 
 # The part that changes who owns it.
-chown $USER:$(id -gn) myfile.txt
+chown $USER: myfile.txt
 
 # Grepping red text.
 shatag -l | grep '\[31;1m'
@@ -6344,3 +6350,4 @@ virsh list --all
 
 # Get list of exec keys.
 grep -h '^Exec=' /etc/xdg/autostart/*.desktop
+
