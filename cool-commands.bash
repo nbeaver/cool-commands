@@ -1294,10 +1294,14 @@ sudo qemu-system-x86_64 -hda /dev/sdb
 isoinfo -d -i /dev/cdrom
 
 # Copy an ISO to a USB flash drive on /dev/sdg
+umount /media/usb
 cp debian.iso /dev/sdg && sync
 # Or, more realistically:
+umount /media/usb
 sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg && sync
+# Beware, this cannot be interrupted, even with kill -9.
 # https://www.debian.org/CD/faq/#write-usb
+# https://unix.stackexchange.com/questions/360693/how-does-copying-the-debian-iso-directly-to-a-usb-drive-work
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -4182,7 +4186,7 @@ reportbug --kudos
 reportbug --mutt
 
 # Test local mail by sending a message to yourself.
-echo "This is a test email from $USER" | mailx -I -s 'test #2' -v "$USER@localhost"
+echo "This is a test email from $USER" | mail --subject='test message' "$USER@localhost"
 
 # Entering unicode on Linux.
 Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
@@ -6351,3 +6355,13 @@ virsh list --all
 # Get list of exec keys.
 grep -h '^Exec=' /etc/xdg/autostart/*.desktop
 
+# debug login scripts.
+echo exit | strace -o strace.log bash -li
+# https://unix.stackexchange.com/questions/334382/find-out-what-scripts-are-being-run-by-bash-on-startup
+
+# Show size of all windows.
+wmctrl -lG
+# https://askubuntu.com/questions/27894/get-window-size-in-shell
+
+# Log out of gnome session.
+gnome-session-quit --logout --no-prompt
