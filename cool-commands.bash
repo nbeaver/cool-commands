@@ -324,6 +324,9 @@ find . -name '*.git' -prune -o -type f -exec 'wc' '-l' '{}' \+
 # Same, but skip mercurial repositories (*.hg) as well.
 find . -name '*.git' -prune -o -name '*.hg' -prune -o -type f -exec 'wc' '-l' '{}' \+
 
+# Also prune the empty files.
+find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -exec wc '-l' '-c' '{}' \+ | grep ' 0 ' | less
+
 # Find all files that the current user has write-access to; a kind of crude security audit.
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print | less
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print 2> /dev/null | less
@@ -6365,3 +6368,4 @@ wmctrl -lG
 
 # Log out of gnome session.
 gnome-session-quit --logout --no-prompt
+
