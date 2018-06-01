@@ -5316,6 +5316,9 @@ dlocate helvR12-ISO8859-1.pcf.gz
 # xfonts-75dpi: /usr/share/fonts/X11/75dpi/helvR12-ISO8859-1.pcf.gz
 # xfonts-100dpi: /usr/share/fonts/X11/100dpi/helvR12-ISO8859-1.pcf.gz
 
+FC_DEBUG=8 fc-match Helvetica | less
+# https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+
 # convert Windows/DOS format text files with \r\n newlines to Unix format.
 tr -d '\r' < file.txt > out.txt
 dos2unix file.txt
@@ -5918,7 +5921,6 @@ parallel -j 3 -- "sleep 2; echo '1st'" "sleep 1; echo '2nd'" "echo '3rd'"
 # http://www.etalabs.net/sh_tricks.html
 
 # Eye dropper app.
-gcolor2
 gpick
 
 # Turn off swap file (if you have enough RAM).
