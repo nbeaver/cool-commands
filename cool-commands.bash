@@ -6371,3 +6371,7 @@ wmctrl -lG
 # Log out of gnome session.
 gnome-session-quit --logout --no-prompt
 
+# Run `desktop-file-validate` on all desktop files.
+find . -name '*.desktop' | xargs -d '\n' desktop-file-validate 2>&1 | less
+# Use null delimiters instead.
+find . -name '*.desktop' -print0 | xargs --null desktop-file-validate 2>&1 | less
