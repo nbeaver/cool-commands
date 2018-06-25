@@ -6375,3 +6375,9 @@ gnome-session-quit --logout --no-prompt
 find . -name '*.desktop' | xargs -d '\n' desktop-file-validate 2>&1 | less
 # Use null delimiters instead.
 find . -name '*.desktop' -print0 | xargs --null desktop-file-validate 2>&1 | less
+
+locate '*.desktop' | xargs -d '\n' grep 'URL=file://' | less
+locate '*.desktop' | xargs -d '\n' grep -h 'Icon=' | sort | uniq | vim -
+
+# Generate 10 pronounceable passwords.
+apg -n 10 -M Ln
