@@ -903,6 +903,7 @@ tar -zxf keepassx-0.4.3.tar.gz
 tar zxf keepassx-0.4.3.tar.gz # The - in front of the flags is not actually necessary.
 # Unfortunately, no easy way to make a parent directory.
 # https://unix.stackexchange.com/questions/198151/tar-extract-into-directory-with-same-base-name
+# ~/writings/looseleaf/posts/8d4ee537-033e-4936-9bd8-f2dc7b033170.rst
 
 # list contents of a tarred file, i.e. tar archive
 tar -tf myfile.tar
@@ -1196,6 +1197,21 @@ sudo hdparm -I /dev/sda
 sudo smartctl -a /dev/sda
 sudo smartctl --all /dev/sda
 smartctl --info /dev/sda
+
+# Run SMART test.
+sudo smartctl -t long /dev/sda
+#[sudo] password for nathaniel: 
+#smartctl 6.6 2016-05-31 r4324 [x86_64-linux-4.15.0-23-generic] (local build)
+#Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
+#
+#=== START OF OFFLINE IMMEDIATE AND SELF-TEST SECTION ===
+#Sending command: "Execute SMART Extended self-test routine immediately in off-line mode".
+#Drive command "Execute SMART Extended self-test routine immediately in off-line mode" successful.
+#Testing has begun.
+#Please wait 170 minutes for test to complete.
+#Test will complete after Fri Jun 29 00:56:53 2018
+#
+#Use smartctl -X to abort test.
 
 
 # Show how much RAM there is.
@@ -5378,6 +5394,9 @@ sudo pip install matplotlib
 # Remove packages with pip.
 pip uninstall matplotlib
 # https://pip.readthedocs.org/en/stable/reference/pip_uninstall/
+
+# Install ruby packages locally.
+gem install --user-install thyme
 
 vlc http://traffic.libsyn.com/nightvale/1-Pilot.mp3
 
