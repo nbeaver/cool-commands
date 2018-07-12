@@ -6400,3 +6400,11 @@ locate '*.desktop' | xargs -d '\n' grep -h 'Icon=' | sort | uniq | vim -
 
 # Generate 10 pronounceable passwords.
 apg -n 10 -M Ln
+
+# Find which process is holding a lock file.
+sudo lslocks | grep /var/lib/tor/lock
+# tor              1322  FLOCK     0B WRITE 0          0          0 /var/lib/tor/lock
+sudo lsof /var/lib/tor/lock
+# COMMAND  PID       USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+# tor     1322 debian-tor    8uW  REG    8,2        0 28836693 /var/lib/tor/lock
+sudo lsof /var/cache/apt/archives/lock
