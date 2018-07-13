@@ -1838,6 +1838,9 @@ dlocate libc.so.6
 dlocate "$(which rm)\$"
 # Similar:
 dlocate /usr/bin/time$
+# Prevents matches to pstree etc.
+$ dlocate '/bin/ps$'
+procps: /bin/ps
 
 #   $ time dpkg -S /usr/share/dict/words
 #   diversion by dictionaries-common from: /usr/share/dict/words
@@ -3802,7 +3805,29 @@ update-alternatives --list editor
 
 # Change default terminal emulator
 sudo update-alternatives --config x-terminal-emulator
+# /var/lib/dpkg/alternatives/x-terminal-emulator
 sudo update-alternatives --set editor /usr/bin/vim.basic
+# /var/lib/dpkg/alternatives/editor
+
+# Change display manager, e.g. kwin_x11, mutter, openbox, twm, xfwm4
+sudo update-alternatives --config x-window-manager
+# Relevant files:
+# /etc/alternatives/x-window-manager
+# /usr/bin/x-window-manager
+# /var/lib/dpkg/alternatives/x-window-manager
+# /var/log/alternatives.log
+
+# Example of how the symlink changes:
+namei /etc/alternatives/x-window-manager
+# f: /etc/alternatives/x-window-manager
+#  d /
+#  d etc
+#  d alternatives
+#  l x-window-manager -> /usr/bin/openbox
+#    d /
+#    d usr
+#    d bin
+#    - openbox
 
 # Using globstar.
 shopt -s globstar
