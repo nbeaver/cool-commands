@@ -3809,6 +3809,8 @@ sudo update-alternatives --config x-terminal-emulator
 sudo update-alternatives --set editor /usr/bin/vim.basic
 # /var/lib/dpkg/alternatives/editor
 
+# Display current window manager.
+update-alternatives --display x-window-manager
 # Change display manager, e.g. kwin_x11, mutter, openbox, twm, xfwm4
 sudo update-alternatives --config x-window-manager
 # Relevant files:
@@ -3816,10 +3818,15 @@ sudo update-alternatives --config x-window-manager
 # /usr/bin/x-window-manager
 # /var/lib/dpkg/alternatives/x-window-manager
 # /var/log/alternatives.log
+# Relevant links:
+# https://www.debian.org/doc/manuals/debian-handbook/sect.customizing-graphical-interface.da.html
+
+# Change session manager, e.g. gnome-session, lxsession, openbox-session, startkde
+sudo update-alternatives --config x-session-manager
+# https://www.debian.org/doc/manuals/debian-reference/ch07.en.html
+
 
 # Example of how the symlink changes:
-namei /etc/alternatives/x-window-manager
-# f: /etc/alternatives/x-window-manager
 #  d /
 #  d etc
 #  d alternatives
@@ -6433,3 +6440,9 @@ sudo lsof /var/lib/tor/lock
 # COMMAND  PID       USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
 # tor     1322 debian-tor    8uW  REG    8,2        0 28836693 /var/lib/tor/lock
 sudo lsof /var/cache/apt/archives/lock
+
+# Prevent watch from being overflowed and wrapping lines.
+cut -c 1-$COLUMNS
+# specifically, use it like this:
+watch "head -c $(($COLUMNS+9)) /dev/zero | tr '\0' '+' | cut -c 1-$COLUMNS"
+# https://stackoverflow.com/questions/1616404/cat-file-with-no-line-wrap
