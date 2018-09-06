@@ -326,6 +326,8 @@ find . -name '*.git' -prune -o -name '*.hg' -prune -o -type f -exec 'wc' '-l' '{
 
 # Also prune the empty files.
 find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -exec wc '-l' '-c' '{}' \+ | grep ' 0 ' | less
+# Use pipe instead of exec.
+find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -print0 | wc -l --files0-from=- | grep '^0 \|^1 ' | less
 
 # Find all files that the current user has write-access to; a kind of crude security audit.
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print | less
@@ -6312,6 +6314,8 @@ gcore $(pgrep -o init)
 # Convert Roman numerals to Arabic numerals.
 echo 'MDCCL' | numconv -f roman
 # 1750
+echo 'MCMLXXXIV' | numconv -f roman
+# 1984
 
 # Check wifi quality.
 watch cat /proc/net/wireless
