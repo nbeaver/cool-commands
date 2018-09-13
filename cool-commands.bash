@@ -1366,6 +1366,7 @@ bg     # Put job in background, but let it keep running.
 # Note job number, or use
 jobs
 disown -h %1 # Detach job 1 from current terminal (%1 is the jobspec/job identifier)
+# -h : mark each JOBSPEC so that SIGHUP is not sent to the job if the shell receives a SIGHUP
 
 # Restart compiz from a terminal emulator
 # Note: Disown defaults to %1, so make sure you don't have any other jobs.
