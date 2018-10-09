@@ -6451,3 +6451,8 @@ cut -c 1-$COLUMNS
 # specifically, use it like this:
 watch "head -c $(($COLUMNS+9)) /dev/zero | tr '\0' '+' | cut -c 1-$COLUMNS"
 # https://stackoverflow.com/questions/1616404/cat-file-with-no-line-wrap
+
+# Show at the top of the screen right away with less.
+for i in $(seq 1 10); do printf '%s\n' "$i"; sleep 1; done | less -c
+for i in $(seq 1 10; do printf '%s\n' "$i"; sleep 1; done | less --clear-screen
+# /home/nathaniel/archive/2018/personal/src/shell/less-clear-screen-example/
