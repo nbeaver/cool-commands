@@ -6466,3 +6466,18 @@ for i in $(seq 1 10); do printf '%s\n' "$i"; sleep 1; done | less --clear-screen
 
 # Show task list every 2 seconds.
 watch 'task list | cut -c 1-80'
+
+# Indent a file by 4 spaces.
+sed 's/^/    /' example.py > example_indented.py
+
+# Indent every non-blank line by 4 spaces.
+sed 's/^.\+$/    &/' example.py > example_nonblank_indented.py
+# Explanation:
+# s     substitute
+# ^.\+$ non-blaink line
+#     & four spaces followed by matching line
+# https://www.gnu.org/software/sed/manual/html_node/The-_0022s_0022-Command.html
+
+# This will not work, because it puts a newline after the four spaces
+sed '/./i\    ' example.py
+# https://www.gnu.org/software/sed/manual/html_node/Other-Commands.html#index-i-_0028insert-text-lines_0029-command
