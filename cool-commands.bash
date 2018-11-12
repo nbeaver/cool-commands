@@ -32,8 +32,8 @@ find . -name '*.html'
 # Find all files with certain permissions.
 find . -perm 777
 find . -perm -g+s
-# http://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
-# http://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
+# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
+# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 
 # Show permissions of a directory.
 ls -ld /var/log
@@ -150,7 +150,7 @@ find | grep NBMAX *.F90
 # View error messages in less by redirecting stderr to stdout
 bash compile.sh 2>&1 | less
 bash compile.sh 2>&1 >/dev/null | less
-# http://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+# https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
 # Send stderr to text file
 bash env.sh 2> err_log.txt
 # Send stdout and stderr to text file
@@ -193,7 +193,7 @@ rename 's/Cu/C/' Te_Na2Cu2Te.*
 
 # From commandlinefu.com
 rename 'y/ /_/' * # replace spaces with underscores
-# http://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
+# https://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
 
 # Replace colons with dashes.
 rename 's/:/-/g' *
@@ -233,7 +233,7 @@ grep -iv '[aeiouy]' /usr/share/dict/words
 egrep -i "^[a-fA-F]+$" /usr/share/dict/words
 # https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Magic_debug_values
 # http://www.urbandictionary.com/define.php?term=0xDEADBEEF
-# http://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
+# https://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
 
 # words that end in "gry"
 grep -i '.*gry$' /usr/share/dict/words
@@ -388,8 +388,8 @@ wget -E -H -k -K -p url -e robots=off
 
 # Use wget, but reject some URLs/files from download.
 wget --recursive "http://groovebackup.com/?lang=en" --reject index.html?lang=de,index.html?lang=dk,index.html?lang=en,logout
-# http://stackoverflow.com/questions/10712344/mirror-http-website-excluding-certain-files
-# http://stackoverflow.com/questions/12704197/wget-reject-still-downloads-file
+# https://stackoverflow.com/questions/10712344/mirror-http-website-excluding-certain-files
+# https://stackoverflow.com/questions/12704197/wget-reject-still-downloads-file
 
 # Use wget to check for broken links in a local HTML file.
 cat file.html | wget --no-check-certificate --spider -nv -F -i -
@@ -666,7 +666,7 @@ id -Gn | grep -o '\bdialout\b'
 id -Gn | grep -wo 'dialout'
 grep dialout /etc/group | grep $USER
 grep lpadmin /etc/group | grep $USER
-# http://stackoverflow.com/questions/18431285/bash-check-if-a-user-is-in-a-group
+# https://stackoverflow.com/questions/18431285/bash-check-if-a-user-is-in-a-group
 
 # dialout is necessary for running e.g. Cura for 3d printing,
 # lpadmin is necessary for adding new printers,
@@ -678,8 +678,8 @@ sudo gpasswd --add $USER dialout
 sudo usermod --append --groups dialout,wireshark $USER
 # Note that if you are the user doing this,
 # it won't take effect until you logout and log back in again.
-# http://unix.stackexchange.com/questions/96343/how-to-take-effect-usermod-command-without-logout-and-login
-# http://superuser.com/questions/272061/reload-a-linux-users-group-assignments-without-logging-out
+# https://unix.stackexchange.com/questions/96343/how-to-take-effect-usermod-command-without-logout-and-login
+# https://superuser.com/questions/272061/reload-a-linux-users-group-assignments-without-logging-out
 # http://blog.edwards-research.com/2010/10/linux-refresh-group-membership-without-logging-out/
 exec su -l $USER
 newgrp dialout
@@ -845,8 +845,8 @@ tr -cd '\200-\377' < utf8.txt
 grep -nP '[^[:ascii:]]' --color=always myfile.txt | less -R
 # long flag version:
 grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less --RAW-CONTROL-CHARS
-# http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
-# http://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
+# https://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
+# https://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
 
 # Find python files with Unicode.
@@ -892,7 +892,7 @@ updmap --enable Map=tengwarscript.map
 system-config-printer
 # Use IPP (Internet Printing Protocol) if possible.
 # LPD, SMB, AppSocket/JetDirect also ok, but have reduced functionality.
-# http://askubuntu.com/questions/401119/should-i-set-up-my-cups-printing-to-use-ipp-lpd-or-url
+# https://askubuntu.com/questions/401119/should-i-set-up-my-cups-printing-to-use-ipp-lpd-or-url
 
 # decompress and unarchive a bzipped file
 tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
@@ -928,7 +928,7 @@ gunzip myfile.txt.gz # produces myfile.txt and removes myfile.txt.gz
 
 # Gzip a file without removing the original.
 gzip < file > file.gz
-# http://unix.stackexchange.com/a/58814
+# https://unix.stackexchange.com/questions/46786/how-to-tell-gzip-to-keep-original-file/58814#58814
 gzip -k -- file
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
 
@@ -952,7 +952,8 @@ patch -R < patch.txt
 
 # Find out what kind of files are in the current directory and its subdirectories.
 find . -type f -exec file '{}' \; | less
-# Reference: man find or https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
+# Reference: man find or
+# https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
 # https://stackoverflow.com/questions/20913198/why-are-the-backslash-and-semicolon-required-with-the-find-commands-exec-optio
 
 # Execute /usr/bin/file on every file and directory below current directory
@@ -964,7 +965,7 @@ find . -type l
 # Find broken symlinks in directories below
 find . -xtype l
 find /usr/ -xtype l
-# http://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
+# https://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
 
 # Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
@@ -1000,7 +1001,7 @@ find ./ -type d -empty -delete
 # Limit it to the current directory only.
 find . -maxdepth 1 -type d -empty
 
-# http://stackoverflow.com/questions/6085156/using-vs-with-exec-in-find
+# https://stackoverflow.com/questions/6085156/using-vs-with-exec-in-find
 find ./ -exec ls '{}' \;
 # ls file1
 # ls file2
@@ -1497,7 +1498,7 @@ nc -l -p 8000 -v
 
 # Check if port is open for e.g. SSH port.
 nc -vz localhost 9999
-# http://stackoverflow.com/a/24356001/1608986
+# https://stackoverflow.com/questions/1998297/ssh-check-if-a-tunnel-is-alive/24356001#24356001
 
 # After sshing in, any of these
 users
@@ -1644,7 +1645,7 @@ nohup redshift -l manual:41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v & disown
 # Note: don't let this conflict with the ~/.config/redshift.conf file.
 # Note: this will produce a nohup.out file. If you don't like it, use it this way:
 nohup redshift -l 41.9:-87.6 -t 5700:3600 -g 0.8 -m vidmode -v  2>/dev/null 1>/dev/null & disown
-# http://stackoverflow.com/questions/10408816/how-to-use-unix-command-nohup-without-nohup-out
+# https://stackoverflow.com/questions/10408816/how-to-use-unix-command-nohup-without-nohup-out
 
 # Using gpg for encryption
 gpg -c myfile.txt # Generates myfile.txt.gpg
@@ -2169,7 +2170,7 @@ cut -f 1 mytext.txt | tr '\n' ' ' | less
 cat in.tsv | tr '\t' ',' > out.csv
 
 # Simple file sharing
-# http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
+# https://web.archive.org/web/20111227004516/http://superuser.com/questions/108394/peer-to-peer-tool-for-file-transfer
 # (On sending machine:)
 # 1. Navigate to directory of choice.
 # 2. Run
@@ -2566,7 +2567,7 @@ atrm
 echo  "DISPLAY=$DISPLAY xmessage Go to bed\!" | at 22:30
 
 # Editing text file 'in place' (i.e. without having to make the temp file on your own)
-# http://unix.stackexchange.com/questions/11067/is-there-a-way-to-modify-a-file-in-place
+# https://unix.stackexchange.com/questions/11067/is-there-a-way-to-modify-a-file-in-place
 # Remove all lines containing foo:
 sed --in-place '/foo/d' myfile
 # Keep all lines containing foo but remove the lines that don't:
@@ -2587,7 +2588,7 @@ sed -i '1 s/^\xef\xbb\xbf//' *.txt
 
 # Add newline to a file if it doesn't have it already (idempotent).
 sed -i -e '$a\' file
-# http://unix.stackexchange.com/questions/31947/how-to-add-a-newline-to-the-end-of-a-file
+# https://unix.stackexchange.com/questions/31947/how-to-add-a-newline-to-the-end-of-a-file
 
 # Get a numbered list of headers in from the 1st line of a csv file.
 sed 's/,/\n/g;q' file.csv | nl
@@ -2688,11 +2689,11 @@ ALT-.
 ffmpeg -v 5 -i file.avi -f null -
 ffmpeg -loglevel 5 -i file.avi -f null -
 # Double video volume (256 is unchanged)
-# http://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
+# https://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
 ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
 # Split up video into segments
-# http://superuser.com/questions/31135/split-mpeg-video-from-command-line
-# http://unix.stackexchange.com/questions/1670/how-can-i-use-ffmpeg-to-split-mpeg-video-into-10-minute-chunks-for-youtube-uploa
+# https://superuser.com/questions/31135/split-mpeg-video-from-command-line
+# https://unix.stackexchange.com/questions/1670/how-can-i-use-ffmpeg-to-split-mpeg-video-into-10-minute-chunks-for-youtube-uploa
 ffmpeg -i source-file.foo -ss 0 -t 600 -c copy first-10-min.m4v
 ffmpeg -i source-file.foo -ss 600 -t 600 -c copy second-10-min.m4v
 ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 -c copy out1.mpg -ss
@@ -2792,7 +2793,7 @@ diff <(man chattr) <(man chmod)
 # Watch a file for changes
 tail -f myfile.log
 less +F myfile.log
-# http://serverfault.com/questions/445899/less-with-update-file-like-functionality
+# https://serverfault.com/questions/445899/less-with-update-file-like-functionality
 
 # See unique lines immediately.
 tail -f access.log | stdbuf -oL cut -d ' ' -f1 | uniq
@@ -2930,10 +2931,12 @@ env > myenv.txt
 # Run a script in that environment.
 env - $(cat myenv.txt) /path/to/myscript
 
-# Find symlinks to a file. From http://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
+# Find symlinks to a file. From here:
+# https://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
 find -L /haystack -xtype l -samefile name-of-file
 
-# Get a listed of sorted email addresses from a text file. From http://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
+# Get a listed of sorted email addresses from a text file. From 
+# https://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
 egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d '<,>' | sort | uniq > sorted-email-list.txt
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
 grep -Eio '([[:alnum:]_.-]+@[[:alnum:]_.-]+?\.[[:alpha:].]{2,6})'
@@ -3222,8 +3225,8 @@ rm -- -
 rm ./-
 unlink -
 # Difference between rm and unlink:
-# http://unix.stackexchange.com/questions/151951/what-is-the-difference-between-rm-and-unlink
-# http://serverfault.com/questions/38816/what-is-the-difference-between-unlink-and-rm
+# https://unix.stackexchange.com/questions/151951/what-is-the-difference-between-rm-and-unlink
+# https://serverfault.com/questions/38816/what-is-the-difference-between-unlink-and-rm
 
 # Remove all files without being goofed up by leading dashes.
 rm -- *
@@ -3277,14 +3280,15 @@ mv folder1 folder2
 # TODO: how is it different? What about this?
 mv folder1 folder2/
 
-# Move all but one of a file (http://stackoverflow.com/questions/670460/move-all-files-except-one)
+# Move all but one of a file
+# https://stackoverflow.com/questions/670460/move-all-files-except-one
 mv ~/Linux/Old/!(Tux.png) ~/Linux/New/
 
 # All files in /usr/share/applications/ that aren't desktop files.
 echo /usr/share/applications/!(*.desktop)
 
 # Get current beamline status at APS
-w3m http://www.aps.anl.gov/aod/blops/status/srStatus.html | grep "Operations Status"
+w3m 'http://www.aps.anl.gov/aod/blops/status/srStatus.html' | grep "Operations Status"
 
 # Insert all possible completions (readline completion trick)
 <Alt><Shift>8 # i.e. M-*
@@ -3462,7 +3466,7 @@ xclip -selection clipboard -t image/png -o > out.png
 # Requires xclip 81 or later.
 # Sometimes works with image/jpeg (acroread snapshots), sometimes not (gnuplot wxt).
 # Have not seen it work with image/tiff yet.
-# http://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
+# https://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
 # http://ubuntuforums.org/showthread.php?t=1335075
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5a413ea5-d4f0-46d9-b7c8-b7170a74b847.json
 
@@ -3515,7 +3519,7 @@ find -type f -printf '%T+ %p\n' | sort | head -n 1
 
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
-# http://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
+# https://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/2b0656bc-9ea5-466b-8734-dcc1570be067.json
 
 # Install from source, but turn it into a debian package first
@@ -3548,7 +3552,7 @@ du --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 # Sort human-based, e.g. 250MB, 10KB, etc.
 du -hd 1 ~ | sort -hr | less
 du --human --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
-# http://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
+# https://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/64c52fa6-cdde-4e8b-9671-1b74978cdc2c.json
 
 # Suspend the computer to RAM and wake up 60 seconds later
@@ -3604,8 +3608,8 @@ find .  -mindepth 1 -maxdepth 1 -name '.*' -type f
 # These don't work for hidden files like .a
 ls -d .??*
 echo .??*
-# http://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
-# http://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
+# https://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
+# https://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/924d5f3a-512b-4c0e-8219-6a47002d9014.json
 
 # Graphically change timezone
@@ -3633,7 +3637,8 @@ pdftk in.pdf cat 5-12 1-4 output out.pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B A15-end output manual.pdf
 # Insert pages in whatever order necessary into a pdf
 pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
-# Not sure if these work on an encrypted pdf: http://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
+# Not sure if these work on an encrypted pdf:
+# https://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
 
 # Combine/merge/join/concatenate pdf files together in numerical order of filename,
 # instead of alphanumeric order. Uses evil parsing of ls, which is a bad idea.
@@ -3777,7 +3782,8 @@ ls -l /proc/2720/fd
 # Launch printer stuff from command line
 system-config-printer
 
-# Add a red dot to the prompt, e.g. when recording; from here: https://news.ycombinator.com/item?id=6190600
+# Add a red dot to the prompt, e.g. when recording; from here:
+# https://news.ycombinator.com/item?id=6190600
 PS1=`printf "\033[1;31m\342\227\217\033[0m\\$ "` sh
 
 # Sort a file in place and guarantee uniqueness as well.
@@ -3928,7 +3934,8 @@ unicode -d 9559
 unicode -o 22527
 # Find all symbols with a description including 'dot' but not 'letter' using regular expressions.
 unicode --max 1000 --regex '^(?=.*dot)(?!.*letter).*'
-# source: http://stackoverflow.com/questions/8240765/is-there-a-regex-to-match-a-string-that-contains-a-but-does-not-contain-b
+# source:
+# https://stackoverflow.com/questions/8240765/is-there-a-regex-to-match-a-string-that-contains-a-but-does-not-contain-b
 # Using `ga` in vim gives hex, decimal, and octal, useful for searching unicode(1).
 # Using `g8` in vim gives UTF-8 representation, not useful for searching unicde (1).
 
@@ -4057,7 +4064,7 @@ cat file2 | sudo tee -a file1 > /dev/null
 # Only works in zsh.
 < file2 >> file1
 >> file1 < file2
-# http://stackoverflow.com/questions/4969641/append-one-file-to-another-in-linux
+# https://stackoverflow.com/questions/4969641/append-one-file-to-another-in-linux
 
 # find duplicate files (assuming that identical file size means they're the same)
 duff *
@@ -4114,7 +4121,7 @@ nameserver 176.58.120.112
 # Make a directory with the format yyyy-mm-dd of today's date
 mkdir $(date -I)
 # Note: the -I / --iso-8601 was deprecated until 2011-10-27.
-# http://unix.stackexchange.com/a/164834
+# https://unix.stackexchange.com/a/164834
 # https://unix.stackexchange.com/questions/164826/date-command-iso-8601-option
 # https://lists.gnu.org/archive/html/bug-coreutils/2006-01/msg00155.html
 
@@ -4153,7 +4160,7 @@ export DISPLAY=:0.0 && gdialog --msgbox "Test"
 # If you're not sure which screen someone is connected to, use `w`
 w
 # This will show e.g. :0 :1. The dot part is the (optional) screen number, if the X-server is using multiple screens.
-# http://unix.stackexchange.com/questions/17255/is-there-a-command-to-list-all-open-displays-on-a-machine
+# https://unix.stackexchange.com/questions/17255/is-there-a-command-to-list-all-open-displays-on-a-machine
 # You can also do obnoxious things like make the window bigger and add Pango markup to change font size and color.
 zenity --warning --width=400 --height=400 --text='<span font="32" color="red">Look out!</span>'
 
@@ -4251,9 +4258,9 @@ Ctrl-Shift-U 2082 <Enter> # Insert ₂ 
 Ctrl-Shift-U ae   <Enter> # Insert ® (registered trademark sign)
 
 # Using zsync for downloads
-zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync
+zsync 'http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync'
 # Do not do this! It will download the entire iso and then tell you "Bad line - not a zsync file?"
-zsync http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso
+zsync 'http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso'
 
 # Using the venerable bc command
 echo '1 + 2' | bc
@@ -4262,10 +4269,10 @@ echo '1 2 + p' | dc
 
 # A simple stopwatch; press Ctrl-C or Ctrl-D to end.
 time cat
-# http://lifehacker.com/285093/turn-the-terminal-into-a-stopwatch-with-time-cat
+# https://lifehacker.com/285093/turn-the-terminal-into-a-stopwatch-with-time-cat
 # An even simpler stopwatch; press enter or Ctrl-D to end
 time read
-# http://www.commandlinefu.com/commands/view/1567/a-very-simple-and-useful-stopwatch
+# https://www.commandlinefu.com/commands/view/1567/a-very-simple-and-useful-stopwatch
 # Press any key to stop the watch
 time read -sn1
 # A stopwatch that counts up the seconds until it's stopped.
@@ -4297,7 +4304,7 @@ pocketsphinx_continuous -infile file.wav > file.txt
 
 # Concatenate / combine mp3s files.
 ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy output.mp3
-# http://superuser.com/questions/314239/how-to-join-merge-many-mp3-files#314245
+# https://superuser.com/questions/314239/how-to-join-merge-many-mp3-files#314245
 
 # Gnuplot png output
 set term png # or pngcairo
@@ -4318,7 +4325,7 @@ apt-get install apt-listbugs
 cp /etc/apt/preferences.d/apt-listbugs ~/tmp/
 # Next, write to the file.
 # We have to use tee to have the permissions to write to the file.
-# http://stackoverflow.com/questions/16573888/redirect-output-to-a-file-permission-denied
+# https://stackoverflow.com/questions/16573888/redirect-output-to-a-file-permission-denied
 /usr/share/apt-listbugs/aptcleanup | sudo tee /etc/apt/preferences.d/apt-listbugs
 # Note that this will take a long time, almost thirty seconds in my case.
 # real	0m22.681s
@@ -4338,12 +4345,12 @@ identify *.jpg
 # Use imagemagick to get even more metadata.
 identify -verbose *.jpg
 # http://xahlee.info/img/metadata_in_image_files.html
-# http://superuser.com/questions/219642/what-software-can-i-use-to-read-png-metadata
+# https://superuser.com/questions/219642/what-software-can-i-use-to-read-png-metadata
 
 # Use imagemagick to combine/stitch/concatenate/append two images together, top to bottom.
 convert in1.png in2.png -append out.png
 # http://www.imagemagick.org/Usage/layers/
-# http://superuser.com/questions/290656/combine-multiple-images-using-imagemagick
+# https://superuser.com/questions/290656/combine-multiple-images-using-imagemagick
 
 # Use imagemagick to combine/stitch/concatenate/append two images together, left to right.
 convert in1.png in2.png +append out.png
@@ -4361,8 +4368,8 @@ convert file.pdf[0] file.png
 
 # Add a white background to first page of pdf instead of being transparent.
 convert -background white -flatten file.pdf[0] file.png
-# http://stackoverflow.com/questions/22994313/imagemagick-convert-pdf-with-transparency-to-jpg
-# http://tex.stackexchange.com/questions/64505/how-to-make-each-pdf-page-of-a-beamer-output-have-an-opaque-background-when-it-i
+# https://stackoverflow.com/questions/22994313/imagemagick-convert-pdf-with-transparency-to-jpg
+# https://tex.stackexchange.com/questions/64505/how-to-make-each-pdf-page-of-a-beamer-output-have-an-opaque-background-when-it-i
 
 # Trim excess border of a uniform color.
 convert -trim image.png image-trimmed.png
@@ -6454,5 +6461,8 @@ watch "head -c $(($COLUMNS+9)) /dev/zero | tr '\0' '+' | cut -c 1-$COLUMNS"
 
 # Show at the top of the screen right away with less.
 for i in $(seq 1 10); do printf '%s\n' "$i"; sleep 1; done | less -c
-for i in $(seq 1 10; do printf '%s\n' "$i"; sleep 1; done | less --clear-screen
+for i in $(seq 1 10); do printf '%s\n' "$i"; sleep 1; done | less --clear-screen
 # /home/nathaniel/archive/2018/personal/src/shell/less-clear-screen-example/
+
+# Show task list every 2 seconds.
+watch 'task list | cut -c 1-80'
