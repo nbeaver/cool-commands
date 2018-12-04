@@ -6481,3 +6481,6 @@ sed 's/^.\+$/    &/' example.py > example_nonblank_indented.py
 # This will not work, because it puts a newline after the four spaces
 sed '/./i\    ' example.py
 # https://www.gnu.org/software/sed/manual/html_node/Other-Commands.html#index-i-_0028insert-text-lines_0029-command
+
+# See distribution of OOM killer scores.
+cat /proc/*/oom_score | maphimbu -g 1
