@@ -1057,8 +1057,15 @@ rsync --archive --ignore-existing --progress --dry-run '/path/to/source/' '/path
 
 # Rsync local directory to another local directory (like cp, but shows progress and only sends deltas)
 rsync --recursive --progress --partial /origin/path /target/path
+# For rsync 3.1.0 / protocol 31 and later.
+rsync --recursive --partial --info=progress2 /origin/path /target/path
+# https://serverfault.com/questions/219013/showing-total-progress-in-rsync-is-it-possible
+
 # If you care about things like permissions, modification times, and symlinks:
-rsync --recursive --progress --partial --archive /origin/path /target/path
+rsync --archive --progress --partial /origin/path /target/path
+# or
+rsync --archive --info=progress2 --partial /origin/path /target/path
+
 # If you want to see the differences between all the files and how much data was transferred.
 rsync --itemize-changes --verbose --recursive --progress --partial --archive /origin/path /target/path
 # If you are e.g. copying large files and want to use a checksum rather than the (much faster) heuristic of size and modification time.
@@ -1314,6 +1321,22 @@ sudo file -s /dev/sdb
 sudo qemu-system-x86_64 -hda /dev/sdb
 
 isoinfo -d -i /dev/cdrom
+# CD-ROM is in ISO 9660 format
+# System id: 
+# Volume id: QSS_CD
+# Volume set id: 
+# Publisher id: 
+# Data preparer id: 
+# Application id: 
+# Copyright File id: 
+# Abstract File id: 
+# Bibliographic File id: 
+# Volume set size is: 1
+# Volume set sequence number is: 1
+# Logical block size is: 2048
+# Volume size is: 40271
+# Joliet with UCS level 3 found
+# NO Rock Ridge present
 
 # Copy an ISO to a USB flash drive on /dev/sdg
 umount /media/usb
@@ -1965,6 +1988,18 @@ dpkg --vextract
 ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i :0.0 output.mkv
 ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY output.mkv
+
+# Stop after 30 seconds.
+ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY -t 30 output.mkv
+# https://askubuntu.com/questions/436956/stop-the-recording-after-some-period-of-time
+# https://ffmpeg.org/ffmpeg-utils.html#Time-duration
+# Wait 5 seconds, then start.
+sleep 5; ffmpeg -f x11grab -s 1600x900 -r 25 -i $DISPLAY -t 30 output.mkv
+
+# Make a silent screencast that lasts 30 seconds.
+sleep 5; timeout 30s recordmydesktop --no-sound -o example.ogv
+# This is nicer than ffmpeg because it shows a screen overlay
+# so you know when it's started and when it's done.
 
 xdpyinfo | grep 'dimensions:' | awk '{print $2}'
 xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
@@ -3167,6 +3202,8 @@ aptitude search -F %p '?provides(awk)'
 
 # Solution:
 aptitude search -F %p '?provides(^awk$)'
+
+aptitude search -F %p '?provides(^x-window-manager$)'
 
 
 grep-available -F Provides -s Package awk
@@ -6484,3 +6521,4 @@ sed '/./i\    ' example.py
 
 # See distribution of OOM killer scores.
 cat /proc/*/oom_score | maphimbu -g 1
+
