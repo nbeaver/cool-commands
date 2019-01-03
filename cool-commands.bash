@@ -6061,11 +6061,17 @@ printf 'α β γ δ' | python -c 'import sys; import json; json.dump(sys.stdin.r
 # Check that all UUIDs are version 4.
 ls * | cut -c 15 | uniq | grep -v '4'
 
-# Creat a 10 megabyte file.
+# Create a 10 megabyte file.
 head -c 10MB /dev/zero > bigfile
 # Random bytes instead of null bytes.
 head -c 10MB /dev/urandom > bigfile
 
+# Create a 10GB file.
+dd if=/dev/zero of=./gentoo_root.img bs=4k iflag=fullblock,count_bytes count=10G
+fallocate -l 10G gentoo_root.img
+truncate -s 10G gentoo_root.img
+# https://stackoverflow.com/questions/257844/quickly-create-a-large-file-on-a-linux-system
+# https://stackoverflow.com/questions/139261/how-to-create-a-file-with-a-given-size-in-linux
 
 SpiderOakONE --userinfo
 # nbeaver @ thinkpad-april-2016 on posix/linux2 (encoding utf_8) (Device #5)
