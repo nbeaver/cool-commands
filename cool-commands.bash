@@ -2013,6 +2013,9 @@ xrandr | grep '*' | awk '{print $1}'
 
 # Find 'Howe' but not 'However'
 grep -P '(?!.*However)Howe' -r .
+# https://unix.stackexchange.com/questions/96480/with-grep-how-can-i-match-a-pattern-and-invert-match-another-pattern
+# https://stackoverflow.com/questions/4538253/how-can-i-exclude-one-word-with-grep 
+# https://perldoc.perl.org/perlre.html#Regular-Expressions
 # TODO: can this be done without Perl regular expressions?
 printf 'However\nHowe\nhowe\nHowey\n' | grep -P '(?!.*However)Howe'
 # Use silver searcher to do the same thing.
