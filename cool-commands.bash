@@ -1567,6 +1567,12 @@ vim --startuptime $(tempfile) ~/path/to/file/to/edit
 
 # On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
 Ctrl-X Ctrl-E
+# edit-and-execute-command (C-x C-e)
+# Invoke an editor on the current command line, and execute the result as shell
+# commands. Bash attempts to invoke $VISUAL, $EDITOR, and emacs as the editor,
+# in that order.
+# https://www.gnu.org/software/bash/manual/html_node/Miscellaneous-Commands.html
+
 # On bash command line, cut word before cursor
 Ctrl-W
 # On bash command line, cut word after cursor
@@ -2004,6 +2010,13 @@ sleep 5; timeout 30s recordmydesktop --no-sound -o example.ogv
 xdpyinfo | grep 'dimensions:' | awk '{print $2}'
 xrandr | grep -P '\d+x\d+ .*\*' | awk '{print $1}'
 xrandr | grep '*' | awk '{print $1}'
+
+# Find 'Howe' but not 'However'
+grep -P '(?!.*However)Howe' -r .
+# TODO: can this be done without Perl regular expressions?
+printf 'However\nHowe\nhowe\nHowey\n' | grep -P '(?!.*However)Howe'
+# Use silver searcher to do the same thing.
+ag '(?!.*However)Howe'
 
 # See programs using the Internet.
 lsof -i -P | less
