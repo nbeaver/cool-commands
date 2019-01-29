@@ -1,4 +1,4 @@
-#! /usr/bin/env false
+! /usr/bin/env false
 # Prevent this file from being run as a shell script.
 exit 1
 
@@ -292,6 +292,9 @@ apt-cache search my-package # search apt packages for 'my-package', case insensi
 # For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
 apt-cache search --names-only '^gnash$'
 
+# For when you only want to see 'mc', not '*mc*'
+apt-cache search --names-only '^mc$'
+
 # Find package descriptions that are longer than 4000 characters.
 apt-cache search '.{4000,}'
 
@@ -314,6 +317,11 @@ find . -type d -name '.git' -print -execdir git --git-dir={} fsck \;
 
 # Example of fsck on a borked drive.
 fsck -y /dev/sda
+
+# On a USB flash drive.
+sudo fsck /dev/sdb
+# https://superuser.com/questions/418053/i-tell-fsck-to-fix-usb-stick-it-says-leaving-file-system-unchanged
+# https://serverfault.com/questions/571458/unable-to-resolve-data-corruption-warning-with-fsck
 
 # When running in the (initramfs) prompt using the ash shell:
 fsck -y /dev/sda1 && exit
@@ -802,6 +810,16 @@ VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
 
 sudo pm-suspend # manually sleep
+# Might need to install it first:
+# sudo apt install pm-utils
+
+pmi suspend
+# sudo apt install powermanagement-interface
+# https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line
+
+# Use systemd
+systemctl suspend
+# https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line
 
 apt-cache showpkg xserver-xorg-input-synaptics
 # Use synaptic to downgrade and lock
@@ -1210,7 +1228,7 @@ smartctl --info /dev/sda
 
 # Run SMART test.
 sudo smartctl -t long /dev/sda
-#[sudo] password for nathaniel: 
+#[sudo] password for nathaniel:
 #smartctl 6.6 2016-05-31 r4324 [x86_64-linux-4.15.0-23-generic] (local build)
 #Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
 #
@@ -1322,15 +1340,15 @@ sudo qemu-system-x86_64 -hda /dev/sdb
 
 isoinfo -d -i /dev/cdrom
 # CD-ROM is in ISO 9660 format
-# System id: 
+# System id:
 # Volume id: QSS_CD
-# Volume set id: 
-# Publisher id: 
-# Data preparer id: 
-# Application id: 
-# Copyright File id: 
-# Abstract File id: 
-# Bibliographic File id: 
+# Volume set id:
+# Publisher id:
+# Data preparer id:
+# Application id:
+# Copyright File id:
+# Abstract File id:
+# Bibliographic File id:
 # Volume set size is: 1
 # Volume set sequence number is: 1
 # Logical block size is: 2048
@@ -1347,6 +1365,18 @@ sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg && sync
 # Beware, this cannot be interrupted, even with kill -9.
 # https://www.debian.org/CD/faq/#write-usb
 # https://unix.stackexchange.com/questions/360693/how-does-copying-the-debian-iso-directly-to-a-usb-drive-work
+
+umount /media/nathaniel/SIMMAX
+# > Error unmounting block device 8:16: GDBus.Error:org.freedesktop.UDisks2.Error.DeviceBusy: Error unmounting /dev/sdb: target is busy
+# Can also do umount /dev/sdb, but this is deprecated
+# man:umount(8)
+# > A file system is specified by giving the directory where it has been mounted.
+# > Giving the special device on which the file system lives may also work, but
+# > is obsolete, mainly because it will fail in case this device was mounted on
+# > more  than one directory.
+# > Note that a file system cannot be unmounted when it is 'busy' - for
+# > example, when there are open files on it, or when some process has its
+# > working directory there, or when a swap file on it is in use.
 
 # Restart the gui for ubuntu
 unity-2d-shell --reset
@@ -2014,7 +2044,7 @@ xrandr | grep '*' | awk '{print $1}'
 # Find 'Howe' but not 'However'
 grep -P '(?!.*However)Howe' -r .
 # https://unix.stackexchange.com/questions/96480/with-grep-how-can-i-match-a-pattern-and-invert-match-another-pattern
-# https://stackoverflow.com/questions/4538253/how-can-i-exclude-one-word-with-grep 
+# https://stackoverflow.com/questions/4538253/how-can-i-exclude-one-word-with-grep
 # https://perldoc.perl.org/perlre.html#Regular-Expressions
 # TODO: can this be done without Perl regular expressions?
 printf 'However\nHowe\nhowe\nHowey\n' | grep -P '(?!.*However)Howe'
@@ -2535,6 +2565,8 @@ iostat -xkdz 1
 
 # Show mounted drives in near little table
 mount | column -t
+# Pipe to less for easier reading.
+mount | column -t | less -S
 
 # Show packages and Debian version numbers in neat columsn.
 dpkg-query --show | column -t | less
@@ -2939,9 +2971,11 @@ xdpyinfo | grep 'name of display:'
 echo $DISPLAY
 
 # Suspend the bash shell
+# https://unix.stackexchange.com/questions/364401/what-is-the-purpose-of-the-bash-suspend-builtin-command
 suspend
 # Oh my goodness! How do I get it back?
 ps aux | grep bash | less
+ps aux | grep 'Ts+' | less
 # We want this one:
 1000     11004  0.0  0.1  10172  6552 pts/2    Ts+  15:01   0:00 /bin/bash
 # 'kill' the process (actually bring it back to life):
@@ -2986,7 +3020,7 @@ env - $(cat myenv.txt) /path/to/myscript
 # https://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
 find -L /haystack -xtype l -samefile name-of-file
 
-# Get a listed of sorted email addresses from a text file. From 
+# Get a listed of sorted email addresses from a text file. From
 # https://stackoverflow.com/questions/2898463/using-grep-to-find-all-emails
 egrep -o "[^[:space:]]+@[^[:space:]]+" raw.txt | tr -d '<,>' | sort | uniq > sorted-email-list.txt
 # This looks good, too: http://www.commandlinefu.com/commands/view/4118/extract-email-adresses-from-some-file-or-any-other-pattern
@@ -3256,6 +3290,17 @@ namei "$(which awk)"
 #      d usr
 #      d bin
 #      - gawk
+
+namei /etc/mtab
+#f: /etc/mtab
+# d /
+# d etc
+# l mtab -> ../proc/self/mounts
+#   d ..
+#   d proc
+#   l self -> 8283
+#     d 8283
+#   - mounts
 
 # Show network connections from the command line
 nmcli device status
@@ -4518,7 +4563,11 @@ svn revert file.txt
 xbacklight -set 100
 # See current brightness
 xbacklight -get
+
 cat /sys/class/backlight/intel_backlight/actual_brightness
+# Forcibly set it to max brightness.
+sudo tee /sys/class/backlight/intel_backlight/brightness < /sys/class/backlight/intel_backlight/max_brightness
+sudo tee /sys/class/backlight/acpi_video0/brightness < /sys/class/backlight/acpi_video0/max_brightness
 
 # gnuplot command we typically use at the beamline
 gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
@@ -4965,7 +5014,7 @@ retext file.rst
 
 # TODO: figure out order of commands for:
 sudo nohup time nice
-http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
+# http://stackoverflow.com/questions/350381/sudo-nohup-nice-in-what-order
 
 # Show a spinning icosahedron.
 ico -faces -sleep 0.05
@@ -5482,6 +5531,10 @@ column -s, -t file.csv
 # https://www.reddit.com/r/bash/comments/37cb9v/favorite_shell_tricks/
 column -s , -t current_calculations.csv | less
 
+# For TSV files.
+column -t -s $'\t' myfile.tsv
+# https://unix.stackexchange.com/questions/7698/command-to-layout-tab-separated-list-nicely
+
 # Install python packages the safe way (or at least safer).
 pip install --user matplotlib
 # Not this:
@@ -5590,6 +5643,7 @@ bind -P | grep line
 # https://www.gnu.org/software/coreutils/manual/html_node/Characters.html
 # http://manpages.ubuntu.com/manpages/precise/en/man3/termios.3.html
 # https://www.quora.com/What-are-all-of-the-keyboard-shortcuts-for-sending-signals-from-the-shell?share=1
+# https://superuser.com/questions/343031/sigterm-with-a-keyboard-shortcut
 stty --all
 stty -a
 # speed 38400 baud; rows 21; columns 159; line = 0;
@@ -5679,7 +5733,7 @@ mimetype -LM * | sort -k 2 | less
 xdg-mime default Thunar.desktop x-scheme-handler/ftp
 
 # Get default PDF reader.
-xdg-mime query default application/pdf 
+xdg-mime query default application/pdf
 
 # Trace the file that gives the mimetype association.
 XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default application/pdf
@@ -6256,7 +6310,7 @@ sysctl kernel.dmesg_restrict=0
 make
 make install
 
-update-desktop-database ~/.local/share/applications/ 
+update-desktop-database ~/.local/share/applications/
 
 # Get size of log files.
 locate '*.log' --null | du --files0-from=- | less
@@ -6464,13 +6518,13 @@ shatag -l | grep '\[31;1m'
 lsblk -f
 # Example output:
 # NAME   FSTYPE LABEL          UUID                                 MOUNTPOINT
-# sda                                                               
+# sda
 # ├─sda1 ext4                  0f650fbc-1ff4-4f24-8fa9-63dbcc1269fc /
-# ├─sda2                                                            
-# └─sda5 swap                  acc8416d-4167-43d9-8b8e-0e28182fbf3f 
-# sdb                                                               
-# └─sdb1 ext4   hgst-tb-backup 47bf6ced-03fe-4086-90c7-5d71c57979dd 
-# sr0                                                               
+# ├─sda2
+# └─sda5 swap                  acc8416d-4167-43d9-8b8e-0e28182fbf3f
+# sdb
+# └─sdb1 ext4   hgst-tb-backup 47bf6ced-03fe-4086-90c7-5d71c57979dd
+# sr0
 
 # Look at repo status, but only recurse one level down.
 mr -q -n 1 status
@@ -6544,3 +6598,18 @@ sed '/./i\    ' example.py
 # See distribution of OOM killer scores.
 cat /proc/*/oom_score | maphimbu -g 1
 
+# Show structure of timezone data file.
+zdump -v /etc/localtime
+# https://askubuntu.com/questions/31842/how-to-read-time-zone-information
+
+# Example of showing where a symlink terminates.
+realpath /etc/mtab
+# /proc/8289/mounts
+
+# Do a long search without disrupting other applications.
+nice -n 19 ionice -c 3 ag -l mysearchstring ~/path/to/file/ | less -c
+nice -n 19 ionice -c 3 ag -G '.*\.py$' -l 'import nltk' ~/src/ | less -c
+
+# Check terminal color scheme.
+msgcat --color=test
+# https://www.gnu.org/software/gettext/manual/html_node/The-TERM-variable.html
