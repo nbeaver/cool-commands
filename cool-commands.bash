@@ -326,6 +326,10 @@ sudo fsck /dev/sdb
 # When running in the (initramfs) prompt using the ash shell:
 fsck -y /dev/sda1 && exit
 
+# Find all files not in a git repository and print the name.
+find . -name '.git' -prune -o -type f -print | less -c
+# https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
+# https://unix.stackexchange.com/questions/109900/find-prune-does-not-ignore-specified-path
 # Find all files not in a git repository and run `wc -l` on them.
 find . -name '*.git' -prune -o -type f -exec 'wc' '-l' '{}' \+
 # -o means 'or', so either prune '*.git' or if they are files (not directories) run wc -l filename on them.
@@ -6613,3 +6617,10 @@ nice -n 19 ionice -c 3 ag -G '.*\.py$' -l 'import nltk' ~/src/ | less -c
 # Check terminal color scheme.
 msgcat --color=test
 # https://www.gnu.org/software/gettext/manual/html_node/The-TERM-variable.html
+
+DISPLAY=:0 kwin --replace
+# https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
+
+# Show extended attributes of a file.
+getfattr -d -m ".*" /path/to/file
+# https://superuser.com/questions/858210/can-you-show-list-all-extended-attributes-and-how
