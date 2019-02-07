@@ -6624,3 +6624,4 @@ DISPLAY=:0 kwin --replace
 # Show extended attributes of a file.
 getfattr -d -m ".*" /path/to/file
 # https://superuser.com/questions/858210/can-you-show-list-all-extended-attributes-and-how
+# https://unix.stackexchange.com/questions/300168/how-do-i-get-a-dump-of-all-extended-attributes-for-a-file
