@@ -6625,3 +6625,7 @@ DISPLAY=:0 kwin --replace
 getfattr -d -m ".*" /path/to/file
 # https://superuser.com/questions/858210/can-you-show-list-all-extended-attributes-and-how
 # https://unix.stackexchange.com/questions/300168/how-do-i-get-a-dump-of-all-extended-attributes-for-a-file
+
+# Add .gitignore files to empty directories so git can track them.
+find . -name .git -prune -o -type d -empty -exec touch {}/.gitignore \;
+# https://stackoverflow.com/questions/115983/how-can-i-add-an-empty-directory-to-a-git-repository/29884569#29884569
