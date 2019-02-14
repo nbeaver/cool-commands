@@ -6629,3 +6629,16 @@ getfattr -d -m ".*" /path/to/file
 # Add .gitignore files to empty directories so git can track them.
 find . -name .git -prune -o -type d -empty -exec touch {}/.gitignore \;
 # https://stackoverflow.com/questions/115983/how-can-i-add-an-empty-directory-to-a-git-repository/29884569#29884569
+
+xapian-delve ~/.recoll/xapiandb/
+# UUID = 60c1ac4d-7d69-498f-b06b-2917ab6d8184
+# number of documents = 84333
+# average document length = 7304.52
+# document length lower bound = 17
+# document length upper bound = 2062714
+# highest document id ever used = 89057
+# has positional information = true
+# currently open for writing = false
+# https://xapian.org/docs/admin_notes.html#inspecting-a-database
+# https://getting-started-with-xapian.readthedocs.io/en/latest/practical_example/indexing/verifying_the_index.html
+xapian-delve -1 -A Q/home/nathaniel/path/to/file/ ~/.recoll/xapiandb/
