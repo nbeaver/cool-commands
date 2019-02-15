@@ -2387,6 +2387,9 @@ find . -type f | wc -l
 # Ignore hidden files and files in hidden directories.
 find . -type f -not -path '*/\.*' | wc -l
 
+# Find filenames without a period in them.
+find . -type f -not -name '*\.*' | less
+
 # Set up an ad-hoc wireless network between two linux machines
 # http://unixlab.blogspot.com/2010/01/setting-up-ad-hoc-wireless-network.html
 # On machine A
@@ -6642,3 +6645,22 @@ xapian-delve ~/.recoll/xapiandb/
 # https://xapian.org/docs/admin_notes.html#inspecting-a-database
 # https://getting-started-with-xapian.readthedocs.io/en/latest/practical_example/indexing/verifying_the_index.html
 xapian-delve -1 -A Q/home/nathaniel/path/to/file/ ~/.recoll/xapiandb/
+
+# Check if /tmp/ is tmpfs or not.
+df -T /tmp
+# Filesystem     Type 1K-blocks      Used Available Use% Mounted on
+# /dev/sda2      ext4 959863856 569432724 341602924  63% /
+# https://unix.stackexchange.com/questions/118471/how-can-i-check-to-see-if-the-tmp-directory-on-my-centos-5-x-system-is-mounted
+
+# Another example:
+df -T /run/user/$UID/systemd/
+# Filesystem     Type  1K-blocks  Used Available Use% Mounted on
+# tmpfs          tmpfs   1630560   120   1630440   1% /run/user/1000
+
+# Check if /tmp/ is tmpfs or not.
+stat -f /tmp
+#  File: "/tmp"
+#    ID: f4fafbe673c2d070 Namelen: 255     Type: ext2/ext3
+#Block size: 4096       Fundamental block size: 4096
+#Blocks: Total: 239965964  Free: 97607780   Available: 85400728
+#Inodes: Total: 61022208   Free: 58655435
