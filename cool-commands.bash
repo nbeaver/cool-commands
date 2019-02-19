@@ -2296,6 +2296,9 @@ apt-get -b source <package-name>
 # apt-get --build source <package-name>
 # apt-get --compile source <package-name>
 
+# TODO: does this work?
+DEB_BUILD_OPTIONS=nostrip,noopt apt-get source -b <package-name>
+
 # If you have the sources from other repos available,
 # you can download and try to build those instead.
 apt-get -b source zotero-standalone/unstable
