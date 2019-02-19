@@ -6667,3 +6667,7 @@ stat -f /tmp
 #Block size: 4096       Fundamental block size: 4096
 #Blocks: Total: 239965964  Free: 97607780   Available: 85400728
 #Inodes: Total: 61022208   Free: 58655435
+
+# Dereference a symlink and turn it into a copy of the target.
+cp --remove-destination source-file.txt copy-of-file.txt
+# https://stackoverflow.com/questions/9371222/cp-command-to-overwrite-the-destination-file-which-is-a-symbolic-link
