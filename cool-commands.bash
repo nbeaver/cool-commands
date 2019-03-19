@@ -1594,6 +1594,8 @@ vim + myfile.txt
 
 # Edit stdin in vim
 vim -
+# Slower method:
+echo 'hi' | vim /dev/stdin
 
 # Time a slow start-up.
 vim --startuptime vim.log ~/path/to/file/to/edit
@@ -1644,6 +1646,9 @@ Alt-Shift-.
 # Remove spaces and duplicate lines
 cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
 sudo grep -r helper /var/log/
+
+# Why sort | uniq, not sort -u? Because of unexpected behavior:
+# https://www.solipsys.co.uk/new/UnexpectedInteractionOfFeatures.html?sb17h
 
 # Latex build for Bibtex
 pdflatex -synctex=1 -interaction=nonstopmode %.tex|bibtex %.aux|pdflatex -synctex=1 -interaction=nonstopmode %.tex|evince %.pdf
@@ -3265,6 +3270,11 @@ aptitude search -F %p '?provides(^awk$)'
 
 aptitude search -F %p '?provides(^x-window-manager$)'
 
+# Alternative with apt-cache, though it includes names, too:
+apt-cache search --names-only '^awk$'
+# gawk - GNU awk, a pattern scanning and processing language
+# mawk - a pattern scanning and text processing language
+# original-awk - The original awk described in "The AWK Programming Language"
 
 grep-available -F Provides -s Package awk
 # Package: original-awk
@@ -3272,6 +3282,7 @@ grep-available -F Provides -s Package awk
 # Package: gawk
 # Package: python-tomahawk
 
+apt-cache search --names-only x-terminal-emulator
 
 update-alternatives --display awk
 # awk - auto mode
@@ -6671,3 +6682,9 @@ stat -f /tmp
 # Dereference a symlink and turn it into a copy of the target.
 cp --remove-destination source-file.txt copy-of-file.txt
 # https://stackoverflow.com/questions/9371222/cp-command-to-overwrite-the-destination-file-which-is-a-symbolic-link
+
+# Make a copy of a symbolic link.
+cp -P mylink mylink-copy
+
+# Find the process running on localhost:8384
+lsof -iTCP:8384 -sTCP:LISTEN
