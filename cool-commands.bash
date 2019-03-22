@@ -6688,3 +6688,7 @@ cp -P mylink mylink-copy
 
 # Find the process running on localhost:8384
 lsof -iTCP:8384 -sTCP:LISTEN
+
+# List all .desktop files with a line containing the string 'URL=http',
+# skipping directories that match the pattern '*.git'
+grep -r -l --include='*.desktop' --exclude-dir='*.git' 'URL=http'
