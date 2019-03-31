@@ -32,8 +32,13 @@ find . -name '*.html'
 # Find all files with certain permissions.
 find . -perm 777
 find . -perm -g+s
+find . -perm -a+rwx
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
+# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
+# Skip symbolic links.
+find . \! -type l -perm 777
+find . '!' -type l -perm 777
 
 # Show permissions of a directory.
 ls -ld /var/log
@@ -6635,7 +6640,10 @@ nice -n 19 ionice -c 3 ag -G '.*\.py$' -l 'import nltk' ~/src/ | less -c
 msgcat --color=test
 # https://www.gnu.org/software/gettext/manual/html_node/The-TERM-variable.html
 
-DISPLAY=:0 kwin --replace
+DISPLAY=:0 kwin --replace & disown
+# https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
+
+plasmashell & disown disown
 # https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
 
 # Show extended attributes of a file.
@@ -6666,7 +6674,7 @@ df -T /tmp
 # /dev/sda2      ext4 959863856 569432724 341602924  63% /
 # https://unix.stackexchange.com/questions/118471/how-can-i-check-to-see-if-the-tmp-directory-on-my-centos-5-x-system-is-mounted
 
-# Another example:
+# Contrast with something that is mounted as tmpfs:
 df -T /run/user/$UID/systemd/
 # Filesystem     Type  1K-blocks  Used Available Use% Mounted on
 # tmpfs          tmpfs   1630560   120   1630440   1% /run/user/1000
@@ -6678,6 +6686,25 @@ stat -f /tmp
 #Block size: 4096       Fundamental block size: 4096
 #Blocks: Total: 239965964  Free: 97607780   Available: 85400728
 #Inodes: Total: 61022208   Free: 58655435
+
+stat -f /run/user/$UID/systemd/
+#  File: "/run/user/1000/systemd/"
+#    ID: 0        Namelen: 255     Type: tmpfs
+#Block size: 4096       Fundamental block size: 4096
+#Blocks: Total: 407640     Free: 407626     Available: 407626
+#Inodes: Total: 2038203    Free: 2038147
+#/run/user/$UID/systemd/
+
+# Another way to check if /tmp/ is tmpfs or not.
+findmnt -T /tmp
+#TARGET SOURCE    FSTYPE OPTIONS
+#/      /dev/sda2 ext4   rw,relatime,errors=remount-ro,data=ordered
+
+# https://unix.stackexchange.com/questions/149660/mount-info-for-current-directory
+findmnt -T /run/user/$UID/systemd/
+#TARGET         SOURCE FSTYPE OPTIONS
+#/run/user/1000 tmpfs  tmpfs  rw,nosuid,nodev,relatime,size=1630560k,mode=700,uid=1000,gid=1000
+
 
 # Dereference a symlink and turn it into a copy of the target.
 cp --remove-destination source-file.txt copy-of-file.txt
@@ -6692,3 +6719,11 @@ lsof -iTCP:8384 -sTCP:LISTEN
 # List all .desktop files with a line containing the string 'URL=http',
 # skipping directories that match the pattern '*.git'
 grep -r -l --include='*.desktop' --exclude-dir='*.git' 'URL=http'
+
+# Look at some recent errors without repeats.
+journalctl -o cat | grep -i error | uniq | less +G
+
+# Setting environment variables in pipelines:
+DEBUG=1 printenv DEBUG # works
+true | DEBUG=1 printenv DEBUG # works
+DEBUG=1 true | printenv DEBUG # doesn't work
