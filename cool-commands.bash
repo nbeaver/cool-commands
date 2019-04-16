@@ -5352,6 +5352,10 @@ bts bugs horae
 # Use gnome indexing software.
 tracker-search
 
+# Delete the tracker database.
+tracker reset --hard
+# https://askubuntu.com/questions/346211/tracker-store-and-tracker-miner-fs-eating-up-my-cpu-on-every-startup?noredirect=1
+
 # See all the packages implemented in the Lisp programming language.
 debtags search "implemented-in::lisp"
 axi-cache search --all implemented-in::lisp
