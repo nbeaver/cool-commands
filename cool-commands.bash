@@ -463,8 +463,10 @@ wget -U firefox http://www.wideislandview.com/2009/07/recipe-no-fuss-rice-cooker
 
 echo blacklist mei > /etc/modprobe.d/mei.conf # avoid this error http://bbs.archlinux.org/viewtopic.php?id=133083-
 # Also here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/984088
-# Should I run this?
 
+# Regenerate the kernel image
+# after e.g. changing configuration files in /etc/modprobe.d/
+sudo update-initramfs -u
 
 for f in *.gsp # for every file ending in .gsp
 do
