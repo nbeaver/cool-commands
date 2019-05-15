@@ -6647,8 +6647,13 @@ msgcat --color=test
 DISPLAY=:0 kwin --replace & disown
 # https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
 
-plasmashell & disown disown
+plasmashell & disown
 # https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
+
+# Log out of KDE plasma 5 desktop from the command line.
+qdbus org.kde.ksmserver /KSMServer logout 0 0 0
+# https://forum.kde.org/viewtopic.php?t=88022
+# https://askubuntu.com/questions/1871/how-can-i-safely-shutdown-reboot-logout-kde-from-the-command-line
 
 # Show extended attributes of a file.
 getfattr -d -m ".*" /path/to/file
