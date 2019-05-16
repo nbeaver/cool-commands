@@ -6743,3 +6743,7 @@ DEBUG=1 true | printenv DEBUG # doesn't work
 tail -n +1 * | tee ../combined.txt | less
 head -n -0 * | tee ../combined.txt | less
 # https://stackoverflow.com/questions/5917413/concatenate-multiple-files-but-include-filename-as-section-headers
+
+# Look at systemd journal longs from the last hour.
+journalctl --since '1 hour ago' --until 'now'
+journalctl --since '-1 hour' --until 'now'
