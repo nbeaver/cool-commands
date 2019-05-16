@@ -6738,3 +6738,8 @@ journalctl -o cat | grep -i error | uniq | less +G
 DEBUG=1 printenv DEBUG # works
 true | DEBUG=1 printenv DEBUG # works
 DEBUG=1 true | printenv DEBUG # doesn't work
+
+# Concatenate a bunch of files and include the filename as a header.
+tail -n +1 * | tee ../combined.txt | less
+head -n -0 * | tee ../combined.txt | less
+# https://stackoverflow.com/questions/5917413/concatenate-multiple-files-but-include-filename-as-section-headers
