@@ -6764,5 +6764,6 @@ sudo snap refresh plexmediaserver
 enscript -f Helvetica-Narrow12 example.txt -p example.ps
 # Modify from the default header.
 enscript -b '$N page $% of $=' -B Helvetica-Narrow12 -f Helvetica-Narrow12 example.txt -p example.ps
+# ~/archive/2019/personal/src/make/enscript-example/Makefile
 # Get list of font options.
 cut -f 1 /usr/share/enscript/afm/font.map
