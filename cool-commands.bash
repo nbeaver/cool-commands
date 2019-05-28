@@ -5511,6 +5511,9 @@ dlocate helvR12-ISO8859-1.pcf.gz
 FC_DEBUG=8 fc-match Helvetica | less
 # https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
 
+FC_DEBUG=4 pango-view -q -t 'ᚠ' 2>&1 | grep -o 'family: "[^"]\+' | cut -c 10- | tail -n 1
+# https://repolinux.wordpress.com/2013/03/10/find-out-fallback-font-used-by-fontconfig-for-a-certain-character/
+
 # convert Windows/DOS format text files with \r\n newlines to Unix format.
 tr -d '\r' < file.txt > out.txt
 dos2unix file.txt
@@ -6747,3 +6750,19 @@ head -n -0 * | tee ../combined.txt | less
 # Look at systemd journal longs from the last hour.
 journalctl --since '1 hour ago' --until 'now'
 journalctl --since '-1 hour' --until 'now'
+
+adb shell screencap -p /sdcard/screen.png
+adb pull /sdcard/screen.png
+# https://blog.shvetsov.com/2013/02/grab-android-screenshot-to-computer-via.html
+
+snap info plexmediaserver
+sudo snap install plexmediaserver
+sudo snap install --beta plexmediaserver
+sudo snap refresh plexmediaserver
+
+# Generate PostScript output from a text file.
+enscript -f Helvetica-Narrow12 example.txt -p example.ps
+# Modify from the default header.
+enscript -b '$N page $% of $=' -B Helvetica-Narrow12 -f Helvetica-Narrow12 example.txt -p example.ps
+# Get list of font options.
+cut -f 1 /usr/share/enscript/afm/font.map
