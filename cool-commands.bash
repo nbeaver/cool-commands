@@ -6767,3 +6767,6 @@ enscript -b '$N page $% of $=' -B Helvetica-Narrow12 -f Helvetica-Narrow12 examp
 # ~/archive/2019/personal/src/make/enscript-example/Makefile
 # Get list of font options.
 cut -f 1 /usr/share/enscript/afm/font.map
+
+# Find JSON that hasn't been formatted.
+find . -name '*.json' -exec wc -l '{}' \+ | sort -n | less
