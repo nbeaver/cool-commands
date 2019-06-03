@@ -2959,6 +2959,14 @@ sudo nmap -O ord08s06-in-f7.1e100.net
 nmap -A -T4 scanme.nmap.org
 nmap -A -T4 198.37.20.176
 
+# See local machines on current router.
+# -sn means "No port scan"
+nmap -sn '192.168.0.*'
+# https://security.stackexchange.com/questions/36198/how-to-find-live-hosts-on-my-network
+
+arp -n
+# https://security.stackexchange.com/questions/36198/how-to-find-live-hosts-on-my-network
+
 # See printer status from the command line
 lpstat -t
 
