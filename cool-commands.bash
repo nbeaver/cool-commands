@@ -643,6 +643,11 @@ man -K 'maintained as a Texinfo manual' | grep 'maintained as a Texinfo manual' 
 str='maintained as a Texinfo manual'; man -K "$str" --sections=1 | grep --count "$str"
 # returns 271, last I checked.
 
+# List man pages that have 'XDG_CACHE_HOME'.
+man -wK 'XDG_CACHE_HOME'
+# List man pages that have the flag '--directory='.
+man -wK -- '--directory='
+
 # search for commands and aliases named 'my-command'.
 compgen -ac | grep my-command
 # Note: -a is for aliases, -c is for commands
@@ -6402,7 +6407,9 @@ ps -o pid,cmd,rss -p 29161
 ps -o pid,cmd,lstart,etime -p 29443
 
 # Get process ID of program running apt-get or dpkg.
-fuser /var/lib/dpkg/lock
+sudo fuser /var/lib/dpkg/lock
+
+sudo fuser /var/lib/dpkg/lock-frontend
 
 # Pad image to certain size.
 convert in.jpg -gravity center -background black -extent 400x400 out.jpg
@@ -6768,6 +6775,9 @@ sudo snap install plexmediaserver
 sudo snap install --beta plexmediaserver
 sudo snap refresh plexmediaserver
 
+# Install skype.
+sudo snap install --classic skype
+
 # Generate PostScript output from a text file.
 enscript -f Helvetica-Narrow12 example.txt -p example.ps
 # Modify from the default header.
@@ -6778,3 +6788,10 @@ cut -f 1 /usr/share/enscript/afm/font.map
 
 # Find JSON that hasn't been formatted.
 find . -name '*.json' -exec wc -l '{}' \+ | sort -n | less
+
+# See XDG setting for default web browser.
+xdg-settings get default-web-browser
+
+# Look up printer info.
+/usr/lib/cups/backend/snmp 192.168.0.11
+# network lpd://BRWB05216CD7EC3/BINARY_P1 "Brother HL-L2340D series" "Brother HL-L2340D series" "MFG:Brother;CMD:PJL,HBP,URF;MDL:HL-L2340D series;CLS:PRINTER;CID:Brother Laser Type1;URF:W8,CP1,IS4-1,MT1-3-4-5-8,OB10,PQ4,RS300-600,V1.3,DM1;" "Home"
