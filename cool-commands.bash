@@ -6795,3 +6795,8 @@ xdg-settings get default-web-browser
 # Look up printer info.
 /usr/lib/cups/backend/snmp 192.168.0.11
 # network lpd://BRWB05216CD7EC3/BINARY_P1 "Brother HL-L2340D series" "Brother HL-L2340D series" "MFG:Brother;CMD:PJL,HBP,URF;MDL:HL-L2340D series;CLS:PRINTER;CID:Brother Laser Type1;URF:W8,CP1,IS4-1,MT1-3-4-5-8,OB10,PQ4,RS300-600,V1.3,DM1;" "Home"
+
+# Infer / guess a file encoding.
+file -bi mystery-file.txt
+# https://superuser.com/questions/301552/how-to-auto-detect-text-file-encoding
+# https://stackoverflow.com/questions/48729215/how-to-check-character-encoding-of-a-file-in-linux
