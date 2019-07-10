@@ -3050,6 +3050,9 @@ env VISUAL=pico crontab -e
 env > myenv.txt
 # Run a script in that environment.
 env - $(cat myenv.txt) /path/to/myscript
+# Avoid use of `cat` command:
+env - $(< myenv.txt) /path/to/myscript
+# https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html
 
 # Find symlinks to a file. From here:
 # https://unix.stackexchange.com/questions/3710/how-do-i-see-what-symlinks-exist-for-a-given-directory
@@ -4281,6 +4284,10 @@ date +%s
 # Convert Unix epoch (timestamp) to human-readable time.
 date --date='@1441752464' +%c
 # Tue 08 Sep 2015 05:47:44 PM CDT
+
+# Convert Unix epoch (timestamp) to ISO timestamp for current timezone.
+date --iso-8601=seconds --date='@1441752464'
+# 2015-09-08T17:47:44-05:00
 
 # A complete human-readable date,
 # not suitable for filenames or directory names,
@@ -6393,12 +6400,13 @@ echo 80 | sudo tee /sys/devices/platform/smapi/BAT0/stop_charge_thresh
 # https://askubuntu.com/questions/34452/how-can-i-limit-battery-charging-to-80-capacity
 # https://unix.stackexchange.com/questions/48534/how-to-adjust-charging-thresholds-of-laptop-battery
 
-# Find python files with dashes in them.
+# Find python filenames with dashes in them.
 locate -b '*.py' | grep -- '/[^/]*-[^/]*\.py$' | less
 # http://stackoverflow.com/questions/761519/is-it-ok-to-use-dashes-in-python-files-when-trying-to-import-them
 # http://stackoverflow.com/questions/2740026/why-are-filename-underscores-better-than-hyphens
 # http://stackoverflow.com/questions/7583652/python-module-with-a-dash-or-hyphen-in-its-name
 # http://stackoverflow.com/questions/8350853/how-to-import-module-when-module-name-has-a-dash-or-hyphen-in-it
+
 
 # Show PID, memory usage (RSS), and command executable.
 ps -o pid,cmd,rss -p 29161
@@ -6605,6 +6613,14 @@ find . -name '*.desktop' -print0 | xargs --null desktop-file-validate 2>&1 | les
 locate '*.desktop' | xargs -d '\n' grep 'URL=file://' | less
 locate '*.desktop' | xargs -d '\n' grep -h 'Icon=' | sort | uniq | vim -
 
+
+locate -0 '*.tex' | xargs -0 grep -l 'newdimens' | less -c
+locate '*.tex' | grep nathaniel  | xargs -d '\n' grep -l 'newdimens' | less -c
+
+# Does not work with spaces in filenames:
+grep -l 'newdimens' "$(locate *.tex)"
+for file in "$(locate *.tex)" ; do grep -l 'newdimens' "$file" ; done
+
 # Generate 10 pronounceable passwords.
 apg -n 10 -M Ln
 
@@ -6800,3 +6816,8 @@ xdg-settings get default-web-browser
 file -bi mystery-file.txt
 # https://superuser.com/questions/301552/how-to-auto-detect-text-file-encoding
 # https://stackoverflow.com/questions/48729215/how-to-check-character-encoding-of-a-file-in-linux
+
+# Look at image information of a remote file.
+curl -s 'https://matplotlib.org/_images/stinkbug.png' | file -
+# /dev/stdin: PNG image data, 500 x 375, 8-bit grayscale, non-interlaced
+# https://github.com/matplotlib/matplotlib/issues/11296
