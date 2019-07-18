@@ -4048,6 +4048,29 @@ youtube-dl --write-info-json 'https://www.youtube.com/watch?v=T0noDEI2nLY'
 
 youtube-dl --write-auto-sub --write-info-json --sub-lang en 'https://www.youtube.com/watch?v=QncdLPYLPkA'
 
+# Pick a certain file.
+youtube-dl -F 'https://www.youtube.com/watch?v=C0DPdy98e4c'
+# [youtube] C0DPdy98e4c: Downloading webpage
+# [youtube] C0DPdy98e4c: Downloading video info webpage
+# [info] Available formats for C0DPdy98e4c:
+# format code  extension  resolution note
+# 171          webm       audio only DASH audio   15k , vorbis@128k, 28.67KiB
+# 249          webm       audio only DASH audio   25k , opus @ 50k, 43.28KiB
+# 250          webm       audio only DASH audio   38k , opus @ 70k, 59.42KiB
+# 251          webm       audio only DASH audio   54k , opus @160k, 85.16KiB
+# 140          m4a        audio only DASH audio  127k , m4a_dash container, mp4a.40.2@128k, 274.02KiB
+# 278          webm       192x144    144p   27k , webm container, vp9, 13fps, video only, 52.21KiB
+# 160          mp4        192x144    144p   37k , avc1.4d400b, 25fps, video only, 62.40KiB
+# 133          mp4        320x240    240p   51k , avc1.4d400d, 25fps, video only, 85.11KiB
+# 242          webm       320x240    240p   69k , vp9, 25fps, video only, 131.47KiB
+# 134          mp4        480x360    360p   84k , avc1.4d4015, 25fps, video only, 138.98KiB
+# 243          webm       480x360    360p  106k , vp9, 25fps, video only, 200.87KiB
+# 135          mp4        640x480    480p  121k , avc1.4d401e, 25fps, video only, 197.65KiB
+# 244          webm       640x480    480p  153k , vp9, 25fps, video only, 287.41KiB
+# 43           webm       640x360    medium , vp8.0, vorbis@128k, 280.86KiB
+# 18           mp4        480x360    medium , avc1.42001E, mp4a.40.2@ 96k, 540.04KiB (best)
+youtube-dl -f 135 'https://www.youtube.com/watch?v=C0DPdy98e4c'
+
 # When gvfsd-metadata spazzes out on you, run this.
 rm -rf ~/.local/share/gvfs-metadata
 # This is a well-known bug.
@@ -6821,3 +6844,15 @@ file -bi mystery-file.txt
 curl -s 'https://matplotlib.org/_images/stinkbug.png' | file -
 # /dev/stdin: PNG image data, 500 x 375, 8-bit grayscale, non-interlaced
 # https://github.com/matplotlib/matplotlib/issues/11296
+
+sudo chv2
+# Change to virtual terminal 2, like Ctrl-Alt-F2.
+
+file /usr/bin/plasmashell
+# /usr/bin/plasmashell: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/l, for GNU/Linux 3.2.0, BuildID[sha1]=5ea1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55, stripped
+file /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug 
+# /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter *empty*, for GNU/Linux 3.2.0, BuildID[sha1]=5ea1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55, with debug_info, not stripped
+
+# Show whether the OS is 32-bit or 64-bit.
+getconf LONG_BIT
+# https://askubuntu.com/questions/41332/how-do-i-check-if-i-have-a-32-bit-or-a-64-bit-os/41334#41334
