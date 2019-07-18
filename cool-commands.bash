@@ -1384,7 +1384,9 @@ sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg && sync
 
 umount /media/nathaniel/SIMMAX
 # > Error unmounting block device 8:16: GDBus.Error:org.freedesktop.UDisks2.Error.DeviceBusy: Error unmounting /dev/sdb: target is busy
-# Can also do umount /dev/sdb, but this is deprecated
+# Can also do this:
+umount /dev/sdb
+# but this is deprecated:
 # man:umount(8)
 # > A file system is specified by giving the directory where it has been mounted.
 # > Giving the special device on which the file system lives may also work, but
