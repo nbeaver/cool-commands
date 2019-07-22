@@ -1132,6 +1132,10 @@ upower -i /org/freedesktop/UPower/devices/battery_BAT0
 acpi -V
 gnome-power-manager
 
+# Show kernel information about battery:
+cat /sys/class/power_supply/BAT*/uevent
+# https://bugzilla.xfce.org/show_bug.cgi?id=11447
+
 # Restart upowerd
 sudo killall upowerd && sudo /usr/lib/upower/upowerd & disown
 
