@@ -1458,6 +1458,14 @@ shuf -n 5 /usr/share/dict/words
 # Get rid of the words with apostrophes.
 grep -v "'" /usr/share/dict/words | shuf -n 5
 
+# Get five random files from a directory.
+shuf -en 5 /bin/*
+# https://unix.stackexchange.com/questions/506302/how-to-shuffle-file-names-randomly-in-a-directory
+# https://unix.stackexchange.com/questions/38335/best-method-to-collect-a-random-sample-from-a-collection-of-files
+# https://stackoverflow.com/questions/701402/best-way-to-choose-a-random-file-from-a-directory
+# https://stackoverflow.com/questions/414164/how-can-i-select-random-files-from-a-directory-in-bash
+# https://stackoverflow.com/questions/701505/best-way-to-choose-a-random-file-from-a-directory-in-a-shell-script
+
 # if you install dictionaries-common,
 # you may need to run
 sudo dpkg-reconfigure dictionaries-common
