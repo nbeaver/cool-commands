@@ -4181,6 +4181,8 @@ texdef -t latex a b c d e f g h i j k l m n o p q r s t u v x y z A B C D E F G 
 # See the definition of the AA macro (for Angstroms).
 texdef AA
 latexdef AA
+# https://texfaq.org/FAQ-ltxcmds
+# https://tex.stackexchange.com/questions/235681/where-is-printtoctitle-defined
 
 # See all non-printing characters in a text file
 cat -A myfile.txt
@@ -6862,3 +6864,7 @@ file /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug
 # Show whether the OS is 32-bit or 64-bit.
 getconf LONG_BIT
 # https://askubuntu.com/questions/41332/how-do-i-check-if-i-have-a-32-bit-or-a-64-bit-os/41334#41334
+
+# Print graphics driver information.
+glxinfo
+# "The glxinfo program shows information about the OpenGL and GLX implementations running on a given X display."
