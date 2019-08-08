@@ -1010,6 +1010,14 @@ find . -exec pathchk -P '{}' \;
 
 # Index all files in a directory with recoll
 find ./ -print -exec recollindex -i '{}' \;
+# Index all files by sending to stdin (more efficient).
+find . -type f -print | recollindex -i
+# Also erase current file data.
+# -e will erase data for individual files from the database.
+find . -type f -print | recollindex -e -i
+
+# Do this without using too many resources.
+find . -type f -name '*.tex' -print | nice -n 19 ionice -c 3 recollindex -e -i
 
 # Much like any other find exec command, but more efficient
 # because it uses the fact that rm can take multiple arguments to runs rm fewer times.
@@ -1332,16 +1340,30 @@ lshw
 sudo regionset /dev/dvd4
 
 # Capture a disc image
-cat /dev/dvd4 > ~/Videos/not-personal/Firefly/firefly-disc-1.iso
+cat /dev/sr0 > my-disc.iso
 # or
-dd if=/dev/dvd4 of=/path/to/output/file.iso
+cp /dev/sr0 my-disc.iso
 # or
-readom dev=/dev/sr0 f=$HOME/Downloads/disc.iso
+dd if=/dev/dvd4 of=/path/to/output/my-disc.iso && eject
+# or
+readom dev=/dev/sr0 f=$HOME/Downloads/disc.iso && eject
+# or
+pv < /dev/sr0 > my-disc.iso
+
+# TODO: does rsync work?
+rsync
+
+# Also eject:
+cp /dev/sr0 my-disc.iso && eject
+# Also alert when something goes wrong:
+cp /dev/sr0 my-disc.iso && eject || zenity --error --text='Disc copy failed.'
+
 # or
 cdrdao
 # https://superuser.com/questions/616392/copying-windows-installation-cd-to-iso-on-ubuntu
+# https://unix.stackexchange.com/questions/224277/is-it-better-to-use-cat-dd-pv-or-another-procedure-to-copy-a-cd-dvd
 # http://www.1stbyte.com/2012/10/19/create-iso-image-from-cd-or-dvd-disk-in-linux/
-safecopy /dev/dvd out.iso
+safecopy /dev/dvd out.iso && eject
 # https://askubuntu.com/questions/138152/software-to-copy-a-scratched-cd-dvd-blueray-to-an-iso-file
 # do a quick first-run.
 safecopy --stage1 /dev/sr0 safecopy.iso
@@ -3111,6 +3133,7 @@ sudo nethogs wlan0
 
 # See info pages, but in the 'less' pager. Much nicer.
 info gpg | less
+info coreutils | less
 
 # Reverse DNS lookup
 host 216.47.138.69
@@ -4221,6 +4244,9 @@ vim -c 'autocmd TextChanged,TextChangedI <buffer> write' temp.sh
 
 # watch a piped command
 watch 'ps aux | grep mycommand'
+
+# Watch for a command to show an error.
+watch -e -n 1 false
 
 # Process files with spaces in the filenames
 IFS=$'\n'
@@ -6846,6 +6872,11 @@ find . -name '*.json' -exec wc -l '{}' \+ | sort -n | less
 
 # See XDG setting for default web browser.
 xdg-settings get default-web-browser
+# Equivalent command for KDE desktop:
+kreadconfig5 --file kdeglobals --group General --key BrowserApplication
+
+# Set the default browser to firefox.
+xdg-settings set default-web-browser firefox.desktop
 
 # Look up printer info.
 /usr/lib/cups/backend/snmp 192.168.0.11
@@ -6861,7 +6892,7 @@ curl -s 'https://matplotlib.org/_images/stinkbug.png' | file -
 # /dev/stdin: PNG image data, 500 x 375, 8-bit grayscale, non-interlaced
 # https://github.com/matplotlib/matplotlib/issues/11296
 
-sudo chv2
+sudo chvt 2
 # Change to virtual terminal 2, like Ctrl-Alt-F2.
 
 file /usr/bin/plasmashell
@@ -6876,3 +6907,15 @@ getconf LONG_BIT
 # Print graphics driver information.
 glxinfo
 # "The glxinfo program shows information about the OpenGL and GLX implementations running on a given X display."
+
+# Update the timestamps on all tex files.
+find . -name '*.tex' -exec touch '{}' \+
+
+# Run cron daemon / cron jobs at lower CPU priority.
+sudo systemctl edit cron.service
+# edits go to /etc/systemd/system/cron.service.d/override.conf
+# I use this:
+# [Service]
+# Nice=19
+# CPUSchedulingPolicy=idle
+# IOSchedulingClass=idle
