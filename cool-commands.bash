@@ -6919,3 +6919,9 @@ sudo systemctl edit cron.service
 # Nice=19
 # CPUSchedulingPolicy=idle
 # IOSchedulingClass=idle
+
+# Suppress fully blank lines.
+sed '/^$/d'
+# another method using grep:
+grep .
+# https://serverfault.com/questions/252921/how-to-remove-empty-blank-lines-from-a-file-in-unix-including-spaces
