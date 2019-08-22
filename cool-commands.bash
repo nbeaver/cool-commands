@@ -3417,15 +3417,16 @@ cat /dev/null > /path/to/file
 # or
 : > /path/to/file
 # or
-printf "" > file
+printf "" > /path/to/file
 # or
-true > file
+true > /path/to/file
 # or
-truncate --size=0 file
+truncate --size=0 /path/to/file
 # or
-truncate -s 0 file
+truncate -s 0 /path/to/file
 # https://superuser.com/questions/849413/why-would-you-cat-dev-null-var-log-messages
 # http://www.tech-recipes.com/rx/2993/how_to_empty_or_clear_the_contents_of_an_existing_unix_file/
+# http://www.tldp.org/LDP/abs/html/io-redirection.html
 
 # Kill an unresponsive SSH session
 # http://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/
@@ -4437,6 +4438,18 @@ fc-list :lang=ar
 
 # List all X server fonts.
 xlsfonts
+
+# List all fonts that support the maple leaf character (U+1F341 MAPLE LEAF 🍁)
+printf '%x' \'🍁 | xargs -I{} fc-list ":charset={}"
+printf '%x' "'🍁'" | xargs -I{} fc-list ":charset={}"
+# -I Replace occurrences of  replace-str  in  the  initial-arguments  with
+#    names  read from standard input.
+
+# "If the leading character is a single-quote or double-quote, the value shall
+# be the numeric value in the underlying codeset of the character following the
+# single-quote or double-quote."
+# https://stackoverflow.com/questions/890262/integer-ascii-value-to-character-in-bash-using-printf
+# https://pubs.opengroup.org/onlinepubs/009695399/utilities/printf.html
 
 # How to ditch KDE completely
 sudo apt-get purge kdelibs-bin kdelibs5-data
@@ -6925,3 +6938,11 @@ sed '/^$/d'
 # another method using grep:
 grep .
 # https://serverfault.com/questions/252921/how-to-remove-empty-blank-lines-from-a-file-in-unix-including-spaces
+
+# List sound outputs.
+pactl list short sinks
+
+# Print an error message to stderr.
+printf 'Error: something has gone wrong.\n' >&2
+# Or put it out front to make it more obvious.
+>&2 printf 'Error: something has gone wrong.\n'
