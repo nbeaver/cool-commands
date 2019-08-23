@@ -6946,3 +6946,6 @@ pactl list short sinks
 printf 'Error: something has gone wrong.\n' >&2
 # Or put it out front to make it more obvious.
 >&2 printf 'Error: something has gone wrong.\n'
+
+# Get page 13 of a DJVU file and convert it to TIFF.
+ddjvu -format=tiff -pages=13 input_file.djvu output_file.tiff
