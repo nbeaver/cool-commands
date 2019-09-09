@@ -437,11 +437,20 @@ wget --adjust-extension --span-hosts --convert-links --backup-converted --page-r
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://marctenbosch.com/miegakure/
 wget --timeout=3 --tries=1 --spider --no-check-certificate ftp://ftp.gnu.org/
 curl --head --silent --location "http://www.reddit.com/r/obscurantism"
+000
+
+fping < list-of-urls.txt
+# https://superuser.com/questions/1456225/debug-http-status-code-of-a-big-urls-list
 
 # Just the HTTP status code and URL.
 curl --head --silent --write-out "%{http_code} %{url_effective}\\n" --location 'http://w3.org/404' --output /dev/null
 curl --head --silent --write-out "%{http_code} %{url_effective}\\n" --location 'http://w3.org/404' --output /dev/null
+curl --head --silent --write-out '%{http_code} %{url_effective}\n' --location 'https://w3.org/404' --output /dev/null
 # http://beerpla.net/2010/06/10/how-to-display-just-the-http-response-code-in-cli-curl/
+# https://stackoverflow.com/questions/12747929/linux-script-with-curl-to-check-webservice-is-up
+# https://unix.stackexchange.com/questions/26426/how-do-i-get-only-the-http-status-of-a-site-in-a-shell-script
+# https://unix.stackexchange.com/questions/105134/type-url-and-show-http-status
+# 
 
 # Just the HTTP status code.
 curl --head --silent --write-out "%{http_code}\\n" --location 'http://www.reddit.com/r/obscurantism' -o /dev/null
@@ -450,6 +459,10 @@ curl --head --silent --write-out "%{http_code}\\n" --location 'http://www.reddit
 curl --head --silent "http://www.reddit.com/r/obscurantism"
 curl --head --silent "http://info.cern.ch/"
 wget --timeout=3 --tries=1 --spider --no-check-certificate  --max-redirect=0 http://marctenbosch.com/miegakure/
+
+# Full debugging.
+curl --verbose --location 'https://w3.org/404' --output /dev/null 2>&1 | less
+curl --verbose --location 'https://w3.org/404' 2>&1 | less
 
 # Download just the first level of linked files, and don't re-download them if they haven't been updated
 wget --no-parent --no-host-directories --recursive --level=1 --convert-links --relative --timestamping http://bernhard-adams.com/IIT-phy412/
@@ -6950,3 +6963,12 @@ printf 'Error: something has gone wrong.\n' >&2
 # Get page 13 of a DJVU file and convert it to TIFF.
 ddjvu -format=tiff -pages=13 input_file.djvu output_file.tiff
 # https://askubuntu.com/questions/46233/converting-djvu-to-pdf
+
+# Test the X server is working.
+xlogo
+xclock
+xload
+xeyes
+
+# Run GDB on existing Firefox.
+gdb /usr/lib/firefox/firefox -p $(pgrep firefox)
