@@ -2182,6 +2182,16 @@ mogrify -strip IMG_3689.JPG
 # http://www.hacktux.com/read/remove/exif
 # http://www.linux-magazine.com/Online/Blogs/Productivity-Sauce/Remove-EXIF-Metadata-from-Photos-with-exiftool
 
+# Crop a white border.
+convert -trim myfile.png myfile-cropped.png
+# In place:
+mogrify -trim myfile.png
+# https://askubuntu.com/questions/351767/how-to-crop-borders-white-spaces-from-image
+
+# Also trim colors that are close to the border color.
+convert -fuzz 25% -trim myfile.png myfile-cropped.png
+# https://www.imagemagick.org/Usage/bugs/fuzz_distance/
+
 # Mount an external drive.
 sudo mkdir /media/nathaniel/external
 sudo mount /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
@@ -2252,6 +2262,16 @@ xset s off
 # Do both (e.g. when watching a movie)
 xset -dpms; xset s off
 
+# Just use a blank screen for a screenshot.
+xset s blank
+
+# Turns off screen after five minutes (300 seconds).
+xset s 300 300
+# "The length  and period parameters for the screen saver function determines
+# how long the server must be inactive for screen saving to activate, and the
+# period to change the background pattern to avoid burn in.  The arguments are
+# specified in seconds.  If only one numerical parameter is given, it will be
+# used for the length."
 
 # See all keybindings
 bind -p | less
@@ -6963,6 +6983,13 @@ printf 'Error: something has gone wrong.\n' >&2
 # Get page 13 of a DJVU file and convert it to TIFF.
 ddjvu -format=tiff -pages=13 input_file.djvu output_file.tiff
 # https://askubuntu.com/questions/46233/converting-djvu-to-pdf
+
+# Convert a DJVU file to PDF.
+ddjvu -format=pdf -quality=85 input_file.djvu out.pdf
+# https://askubuntu.com/questions/46233/converting-djvu-to-pdf
+
+# Convert a DJVU file to PostScript, then to PDF.
+djvups input.djvu | ps2pdf - output.pdf
 
 # Test the X server is working.
 xlogo
