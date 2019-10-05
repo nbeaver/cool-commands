@@ -1764,6 +1764,8 @@ pdftk book.pdf update_info  info.txt output out-book.pdf
 # Dump all metadata
 for f in *.pdf; do echo "=====$f=====" >> dump.txt; pdftk "$f" dump_data &>> dump.txt; done
 
+pdftk needs-password.pdf cat output out.pdf do_ask
+
 # Copy all files in a remote directory to this computer.
 scp -r iit@id1.mr.aps.anl.gov:~/Pelliccione/Te_edge_12_17_2012 /home/nathaniel/Dropbox/10_Fall_2012/APS/data-analysis/
 
@@ -6999,3 +7001,23 @@ xeyes
 
 # Run GDB on existing Firefox.
 gdb /usr/lib/firefox/firefox -p $(pgrep firefox)
+
+# Run and sort command output in tandem using a command group.
+{ echo $RANDOM; echo $RANDOM; echo $RANDOM; } | sort -n
+# 7647
+# 9659
+# 28126
+{ printf '7\n5\n3\n' ; printf '10\n8\n6\n' ; printf '4\n3\n2\n1\n' ; } | sort -n
+# https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html
+# https://stackoverflow.com/questions/11917708/pipe-multiple-commands-into-a-single-command
+# https://stackoverflow.com/questions/17983777/shell-pipe-to-multiple-commands-in-a-file
+
+# Alternately, use a subshell:
+( echo $RANDOM; echo $RANDOM; echo $RANDOM ) | sort -n
+( printf '7\n5\n3\n' ; printf '10\n8\n6\n' ; printf '4\n3\n2\n1\n' ) | sort -n
+
+# Alternately, use process substitution:
+sort -n <( echo $RANDOM ) <( echo $RANDOM ) <( echo $RANDOM)
+sort -n <( printf '7\n5\n3\n' ) <( printf '10\n8\n6\n' ) <( printf '4\n3\n2\n1\n' )
+# Equivalent to:
+sort -n /dev/fd/61 /dev/fd/62 /dev/fd/63
