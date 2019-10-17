@@ -7021,3 +7021,6 @@ sort -n <( echo $RANDOM ) <( echo $RANDOM ) <( echo $RANDOM)
 sort -n <( printf '7\n5\n3\n' ) <( printf '10\n8\n6\n' ) <( printf '4\n3\n2\n1\n' )
 # Equivalent to:
 sort -n /dev/fd/61 /dev/fd/62 /dev/fd/63
+
+# List available scanners.
+scanimage -L
