@@ -2925,7 +2925,7 @@ ffmpeg -i image.iso
 avconv -i image.iso
 # mediainfo will only tell you ISO format and file size :(
 
-# Blank the screen temporarily (turn off display)
+# Blank the screen temporarily (turn off display, turn off the screen)
 xset dpms force standby
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
 
