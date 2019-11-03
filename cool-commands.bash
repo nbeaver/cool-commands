@@ -7024,3 +7024,11 @@ sort -n /dev/fd/61 /dev/fd/62 /dev/fd/63
 
 # List available scanners.
 scanimage -L
+
+# Show if a sudo session is active.
+if sudo -vn 2>/dev/null; then printf 'active sudo session\n'; fi
+if sudo -n true 2>/dev/null; then printf 'active sudo session\n'; fi
+# https://superuser.com/questions/195781/sudo-is-there-a-command-to-check-if-i-have-sudo-and-or-how-much-time-is-left
+# https://stackoverflow.com/questions/122276/quickly-check-whether-sudo-permissions-are-available
+# https://stackoverflow.com/questions/3858208/sudo-is-there-a-command-to-check-if-i-have-sudo-and-or-how-much-time-is-left
+# error message when it isn't active: "sudo: a password is required"
