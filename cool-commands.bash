@@ -7032,3 +7032,11 @@ if sudo -n true 2>/dev/null; then printf 'active sudo session\n'; fi
 # https://stackoverflow.com/questions/122276/quickly-check-whether-sudo-permissions-are-available
 # https://stackoverflow.com/questions/3858208/sudo-is-there-a-command-to-check-if-i-have-sudo-and-or-how-much-time-is-left
 # error message when it isn't active: "sudo: a password is required"
+
+# Create a blank letter-size pdf.
+convert xc:none -page Letter blank-letter-size.pdf
+# '-page Letter' is short for '-page 612x792'.
+convert xc:none -page 612x792 blank-letter-size.pdf
+# https://imagemagick.org/script/command-line-options.php#page
+# Units are PostScript typographic points (1 inch / 72 ≈ 0.3528 mm).
+# https://en.wikipedia.org/wiki/Point_(typography)
