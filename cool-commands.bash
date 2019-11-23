@@ -7040,3 +7040,9 @@ convert xc:none -page 612x792 blank-letter-size.pdf
 # https://imagemagick.org/script/command-line-options.php#page
 # Units are PostScript typographic points (1 inch / 72 ≈ 0.3528 mm).
 # https://en.wikipedia.org/wiki/Point_(typography)
+
+# Intentionally use up 4 CPU cores.
+stress --cpu 4
+
+# Example from the man page:
+stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10s
