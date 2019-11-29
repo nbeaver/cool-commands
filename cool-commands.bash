@@ -850,6 +850,12 @@ pmi suspend
 systemctl suspend
 # https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line
 
+systemctl list-unit-files
+# https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
+
+systemctl list-units
+# https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
+
 apt-cache showpkg xserver-xorg-input-synaptics
 # Use synaptic to downgrade and lock
 sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
@@ -3433,6 +3439,9 @@ nmcli dev wifi | sort -k1.93nr
 nmcli dev wifi | cut -c4- | sort -k6nr | less
 # This seems to work better for older version of nmcli.
 nmcli dev wifi | sort -k8n | less
+
+# Do a connectivity check.
+nmcli networking connectivity check
 
 # Remove files with dashes, e.g. a file called '-'
 rm -- -
