@@ -7055,3 +7055,6 @@ stress --cpu 4
 
 # Example from the man page:
 stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10s
+
+# Run octave in the terminal.
+octave --no-gui
