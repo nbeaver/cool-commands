@@ -7058,3 +7058,8 @@ stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10s
 
 # Run octave in the terminal.
 octave --no-gui
+
+# Get PNG file metadata
+identify -verbose example.png
+# https://stackoverflow.com/questions/8113314/does-png-support-metadata-fields-like-author-camera-model-etc
+# https://superuser.com/questions/219642/what-software-can-i-use-to-read-png-metadata
