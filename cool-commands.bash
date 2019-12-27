@@ -2935,6 +2935,28 @@ avconv -i image.iso
 xset dpms force standby
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
 
+# /usr/share/man/man3/DPMSSetTimeouts.3.gz
+# "The  value  standby is the amount of inactivity time, in seconds, before
+# standby mode is invoked. The actual effects of this mode are dependent on the
+# characteristics of the monitor and frame buffer card. Standby mode is
+# implemented by shutting off the horizontal sync signal, and pulsing the
+# vertical  sync  signal.  Standby mode  provides  the  quickest  monitor
+# recovery  time.   Note also that many monitors implement this mode identical
+# to suspend mode."
+
+# Sleep for a while in case keyboard or mouse activity would wake the screen up again.
+sleep 1; xset dpms force standby
+
+xset dpms force off
+sleep 1; xset dpms force off
+# "The  value  off  is  the  amount of time of inactivity,in seconds, before
+# the third and final level of power savings is invoked. Off mode's physical
+# and electrical characteristics are implementation defined. In DPMS compliant
+# hardware, it is implemented by shutting off both horizontal and vertical sync
+# signals,  resulting  in powering  down of the monitor.  Recovery time is
+# implementation dependent.  Usually the recovery time is very close to the
+# power-up time of the monitor."
+
 # Use less on multiple files
 less file1 file2 file3
 # While in less:
