@@ -1758,6 +1758,13 @@ du --summarize --human-readable --one-file-system * | sort --human-numeric-sort 
 # Ignore hidden files.
 du -sh --exclude "./.*"
 
+# Get disk usage of everything not in the home directories.
+sudo du -sh --exclude='/home/*' /
+# use less disk doing it.
+sudo ionice -c 3 du -sh --exclude='/home/*' /
+# Also exclude /proc/ and /run/:
+sudo ionice -c 3 du -sh --exclude='/home/*' --exclude='/proc/*' '/run/*' /
+
 # Adding metadata to pdfs with pdftk
 # Add an info dictionary if there isn't one already (harmless)
 pdftk book.pdf cat output book.pdf
@@ -5048,6 +5055,9 @@ exo-open
 gtk-launch
 # https://bugzilla.gnome.org/show_bug.cgi?id=343896
 # https://askubuntu.com/questions/5172/running-a-desktop-file-in-the-terminal
+
+# Add debug output.
+XDG_UTILS_DEBUG_LEVEL=4 xdg-open 'https://example.org'
 
 # See what syscalls (system calls) a program makes, what files it reads, and so on.
 strace echo "Hello."
