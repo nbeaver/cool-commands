@@ -925,6 +925,9 @@ unzip -l myfile.zip # list contents of zip file
 unzip '*.zip' # unzip all files ending in .zip
 unzip myfile.zip -d /path/to/desired/directory
 
+# Zip two folders but ignore the git repositories.
+zip -r myfile.zip folder1/ folder2/ --exclude '*.git*'
+
 # Zip file gone wrong:
 file imap.zip
 # imap.zip: Zip archive data, at least v3.0 to extract
@@ -5702,6 +5705,14 @@ grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
+
+# Grep only Makefiles.
+grep --recursive --include=Makefile 'example-pattern'
+grep -r --include=Makefile 'example-pattern'
+
+# use ag (silver searcher) on just Makefiles.
+ag --file-search-regex Makefile 'example-pattern'
+ag -G Makefile 'example-pattern'
 
 # Save a transcript of terminal session.
 script
