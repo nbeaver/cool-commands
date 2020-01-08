@@ -2352,6 +2352,9 @@ pdfimages -j mypdf ./
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
 
+# Show info about pages 1-10 of a PDF.
+pdfimages -f 1 -l 10 -list example.pdf | less
+
 # Get the first field of a text file and put it all on one line
 cut -f 1 mytext.txt | tr '\n' ' ' | less
 
