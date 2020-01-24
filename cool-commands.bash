@@ -360,6 +360,17 @@ find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
 find . -name '*.git' -prune -o -type f -print0 | wc -l --files0-from=-
 # https://stackoverflow.com/questions/13727917/use-wc-on-all-subdirectories-to-count-the-sum-of-lines
 
+# Find filenames ending with .cc, .cpp, or .cxx.
+find . \( -name '.cc' -o -name '*.cpp' -o -name '*.cxx' \)
+# https://stackoverflow.com/questions/1133698/find-name-pattern-that-matches-multiple-patterns
+
+# List of unique file extensions.
+find . -type f -name '*.*' | sed 's/.*\.//' | sort -u
+# https://stackoverflow.com/questions/4998290/how-to-find-all-file-extensions-recursively-from-a-directory
+
+# Find duplicate files efficiently.
+find . -type f \( -name '*.pdf' -o -name '*.djvu' -o -name '*.epub' -o -name '*.mobi' \) -print0 | duff -0 | xargs -0 -n1 echo
+
 # Find a writable file owned by root.
 find / -xdev -user root -perm -u+w -name hello 2>/dev/null
 # https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
@@ -5657,6 +5668,10 @@ date --date='January 19, 2038 03:14:08 UTC'
 # on 64-bit systems, it just says:
 # Mon Jan 18 21:14:08 CST 2038
 # http://en.wikipedia.org/wiki/Year_2038_problem
+# Origin is due to overflow of a signed 32-bit integer.
+date -u --date=@"$((2**31-1))"
+# Tue Jan 19 03:14:07 UTC 2038
+
 
 # Display date of Easter (for Western Christian churches).
 ncal -e
@@ -7109,3 +7124,6 @@ octave --no-gui
 identify -verbose example.png
 # https://stackoverflow.com/questions/8113314/does-png-support-metadata-fields-like-author-camera-model-etc
 # https://superuser.com/questions/219642/what-software-can-i-use-to-read-png-metadata
+
+# Extract text from a PDF file.
+pdftotext myfile.pdf outfile.txt
