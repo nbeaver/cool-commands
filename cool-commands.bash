@@ -7127,3 +7127,5 @@ identify -verbose example.png
 
 # Extract text from a PDF file.
 pdftotext myfile.pdf outfile.txt
+
+jupyter kernelspec list
