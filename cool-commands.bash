@@ -4780,10 +4780,16 @@ xbacklight -set 100
 # See current brightness
 xbacklight -get
 
+# Show maximum brightness.
 cat /sys/class/backlight/intel_backlight/actual_brightness
+# 4437
+
 # Forcibly set it to max brightness.
 sudo tee /sys/class/backlight/intel_backlight/brightness < /sys/class/backlight/intel_backlight/max_brightness
 sudo tee /sys/class/backlight/acpi_video0/brightness < /sys/class/backlight/acpi_video0/max_brightness
+
+# Forcibly set it to a given brightness, e.g. 2000.
+echo 2000 | sudo tee /sys/class/backlight/intel_backlight/brightness
 
 # gnuplot command we typically use at the beamline
 gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
