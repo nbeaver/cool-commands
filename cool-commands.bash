@@ -30,15 +30,29 @@ find . -name *.html
 find . -name '*.html'
 
 # Find all files with certain permissions.
+# World-readable (777)
 find . -perm 777
+
 find . -perm -g+s
+# World readable, writable, and executable.
 find . -perm -a+rwx
+# Find directories that are world-writable.
+find . -type d -perm -a+w
+
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # Skip symbolic links.
 find . \! -type l -perm 777
 find . '!' -type l -perm 777
+
+# Fix permissions recursively.
+find . -perm 777 -exec chmod 755 '{}' \;
+
+# Find a writable file owned by root.
+find / -xdev -user root -perm -u+w -name hello 2>/dev/null
+# https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
+
 
 # Show permissions of a directory.
 ls -ld /var/log
@@ -268,6 +282,12 @@ sudo chmod -R +rwx .mozilla
 
 chmod u+rw,g+r,o+r myfile.txt
 
+chmod a-w,u+w,g+w mydir/
+
+# Change to only user can access.
+chmod 0700 mydir/
+chmod u+rwx,g-rwx,o-rwx mydir/
+
 type ls # identify the kind of command ls is
 type -a ls # print all the places that contain an executable named 'ls', including aliases, functions, and builtins.
 # For example, `type -a ls` shows:
@@ -370,10 +390,6 @@ find . -type f -name '*.*' | sed 's/.*\.//' | sort -u
 
 # Find duplicate files efficiently.
 find . -type f \( -name '*.pdf' -o -name '*.djvu' -o -name '*.epub' -o -name '*.mobi' \) -print0 | duff -0 | xargs -0 -n1 echo
-
-# Find a writable file owned by root.
-find / -xdev -user root -perm -u+w -name hello 2>/dev/null
-# https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
 
 cp -a ./.[a-zA-Z0-9]* ~/dotfiles_from_lucid_install_full/
 
@@ -491,6 +507,12 @@ echo blacklist mei > /etc/modprobe.d/mei.conf # avoid this error http://bbs.arch
 # Regenerate the kernel image
 # after e.g. changing configuration files in /etc/modprobe.d/
 sudo update-initramfs -u
+
+# See the hexdump of a file.
+hexdump myfile.gsp | less
+
+# See the hexdump of a file side-by-side with ASCII.
+hexdump -C myfile.gsp | less
 
 for f in *.gsp # for every file ending in .gsp
 do
@@ -2035,6 +2057,10 @@ apt-file search libc.so.6
 #   real	0m2.820s
 #   user	0m2.812s
 #   sys	0m0.228s
+
+apt-file -x search '/fftw3.h$'
+# libfftw3-dev: /usr/include/fftw3.h
+apt-file -x search '/glib.h$'
 
 apt-file search showkey
 # kbd: /usr/bin/showkey
@@ -5725,9 +5751,12 @@ grep -Url $'\015' --include='*.txt'
 grep -Url $'\x0d' --include='*.txt'
 grep -Url $'\r' --include='*.txt'
 grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
+# Or just ignore binary files.
+grep -IUrl $'\r'
 # https://unix.stackexchange.com/questions/79702/how-to-test-whether-the-file-is-crlf-or-lf-without-modyfing-it
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
+# https://superuser.com/questions/194668/grep-to-find-files-that-contain-m-windows-carriage-return
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
 
 # Grep only Makefiles.
@@ -6621,9 +6650,6 @@ import - | zbarimg :-
 # Browse samba shares.
 smbtree
 
-# Fix permissions recursively.
-find . -perm 777 -exec chmod 755 '{}' \;
-
 # Get files modified in the last day.
 find -mtime -1
 # Only in current directory.
@@ -7135,3 +7161,17 @@ identify -verbose example.png
 pdftotext myfile.pdf outfile.txt
 
 jupyter kernelspec list
+
+find . -name '*.png' | feh --file -
+
+# Show where `man' looks for manpages, including MANPATH.
+man -w
+
+# Interactive audio signal / tone / sound generator with various waveforms (stereo mode).
+siggen -2
+# https://unix.stackexchange.com/questions/82112/stereo-tone-generator-for-linux
+# https://unix.stackexchange.com/questions/245897/audio-tone-sine-generator-with-frequency-gauge
+# with alsa-oss compatibility library:
+aoss siggen -2
+# with PulseAudio OSS Wrapper (pulseaudio-utils):
+padsp siggen -2
