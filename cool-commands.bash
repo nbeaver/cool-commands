@@ -791,7 +791,7 @@ sudo updatedb
 stat -c %y /var/lib/mlocate/mlocate.db
 # Find out when the last time the database was queried.
 stat -c %x /var/lib/mlocate/mlocate.db
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/308423e6-95a4-4001-9e76-501ad79b2e93.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/308423e6-95a4-4001-9e76-501ad79b2e93.json
 # TODO: write a command that shows how long its been (in days) since the database was updated.
 
 
@@ -933,7 +933,7 @@ grep -nP '[^[:ascii:]]' --color=always myfile.txt | less -R
 grep --line-number --perl-regexp '[^[:ascii:]]' --color=always myfile.txt | less --RAW-CONTROL-CHARS
 # https://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
 # https://superuser.com/questions/417305/how-can-i-identify-non-ascii-characters-from-the-shell
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/7b93628a-938d-4227-a88c-9d697f55fac4.json
 
 # Find python files with Unicode.
 grep -rlnP '[^[:ascii:]]' --include='*.py'
@@ -1019,7 +1019,7 @@ gunzip myfile.txt.gz # produces myfile.txt and removes myfile.txt.gz
 gzip < file > file.gz
 # https://unix.stackexchange.com/questions/46786/how-to-tell-gzip-to-keep-original-file/58814#58814
 gzip -k -- file
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
 
 cat /bin/cat # mojibake-fy the screen
 reset # fix it
@@ -1055,7 +1055,7 @@ find . -type l
 find . -xtype l
 find /usr/ -xtype l
 # https://unix.stackexchange.com/questions/34248/how-can-i-find-broken-symlinks
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/d1963f6a-dd27-48f5-8663-8ebe6ff5dae8.json
 
 # Does the same thing, but much more slowly (test -r returns 1 if the file is not readable).
 find ./ -type l ! -exec test -r {} \; -print
@@ -1885,7 +1885,7 @@ ping -i 2 localhost | sed -u 's/.*/ping/' | espeak
 # Ping google.com instead, and use Mac OS X 'say' command:
 ping google.com | sed -u 's/.*/ping/' | xargs -n1 say
 # https://news.ycombinator.com/item?id=8861819
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/07248c2f-4809-4b19-9ff0-6fa8e554b8f6.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/07248c2f-4809-4b19-9ff0-6fa8e554b8f6.json
 
 # Trace the route/path of the connection to an ip address or website
 tracepath google.com
@@ -1959,7 +1959,7 @@ sudo chmod o-w file
 # Protect home directory from access by other users.
 chmod o-rwx $HOME
 # https://askubuntu.com/questions/46501/why-can-other-users-see-the-files-in-my-home-folder
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/2d031b99-6945-45bd-be31-71382d661d73.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/2d031b99-6945-45bd-be31-71382d661d73.json
 
 # The default shell:
 echo $SHELL
@@ -1981,7 +1981,7 @@ export SHELL=/bin/bash
 bash
 # This will require you to hit Ctrl-D twice when one want to log out,
 # once when you exit bash and once when you exit dash.
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/7a49c243-47f7-4a5a-a42a-87357d134b0d.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/7a49c243-47f7-4a5a-a42a-87357d134b0d.json
 
 # Find out whether a package is installed or not.
 # Also tells you the version and whether it's installed from a ppa.
@@ -2189,7 +2189,7 @@ uname --all
 # Only the kernel architecture, e.g. x86_64
 uname --machine
 uname -m
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/f69252a3-a58b-48bc-9fd2-89e9e5d29f94.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/f69252a3-a58b-48bc-9fd2-89e9e5d29f94.json
 
 # Shows kernal architecture as well,
 # theoretically the same as uname -m.
@@ -2213,7 +2213,7 @@ lscpu
 lscpu | grep 'Architecture:'
 # Show only the architecture name, e.g. x86_64
 lscpu | grep '^Architecture:' | awk '{print $2}'
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/101630e8-efc4-4566-bbc8-78e6ac76120f.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/101630e8-efc4-4566-bbc8-78e6ac76120f.json
 
 # Try to fix wifi
 sudo echo SUSPEND_MODULES="$SUSPEND_MODULES rtl1892ce" >> /etc/pm/config.d/unload_modules
@@ -2387,7 +2387,7 @@ find . -depth | rename 's/\ /_/g'
 pdfimages -j mypdf ./
 # A somewhat neater solution for all pdfs in current directory.
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
 
 # Show info about pages 1-10 of a PDF.
 pdfimages -f 1 -l 10 -list example.pdf | less
@@ -2515,7 +2515,7 @@ mv */* ./
 # Move files in current directory to parent directory
 # Note: using cp or rsync is all well and good for this, too, but what if the files are huge? mv can move directories without copying files.
 mv -- * .[^.]* ..
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
 ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
@@ -2757,7 +2757,7 @@ dpkg-query --show | column -t | less
 
 # Kill stopped jobs
 kill $(jobs -ps)
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/dbadb0c9-5590-46af-b846-095c44a66e2c.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/dbadb0c9-5590-46af-b846-095c44a66e2c.json
 
 # Use a string as if it were a file.
 # Note that it adds a newline at the end.
@@ -2983,7 +2983,7 @@ avconv -i image.iso
 
 # Blank the screen temporarily (turn off display, turn off the screen)
 xset dpms force standby
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/5b791952-7792-4ca5-bb38-cf622f3cdc8a.json
 
 # /usr/share/man/man3/DPMSSetTimeouts.3.gz
 # "The  value  standby is the amount of inactivity time, in seconds, before
@@ -3764,7 +3764,7 @@ xclip -selection clipboard -t image/png -o > out.png
 # Have not seen it work with image/tiff yet.
 # https://unix.stackexchange.com/questions/145131/copy-image-from-clipboard-to-file
 # http://ubuntuforums.org/showthread.php?t=1335075
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/5a413ea5-d4f0-46d9-b7c8-b7170a74b847.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/5a413ea5-d4f0-46d9-b7c8-b7170a74b847.json
 
 # Lookup information about a website or ip address
 whois iit.edu
@@ -3816,7 +3816,7 @@ find -type f -printf '%T+ %p\n' | sort | head -n 1
 # Find files in your home directory that you don't own
 find $HOME ! -user $USER
 # https://stackoverflow.com/questions/5927489/looking-for-files-not-owned-by-someone
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/2b0656bc-9ea5-466b-8734-dcc1570be067.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/2b0656bc-9ea5-466b-8734-dcc1570be067.json
 
 # Install from source, but turn it into a debian package first
 ./configure && make && checkinstall
@@ -3849,7 +3849,7 @@ du --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 du -hd 1 ~ | sort -hr | less
 du --human --max-depth=1 $HOME | sort --reverse --human-numeric-sort | less
 # https://serverfault.com/questions/62411/how-can-i-sort-du-h-output-by-size
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/64c52fa6-cdde-4e8b-9671-1b74978cdc2c.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/64c52fa6-cdde-4e8b-9671-1b74978cdc2c.json
 
 # Suspend the computer to RAM and wake up 60 seconds later
 sudo rtcwake -m mem -s 60
@@ -3906,7 +3906,7 @@ ls -d .??*
 echo .??*
 # https://stackoverflow.com/questions/22408455/how-to-list-only-the-dot-files-and-dot-folder-names-without-the-content-in-them
 # https://stackoverflow.com/questions/698764/use-rsync-to-copy-only-hidden-files
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/924d5f3a-512b-4c0e-8219-6a47002d9014.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/924d5f3a-512b-4c0e-8219-6a47002d9014.json
 
 # Graphically change timezone
 time-admin
@@ -4767,7 +4767,7 @@ rmdir "$dir"
 # On one line:
 dir="$(mktemp -d --tmpdir=.)" && unzip -q file.odt -d "$dir" && cd "$dir" && mogrify -resize 10x10% Pictures/* && zip -qrm ../resized.odt * && cd .. && rmdir "$dir"
 # TODO: delete dir variable.
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/361f2d3b-beeb-4a29-bcf6-070edaec63a9.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/361f2d3b-beeb-4a29-bcf6-070edaec63a9.json
 
 # restart xfce4 panels
 xfce4-panel -r
@@ -5757,7 +5757,7 @@ grep -IUrl $'\r'
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
 # https://superuser.com/questions/194668/grep-to-find-files-that-contain-m-windows-carriage-return
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd-oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/fd1ea283-a1ec-4997-9806-464a5a715624.json
 
 # Grep only Makefiles.
 grep --recursive --include=Makefile 'example-pattern'
@@ -7175,3 +7175,27 @@ siggen -2
 aoss siggen -2
 # with PulseAudio OSS Wrapper (pulseaudio-utils):
 padsp siggen -2
+
+# Convert PDF to PNG without imagemagick.
+pdftocairo -png -rx 300 -ry 300 input.pdf out
+# creates out-1.png, out-2.png, etc.
+pdftoppm -png -rx 300 -ry 300 input.pdf out
+# creates out-1.png, out-2.png, etc.
+
+# Get font metadata, also works on TrueType Fonts (TTF) files.
+otfinfo --info /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
+# Family:              Liberation Sans
+# Subfamily:           Regular
+# Full name:           Liberation Sans
+# PostScript name:     LiberationSans
+# Version:             Version 1.07.4
+# Unique ID:           Ascender - Liberation Sans
+# Designer:            Steve Matteson
+# Designer URL:        http://www.ascendercorp.com/typedesigners.html
+# Manufacturer:        Ascender Corporation
+# Vendor URL:          http://www.ascendercorp.com/
+# Trademark:           Liberation is a trademark of Red Hat, Inc. registered in U.S. Patent and Trademark Office and certain other jurisdictions.
+# Copyright:           Copyright (c) 2007 Red Hat, Inc. All rights reserved. LIBERATION is a trademark of Red Hat, Inc.
+# License URL:         https://fedoraproject.org/wiki/Licensing/LiberationFontLicense
+# License Description: Licensed under the Liberation Fonts license, see https://fedoraproject.org/wiki/Licensing/LiberationFontLicense
+# Vendor ID:           1ASC
