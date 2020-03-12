@@ -39,6 +39,9 @@ find . -perm -a+rwx
 # Find directories that are world-writable.
 find . -type d -perm -a+w
 
+# Find directories that aren't permissions 0775 (drwxr-xr-x).
+find . -type d \! -perm 0775
+
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
@@ -5989,11 +5992,11 @@ gvfs-info /etc/hosts
 
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
-
+gio mime x-scheme-handler/thunderlink
 
 # Check what mimetype a file is.
 xdg-mime query filetype /tmp/foobar.png
-
+gio info -a 'standard::content-type' /tmp/foobar.png
 mimetype /tmp/foobar.png
 
 # List mimetypes of all files, sorted by mimetype.
