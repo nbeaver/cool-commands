@@ -7202,3 +7202,12 @@ otfinfo --info /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
 # License URL:         https://fedoraproject.org/wiki/Licensing/LiberationFontLicense
 # License Description: Licensed under the Liberation Fonts license, see https://fedoraproject.org/wiki/Licensing/LiberationFontLicense
 # Vendor ID:           1ASC
+
+# Using magic-wormhole.
+# On sending machine:
+wormhole send myfile.txt
+# > Sending ... file name 'myfile.txt'
+# > One the other computers, please run: wormhole receive
+# > Wormhole code is: 5-october-stockman
+# On receiving machine:
+wormhole receive
