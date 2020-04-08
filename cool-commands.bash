@@ -49,8 +49,12 @@ find . -type d \! -perm 0775
 find . \! -type l -perm 777
 find . '!' -type l -perm 777
 
+# Find directories and sort by permissions type.
+find . -type d -printf '%m %p\n' | sort | less
+
 # Fix permissions recursively.
 find . -perm 777 -exec chmod 755 '{}' \;
+find . -perm 777 -exec chmod 775 '{}' \;
 
 # Find a writable file owned by root.
 find / -xdev -user root -perm -u+w -name hello 2>/dev/null
@@ -2061,6 +2065,8 @@ apt-file search libc.so.6
 #   user	0m2.812s
 #   sys	0m0.228s
 
+# Find which package contained a header file.
+# Useful for compiling from source.
 apt-file -x search '/fftw3.h$'
 # libfftw3-dev: /usr/include/fftw3.h
 apt-file -x search '/glib.h$'
@@ -6014,6 +6020,9 @@ xdg-mime query default application/pdf
 # Trace the file that gives the mimetype association.
 XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default application/pdf
 
+# See how KDE handles the 'appplication/pdf' mimetype.
+ktraderclient5 --mimetype 'application/pdf'
+
 # Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
 ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
 xdg-open http://localhost:1631/
@@ -7211,3 +7220,11 @@ wormhole send myfile.txt
 # > Wormhole code is: 5-october-stockman
 # On receiving machine:
 wormhole receive
+
+# List all the package names starting with "libstdc++".
+apt-cache pkgnames "libstdc++"
+# Just get the debug packages.
+apt-cache pkgnames "libstdc++" | grep dbg | less
+
+# See what environment variables the `date` command uses.
+ltrace -f -e getenv -o my-ltrace-01.log date
