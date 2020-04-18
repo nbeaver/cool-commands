@@ -2629,6 +2629,8 @@ pgrep x-www-browser
 ps --sort=-size -Fp $(pgrep dbus-daemon)
 ps --sort=-rss -Fp $(pgrep dbus-daemon)
 
+ps --sort=-rss -o pid,cmd,rss -fp $(pgrep bash)
+
 # Compress and tar a directory called 'meansum'
 tar -czvf meansum.tgz meansum/
 tar --create --gzip --verbose --file meansum.tgz meansum/
@@ -7228,3 +7230,10 @@ apt-cache pkgnames "libstdc++" | grep dbg | less
 
 # See what environment variables the `date` command uses.
 ltrace -f -e getenv -o my-ltrace-01.log date
+
+journalctl --list-boots
+
+journalctl _PID=28097
+
+# Verbose debug info for a makefile.
+make -qp
