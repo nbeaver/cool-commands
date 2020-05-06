@@ -345,7 +345,8 @@ find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 # or you will get error messages like these:
 # find: `/usr/bin/git fsck ./': No such file or directory
 
-find . -type d -name '.git' -print -execdir git --git-dir={} fsck \;
+# Quick and dirty way to find large git repositories.
+find . -type d -name '.git' -execdir du -0sb \; -printf ' %p\n' | sort -n
 
 # Example of fsck on a borked drive.
 fsck -y /dev/sda
@@ -1412,6 +1413,9 @@ readom dev=/dev/sr0 f=$HOME/Downloads/disc.iso && eject
 # or
 pv < /dev/sr0 > my-disc.iso
 
+# Don't need to use an absolute path.
+readom dev=/dev/sr0 f=./disc.iso && eject
+
 # TODO: does rsync work?
 rsync
 
@@ -1776,6 +1780,9 @@ kill -2 21213 # send SIGINT to process 21213
 kill -1 21213 # send SIGHUP to process 21213
 kill -3 21213 # send SIGQUIT (like Ctrl-\) to process 21213; will dump core
 kill -9 21213 # sends unblockable KILL signal to kernel
+
+# Pause all Firefox processes for 3 seconds.
+kill -SIGSTOP $(pgrep firefox); sleep 3; kill -SIGCONT $(pgrep firefox)
 
 # Kill a process, wait a second, then see if it's still running
 kill -3 4782 && sleep 1 && ps aux | grep 4782
@@ -5778,6 +5785,9 @@ grep -r --include=Makefile 'example-pattern'
 ag --file-search-regex Makefile 'example-pattern'
 ag -G Makefile 'example-pattern'
 
+# Search for .c files with 'sprintf('.
+ag -G '.*\.c$' 'sprintf('
+
 # Save a transcript of terminal session.
 script
 # Default output file is `typescript`.
@@ -5923,7 +5933,7 @@ bind -P | grep line
 # shell-expand-line can be found on "\e\C-e".
 # unix-line-discard can be found on "\C-u".
 
-# See what the terminal interprets.
+# See what the terminal interprets, e.g. Ctrl-S to pause terminal.
 # https://www.gnu.org/software/coreutils/manual/html_node/Characters.html
 # http://manpages.ubuntu.com/manpages/precise/en/man3/termios.3.html
 # https://www.quora.com/What-are-all-of-the-keyboard-shortcuts-for-sending-signals-from-the-shell?share=1
@@ -7022,6 +7032,10 @@ sudo snap refresh plexmediaserver
 
 # Install skype.
 sudo snap install --classic skype
+
+# Update all snap packages,
+# like apt-get upgrade.
+sudo snap refresh
 
 # Generate PostScript output from a text file.
 enscript -f Helvetica-Narrow12 example.txt -p example.ps
