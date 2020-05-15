@@ -1262,8 +1262,43 @@ sudo fdisk -l
 # /dev/sdb2       967143422 1000214527  33071106  15.8G  5 Extended
 # /dev/sdb5       967143424 1000214527  33071104  15.8G 82 Linux swap / Solaris
 
+# Show partitions, formats, and UUIDs.
+sudo blkid
+# /dev/sda1: UUID="B545-D15C" TYPE="vfat" PARTLABEL="EFI System Partition" PARTUUID="088bfc20-e02e-4c0f-a9a0-97393ea66a22"
+# /dev/sda2: UUID="8aba78a5-df87-471d-ab5c-a3846c6858a9" TYPE="ext4" PARTUUID="5aac593a-e2c0-4924-9532-2a0b592fe1de"
+# /dev/sdb1: LABEL="media" UUID="e5eb52cb-c135-4493-b810-43ffe4cf2e94" TYPE="ext4" PARTUUID="76758f34-a677-4c9c-9c84-4fb183f8bbf2"
+# /dev/loop0: TYPE="squashfs"
+# /dev/loop1: TYPE="squashfs"
+# /dev/loop2: TYPE="squashfs"
+# /dev/loop3: TYPE="squashfs"
+# /dev/loop4: TYPE="squashfs"
+# /dev/loop5: TYPE="squashfs"
+# /dev/loop6: TYPE="squashfs"
+# /dev/loop7: TYPE="squashfs"
+# /dev/loop8: TYPE="squashfs"
+# /dev/loop9: TYPE="squashfs"
+# /dev/loop10: TYPE="squashfs"
+# /dev/loop11: TYPE="squashfs"
+# /dev/loop12: TYPE="squashfs"
+# /dev/loop13: TYPE="squashfs"
+# /dev/loop14: TYPE="squashfs"
+# /dev/loop15: TYPE="squashfs"
+# /dev/loop17: TYPE="squashfs"
+# /dev/loop18: TYPE="squashfs"
+# /dev/loop19: TYPE="squashfs"
+# /dev/loop20: TYPE="squashfs"
+# /dev/loop21: TYPE="squashfs"
+# /dev/loop22: TYPE="squashfs"
+# /dev/loop23: TYPE="squashfs"
+# /dev/loop25: TYPE="squashfs"
+# /dev/loop26: TYPE="squashfs"
+# /dev/loop27: TYPE="squashfs"
+# /dev/loop28: TYPE="squashfs"
+# /dev/loop29: TYPE="squashfs"
+# /dev/loop30: TYPE="squashfs"
+# /dev/loop31: TYPE="squashfs"
 
-# Another easy way to see disks and partitions whether they are mount or not
+# Another easy way to see disks and partitions whether they are mounted or not
 # Does not require sudo.
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
@@ -6951,6 +6986,24 @@ xapian-delve ~/.recoll/xapiandb/
 # https://xapian.org/docs/admin_notes.html#inspecting-a-database
 # https://getting-started-with-xapian.readthedocs.io/en/latest/practical_example/indexing/verifying_the_index.html
 xapian-delve -1 -A Q/home/nathaniel/path/to/file/ ~/.recoll/xapiandb/
+
+# See record information.
+xapian-delve -r 1 -d ~/.recoll/xapiandb/
+# Data for record #1:
+# url=file:///home/nathaniel/.zotero/zotero/vt5s686l.default/zotero/storage/CGQQTDFV/Ianculescu-2007-BF-BT-ferromagnetism.pdf
+# mtype=application/pdf
+# fmtime=01350055089
+# origcharset=CP1252
+# fbytes=417170
+# pcbytes=417170
+# dbytes=20415
+# sig=4171701580528861
+# caption=Microsoft Word - BiFeO3-BaTiO3_corr.doc
+# abstract=?!#@  Preparation and Properties of (1-x)BiFeO3 – xBaTiO3 Solid Solutions with Multiferroic Character A. Ianculescu1, L. Mitoşeriu2*, H. Chiriac3, M. M. Carnasciali4, A. Brăileanu5 and R. Truşcă6 1 Polytechnics University of Bucharest, 1-7 Gh.
+# author=LMitoseriu - PScript5.dll Version 5.2
+# filename=Ianculescu-2007-BF-BT-ferromagnetism.pdf
+
+Term List for record #1:
 
 # Check if /tmp/ is tmpfs or not.
 df -T /tmp
