@@ -347,6 +347,9 @@ find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 
 # Quick and dirty way to find large git repositories.
 find . -type d -name '.git' -execdir du -0sb \; -printf ' %p\n' | sort -n
+# Measure the size of the .git folder itself, not the parent folder.
+find . -type d -name '.git' -exec du -sb '{}' \+ | sort -rn
+find . -type d -name '.git' -exec du -sh '{}' \+
 
 # Example of fsck on a borked drive.
 fsck -y /dev/sda
@@ -2315,6 +2318,8 @@ sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf
 df # to see mounted partitions
 df -h # to see human readable sizes
 df -T # to see filesystem types
+
+df -B1 | numfmt --header --field 2-4 --to=si
 
 sudo udisks --unmount /dev/sdb1 && sudo udisks --unmount /dev/sdb2 && sudo udisks --detach /dev/sdb
 
