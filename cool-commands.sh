@@ -5834,6 +5834,9 @@ ag -G Makefile 'example-pattern'
 # Search for .c files with 'sprintf('.
 ag -G '.*\.c$' 'sprintf('
 
+# Sesarch for .sh files with '<<<' (here-doc).
+ag -G '.*\.sh' '<<<' .
+
 # Save a transcript of terminal session.
 script
 # Default output file is `typescript`.
