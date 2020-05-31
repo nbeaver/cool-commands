@@ -2313,6 +2313,9 @@ sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf
 #       dmesg -w
 
 
+# Mount a ram drive
+mkdir -p /mnt/ram
+mount -t ramfs -o size=20m ramfs /mnt/ram
 
 # Unmount partitions and detach disk
 df # to see mounted partitions
@@ -2542,6 +2545,9 @@ find ~/Dropbox -type l -ls
 
 # Find all symbolic links in a folder to a folder
 find ~/Dropbox/ -lname '*Dropbox*'
+
+# Find all filenames with unicode characters.
+LC_ALL=C find . -name '*[![:print:]]*' | visit_paths.py
 
 # Find all directories with a name including 'Link'. These are suspicious characters Dropbox has dereferenced into directories instead of symbolic links.
 find ~/Dropbox -type d -name '*Link*'
