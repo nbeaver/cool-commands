@@ -1,4 +1,4 @@
-! /usr/bin/env false
+#! /usr/bin/env bash
 # Prevent this file from being run as a shell script.
 exit 1
 
@@ -28,6 +28,9 @@ find . -name  *cool*
 find . -name *.html
 # Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
+
+# Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
+find . -type f -name '*.sw?'
 
 # Find all files with certain permissions.
 # World-readable (777)
