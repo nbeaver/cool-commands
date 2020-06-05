@@ -1207,6 +1207,7 @@ cat /proc/acpi/battery/BAT0/state # deprecated.
 # See more detailed information about battery life.
 upower -i /org/freedesktop/UPower/devices/battery_BAT0
 acpi -V
+gnome-power-statistics
 gnome-power-manager
 
 # Show kernel information about battery:
@@ -7321,3 +7322,8 @@ journalctl _PID=28097
 
 # Verbose debug info for a makefile.
 make -qp
+
+# Get default display manager.
+cat /etc/X11/default-display-manager
+# e.g. /usr/bin/sddm
+# https://askubuntu.com/questions/584373/how-to-check-using-the-command-line-which-display-manager-is-running
