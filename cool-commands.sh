@@ -7327,3 +7327,24 @@ make -qp
 cat /etc/X11/default-display-manager
 # e.g. /usr/bin/sddm
 # https://askubuntu.com/questions/584373/how-to-check-using-the-command-line-which-display-manager-is-running
+
+# See Dropbox syncing progress.
+cd ~/Dropbox/
+dropbox filestatus
+# Example output:
+# .dropbox:          unwatched
+# .dropbox.cache:    unwatched
+# .icons:            up to date
+# 2020-06-11:        up to date
+# Apps:              up to date
+# archive:           syncing
+# calibre-libraries: up to date
+# Camera Uploads:    up to date
+# import:            up to date
+# keepass:           up to date
+# Public:            up to date
+# Screenshots:       up to date
+# Shared_Folders:    up to date
+# temp:              up to date
+# writings:          up to date
+# zim-wiki:          up to date
