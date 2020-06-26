@@ -45,6 +45,12 @@ find . -type d -perm -a+w
 # Find directories that aren't permissions 0775 (drwxr-xr-x).
 find . -type d \! -perm 0775
 
+# Find files or directories that are not writable in the current directory.
+find . ! -writable
+
+# Make them writable again.
+find . ! -writable -exec chmod --changes +w '{}' \+ | less
+
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
@@ -54,6 +60,9 @@ find . '!' -type l -perm 777
 
 # Find directories and sort by permissions type.
 find . -type d -printf '%m %p\n' | sort | less
+
+# Create permissions report.
+find . -printf '%m\n' | sort | uniq -c | tee permissions-report.txt | less
 
 # Fix permissions recursively.
 find . -perm 777 -exec chmod 755 '{}' \;
@@ -1083,10 +1092,10 @@ find ./ -print -exec recollindex -i '{}' \;
 find . -type f -print | recollindex -i
 # Also erase current file data.
 # -e will erase data for individual files from the database.
-find . -type f -print | recollindex -e -i
+find . -type f -print | recollindex -e
 
 # Do this without using too many resources.
-find . -type f -name '*.tex' -print | nice -n 19 ionice -c 3 recollindex -e -i
+find . -type f -name '*.tex' -print | nice -n 19 ionice -c 3 recollindex -e
 
 # Much like any other find exec command, but more efficient
 # because it uses the fact that rm can take multiple arguments to runs rm fewer times.
@@ -6068,6 +6077,7 @@ gio mime x-scheme-handler/thunderlink
 # Check what mimetype a file is.
 xdg-mime query filetype /tmp/foobar.png
 gio info -a 'standard::content-type' /tmp/foobar.png
+kmimetypefinder5 /tmp/foobar.png
 mimetype /tmp/foobar.png
 
 # List mimetypes of all files, sorted by mimetype.
@@ -7348,3 +7358,16 @@ dropbox filestatus
 # temp:              up to date
 # writings:          up to date
 # zim-wiki:          up to date
+
+# Get a random process ID (PID).
+ps -eo pid | tail -n +2 | shuf -n 1
+
+# Get all but the first line.
+tail -n +2
+# https://stackoverflow.com/questions/7318497/omitting-the-first-line-from-any-linux-command-output
+
+# Test a process looking at PIDs.
+watch --errexit -n 1 'ps -fp $(ps -eo pid | tail -n +2 | shuf -n 1)'
+
+# Visit the realpaths of all symbolic links.
+find . -type l | xargs realpath | visit_paths.py
