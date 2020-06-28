@@ -2966,7 +2966,7 @@ xset q | grep bell
 # A more thorough way to turn off the system bell:
 rmmod pcspkr
 # making it permanent
-sudo su
+sudo -s
 echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
 # alternately, without becoming superuser:
 echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf
@@ -2974,6 +2974,12 @@ echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf
 # http://pushl.hatenablog.com/entry/2012/12/22/035018
 # silent version:
 echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf > /dev/null
+
+# Instead of this:
+sudo su
+# do this:
+sudo -s
+# https://unix.stackexchange.com/questions/132748/sudo-not-preserving-ps1
 
 # From http://overapi.com/linux/
 # Run cmd1 then cmd2
@@ -7371,3 +7377,6 @@ watch --errexit -n 1 'ps -fp $(ps -eo pid | tail -n +2 | shuf -n 1)'
 
 # Visit the realpaths of all symbolic links.
 find . -type l | xargs realpath | visit_paths.py
+
+# End a sudo session early.
+sudo -k
