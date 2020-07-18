@@ -540,7 +540,7 @@ hexdump -C myfile.gsp | less
 for f in *.gsp # for every file ending in .gsp
 do
     echo $f # display the filename
-    hexdump -C $f > "${f%.*}.txt" # make a text hexdump
+    hexdump -C $f > "${f%.gsp}.txt" # make a text hexdump
 done
 
 for f in *.exe; do hexdump -C "$f" > "$f.hexdump.txt"; done
@@ -1012,7 +1012,7 @@ tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 # decompress and unarchive a gzipped file
 tar -zxvf XeroxLinuxi686xpxx_4.30.28.tgz
 
-# decompress and unacrhive a tarred, gzipped file
+# decompress and unarchive a tarred, gzipped file
 tar -zxf keepassx-0.4.3.tar.gz
 tar zxf keepassx-0.4.3.tar.gz # The - in front of the flags is not actually necessary.
 # Unfortunately, no easy way to make a parent directory.
@@ -4045,6 +4045,9 @@ convert -density 300 temp.pdf out.png
 # Downscale a big JPEG to 999kB or less.
 convert big.jpg -define jpeg:extent=999kb smaller.jpg
 
+# Convert JPEG to PDF with rotation.
+convert -rotate 90 in.jpg out.pdf
+
 # Oh my gosh, I just entered my password in the terminal
 # and now it will be in the bash history! What can I do?
 unset HISTFILE
@@ -5899,8 +5902,10 @@ column -t -s $'\t' myfile.tsv
 
 # Install python packages the safe way (or at least safer).
 pip install --user matplotlib
+# https://pip.pypa.io/en/stable/installing/
 # Not this:
 sudo pip install matplotlib
+
 # Remove packages with pip.
 pip uninstall matplotlib
 # https://pip.readthedocs.org/en/stable/reference/pip_uninstall/
@@ -6250,6 +6255,9 @@ nm --dynamic /usr/bin/clear
 #                  U stdout
 #                  U tigetstr
 #                  U tputs
+
+# Check if a binary was compiled with AddressSanitizer enabled.
+
 
 ldd /usr/bin/line
 # 	linux-vdso.so.1 (0x00007ffc919de000)
@@ -7380,3 +7388,9 @@ find . -type l | xargs realpath | visit_paths.py
 
 # End a sudo session early.
 sudo -k
+
+# Streaming a YouTube video to VLC media player.
+youtube-dl -o - 'https://www.youtube.com/watch?v=BaW_jenozKcj' | vlc -
+
+# Debug Nautilus.
+nautilus --gdk-debug=events,misc,dnd,color-context,xim --gtk-debug=objects,misc,signals,dnd,plugsocket
