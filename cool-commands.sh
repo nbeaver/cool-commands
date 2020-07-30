@@ -7394,3 +7394,16 @@ youtube-dl -o - 'https://www.youtube.com/watch?v=BaW_jenozKcj' | vlc -
 
 # Debug Nautilus.
 nautilus --gdk-debug=events,misc,dnd,color-context,xim --gtk-debug=objects,misc,signals,dnd,plugsocket
+
+# See texlive documentation files for the siunitx package.
+texdoc -l -s siunitx
+# Example output:
+#  1 /usr/share/texlive/texmf-dist/doc/latex/siunitx/siunitx.pdf
+#    = Package documentation
+#  2 /usr/share/texlive/texmf-dist/doc/latex/siunitx/README.md
+#    = Readme
+# Enter number of file to view, RET to view 1, anything else to skip:
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6f1c574e-9500-4656-88e0-77755721a1d7.json
+
+# Show package names starting with "libstdc++".
+apt-cache --no-generate pkgnames "libstdc++" | less
