@@ -7407,3 +7407,6 @@ texdoc -l -s siunitx
 
 # Show package names starting with "libstdc++".
 apt-cache --no-generate pkgnames "libstdc++" | less
+
+# Show mr custom subcommand (uploadcandidate)
+mr -q uploadcandidate
