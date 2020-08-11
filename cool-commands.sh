@@ -32,6 +32,9 @@ find . -name '*.html'
 # Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
 find . -type f -name '*.sw?'
 
+# Find files with spaces in the filename.
+find . -name '* *'
+
 # Find all files with certain permissions.
 # World-readable (777)
 find . -perm 777
@@ -6929,6 +6932,8 @@ find . -name '*.desktop' -print0 | xargs --null desktop-file-validate 2>&1 | les
 locate '*.desktop' | xargs -d '\n' grep 'URL=file://' | less
 locate '*.desktop' | xargs -d '\n' grep -h 'Icon=' | sort | uniq | vim -
 
+locate '*.desktop' | xargs -L 1 -d '\n' basename | sort -u | less -c
+
 
 locate -0 '*.tex' | xargs -0 grep -l 'newdimens' | less -c
 locate '*.tex' | grep nathaniel  | xargs -d '\n' grep -l 'newdimens' | less -c
@@ -7116,7 +7121,12 @@ head -n -0 * | tee ../combined.txt | less
 journalctl --since '1 hour ago' --until 'now'
 journalctl --since '-1 hour' --until 'now'
 
+# Since last reboot.
+journalctl --boot --lines=all | less
+
+# Get screenshot on an android device.
 adb shell screencap -p /sdcard/screen.png
+# Copy the screenshot to current directory.
 adb pull /sdcard/screen.png
 # https://blog.shvetsov.com/2013/02/grab-android-screenshot-to-computer-via.html
 
@@ -7410,3 +7420,17 @@ apt-cache --no-generate pkgnames "libstdc++" | less
 
 # Show mr custom subcommand (uploadcandidate)
 mr -q uploadcandidate
+
+# Get GNOME version.
+cat /usr/share/gnome/gnome-version.xml
+
+# Increase / decrease volume on KDE plasma.
+qdbus org.kde.kglobalaccel /component/kmix org.kde.kglobalaccel.Component.invokeShortcut 'increase_volume'
+qdbus org.kde.kglobalaccel /component/kmix org.kde.kglobalaccel.Component.invokeShortcut 'decrease_volume'
+
+# Get e.g. PostScript name of a TrueType font.
+otfinfo -i /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf | less
+otfinfo -i /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf | grep 'PostScript name:'
+
+# Interactive disk usage explorer that runs in the terminal.
+ncdu
