@@ -6087,6 +6087,7 @@ gvfs-info /etc/hosts
 # Check if a mimetype is known.
 gvfs-mime --query x-scheme-handler/thunderlink
 gio mime x-scheme-handler/thunderlink
+ktraderclient5 --mimetype 'x-scheme-handler/thunderlink'
 
 # Check what mimetype a file is.
 xdg-mime query filetype /tmp/foobar.png
@@ -7434,3 +7435,6 @@ otfinfo -i /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf | grep 'PostScript na
 
 # Interactive disk usage explorer that runs in the terminal.
 ncdu
+
+# Notify when insync finishes syncing.
+watch -g 'insync get_status'; espeak 'insync is done syncing'
