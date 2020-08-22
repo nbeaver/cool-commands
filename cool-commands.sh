@@ -7438,3 +7438,11 @@ ncdu
 
 # Notify when insync finishes syncing.
 watch -g 'insync get_status'; espeak 'insync is done syncing'
+
+# Debug a Qt-based application and save the logged output.
+QT_LOGGING_RULES="*.info=true;*.debug=true" keepassxc 2>&1 | tee keepassxc_debug_log_$(date +%F_%H_%M_%S_%s_%N).txt | less
+# Alternative: ~/.config/QtProject/qtlogging.ini
+# https://www.qt.io/blog/2014/03/11/qt-weekly-1-categorized-logging
+
+# Format a JSON file in place.
+python3 -m json.tool < my-json-data.json | sponge my-json-data.json
