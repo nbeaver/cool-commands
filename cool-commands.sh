@@ -7446,3 +7446,6 @@ QT_LOGGING_RULES="*.info=true;*.debug=true" keepassxc 2>&1 | tee keepassxc_debug
 
 # Format a JSON file in place.
 python3 -m json.tool < my-json-data.json | sponge my-json-data.json
+
+# View WEBP image.
+vwebp example.webp
