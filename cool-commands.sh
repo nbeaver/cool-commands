@@ -539,6 +539,9 @@ hexdump myfile.gsp | less
 
 # See the hexdump of a file side-by-side with ASCII.
 hexdump -C myfile.gsp | less
+# Example with runtime file used by `who'.
+hexdump -C /var/run/utmp | less
+
 
 for f in *.gsp # for every file ending in .gsp
 do
