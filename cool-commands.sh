@@ -7452,3 +7452,8 @@ python3 -m json.tool < my-json-data.json | sponge my-json-data.json
 
 # View WEBP image.
 vwebp example.webp
+
+# Run older version of Thunderbird on a newer profile.
+thunderbird --allow-downgrade --ProfileManager
+# https://askubuntu.com/questions/1201870/thunderbird-68-3-1-profile-how-to-install-in-ubuntu-18-04
+# https://askubuntu.com/questions/1226247/you-have-launched-an-older-version-of-thunderbird
