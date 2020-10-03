@@ -6806,8 +6806,6 @@ sudo modprobe -r psmouse && modprobe psmouse proto=imps
 
 dconf read /org/gnome/desktop/peripherals/touchpad/tap-to-click
 
-# TODO: find out how to send a notification when /var/cache/apt/archives/lock is released.
-
 echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
 
 # Generate a core dump of the init process.
@@ -6956,6 +6954,8 @@ sudo lsof /var/lib/tor/lock
 # COMMAND  PID       USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
 # tor     1322 debian-tor    8uW  REG    8,2        0 28836693 /var/lib/tor/lock
 sudo lsof /var/cache/apt/archives/lock
+
+# TODO: find out how to send a notification when /var/cache/apt/archives/lock is released.
 
 # Prevent watch from being overflowed and wrapping lines.
 cut -c 1-$COLUMNS
