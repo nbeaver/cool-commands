@@ -7457,3 +7457,12 @@ vwebp example.webp
 thunderbird --allow-downgrade --ProfileManager
 # https://askubuntu.com/questions/1201870/thunderbird-68-3-1-profile-how-to-install-in-ubuntu-18-04
 # https://askubuntu.com/questions/1226247/you-have-launched-an-older-version-of-thunderbird
+
+# Ping Google's DNS servers and show timestamp.
+ping -D 8.8.8.8
+
+# Refresh all executables in $PATH (for bash shell).
+hash -r
+
+# Refresh a single command.
+hash -d my-script.sh
