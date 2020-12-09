@@ -7466,3 +7466,6 @@ hash -r
 
 # Refresh a single command.
 hash -d my-script.sh
+
+# Find glob patterns corresponding to two or mimetypes.
+sed '/^#/d' /usr/share/mime/globs ~/.local/share/mime/globs | sort -u | cut -d: -f 2 | sort | uniq -d | less
