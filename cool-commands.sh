@@ -7469,3 +7469,11 @@ hash -d my-script.sh
 
 # Find glob patterns corresponding to two or mimetypes.
 sed '/^#/d' /usr/share/mime/globs ~/.local/share/mime/globs | sort -u | cut -d: -f 2 | sort | uniq -d | less
+
+# Convert an RIS file to BibTeX and copy to clipboard.
+ris2xml example.ris | xml2bib | xsel -b
+
+# Dump a tzdata file.
+zdump /etc/localtime
+zdump -v /etc/localtime
+# https://unix.stackexchange.com/questions/85925/how-can-i-examine-the-contents-of-etc-localtime
