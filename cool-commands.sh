@@ -7008,7 +7008,7 @@ msgcat --color=test
 DISPLAY=:0 kwin --replace & disown
 # https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
 
-plasmashell & disown
+DISPLAY=:0 plasmashell & disown
 # https://askubuntu.com/questions/213680/how-to-restart-kwin-when-it-is-hung
 
 # Log out of KDE plasma 5 desktop from the command line.
