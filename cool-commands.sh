@@ -3404,6 +3404,8 @@ route | tail -n+3 | awk '{print $NF}' | sort | uniq
 # Find out your ip address
 ifconfig
 ip addr show
+# or just
+ip addr
 # Using moreutils
 ifdata -pa eth0
 
@@ -6152,6 +6154,8 @@ uuid -v3 ns:URL http://www.ossp.org/
 curl --proto https ifconfig.me
 # Alternative method, using DNS:
 dig +short myip.opendns.com @resolver1.opendns.com
+# Similar command.
+dig @resolver4.opendns.com myip.opendns.com +short
 
 # Remove file by inode.
 ls -i
@@ -6944,8 +6948,10 @@ locate '*.tex' | grep nathaniel  | xargs -d '\n' grep -l 'newdimens' | less -c
 grep -l 'newdimens' "$(locate *.tex)"
 for file in "$(locate *.tex)" ; do grep -l 'newdimens' "$file" ; done
 
-# Generate 10 pronounceable passwords.
+# Generate 10 pronounceable passwords (lowercase letters and a number).
 apg -n 10 -M Ln
+# Use only lowercase letters.
+apg -n 10 -M L
 
 # Find which process is holding a lock file.
 sudo lslocks | grep /var/lib/tor/lock
@@ -7477,3 +7483,13 @@ ris2xml example.ris | xml2bib | xsel -b
 zdump /etc/localtime
 zdump -v /etc/localtime
 # https://unix.stackexchange.com/questions/85925/how-can-i-examine-the-contents-of-etc-localtime
+
+# Find setuid executables.
+find /bin -perm -4000
+# https://linux-audit.com/finding-setuid-binaries-on-linux-and-bsd/
+
+ffprobe -loglevel error -select_streams v:0 -show_entries packet=pts_time,flags -of csv=print_section=0 myvideo.mp4
+
+ffprobe -select_streams v -show_frames -show_entries frame=pict_type -of csv myvideo.mp4
+
+ffprobe -select_streams v -show_frames myvideo.mp4
