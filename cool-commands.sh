@@ -3370,6 +3370,11 @@ dig +trace w3.org
 
 dig @8.8.8.8 www.google.com
 
+# Show DNS servers.
+systemd-resolve --status
+resolvectl status
+# https://unix.stackexchange.com/questions/328131/how-to-troubleshoot-dns-with-systemd-resolved
+
 # Choose a mirror to download from by comparing speed and latency
 sudo netselect -vv debian.uchicago.edu mirror.anl.gov
 
@@ -7493,3 +7498,18 @@ ffprobe -loglevel error -select_streams v:0 -show_entries packet=pts_time,flags 
 ffprobe -select_streams v -show_frames -show_entries frame=pict_type -of csv myvideo.mp4
 
 ffprobe -select_streams v -show_frames myvideo.mp4
+
+# Find paths at least 260 characters long.
+find . -regextype 'posix-extended' -regex '.{260,}' | less
+
+# Stamp PostScript onto PDF.
+ps2pdf overlay.ps | pdftk input.pdf stamp - output output.pdf
+# https://gitlab.com/pdftk-java/pdftk/-/issues/57
+ps2pdf overlay.ps | pdftk input.pdf stamp /dev/stdin output output.pdf
+
+# Get bash history without line numbers.
+history -w /dev/stdout
+# https://stackoverflow.com/questions/7110119/bash-history-without-line-numbers
+
+# Get just the systemctl commands.
+history -w /dev/stdout | grep '^systemctl' | sort -u | less
