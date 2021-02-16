@@ -4825,7 +4825,7 @@ convert in.png -fill white -draw 'color 0,0 replace' out.png
 convert in.png -fill white -opaque 'rgb(114,159,207' out.png
 convert in.png -fill white -opaque '#729FCF' out.png
 
-# Create a png of unifrom, solid red.
+# Create a png of uniform, solid red.
 convert -size '100x100' 'canvas:#FF0000' red.png
 convert -size '100x100' 'canvas:red' red.png
 # http://stackoverflow.com/questions/7771975/imagemagick-create-a-png-file-which-is-just-a-solid-rectangle
@@ -5380,7 +5380,9 @@ SpiderOak --repair
 SpiderOakONE --share-single-file=temp.txt
 # https://spideroak.com/storage/NZRGKYLWMVZA/shared/811021-5-55547/temp.txt?f9ce28081c95feece929334c41995cb9
 
-# TODO: figure out how to watch(1) aliases and shell functions.
+# Use 'watch' with an alias or shell function.
+watch -x bash -ic 'my-alias'
+# https://unix.stackexchange.com/questions/614722/how-to-use-aliases-with-watch-command
 
 # Convert hexadecimal to decimal
 python:
@@ -5632,7 +5634,9 @@ md5sum debian-live-7.6.0-amd64-xfce-desktop.iso
 wget -qO - 'http://commons.wikimedia.org/wiki/File:Ippolito1.jpg' | tee Ippolito1.jpg | md5sum
 # 570f9617245979be3c5219c73b577230  -
 
-# TODO: use `watch` on functions?
+# use `watch` on a bash function
+watch -x bash -ic 'my-function'
+# https://unix.stackexchange.com/questions/614722/how-to-use-aliases-with-watch-command
 
 # Use the /usr/bin/dict system dictionary to look up some tricky words.
 dict sinecure
@@ -7513,3 +7517,11 @@ history -w /dev/stdout
 
 # Get just the systemctl commands.
 history -w /dev/stdout | grep '^systemctl' | sort -u | less
+
+# Copy a symbolic link.
+cp -P /path/to/my-symlink /the/path/to/new-symlink
+# https://unix.stackexchange.com/questions/56084/how-do-i-copy-a-symbolic-link
+
+# Alternative method to copy symbolic links.
+cp -a --preserve=links /path/to/my-symlink /the/path/to/new-symlink
+# https://superuser.com/questions/138587/how-to-copy-symbolic-links
