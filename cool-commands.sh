@@ -1150,6 +1150,7 @@ readline.write_history_file("my_history.txt")
 
 # instant memory leak!
 echo $(yes hurpaflerp)
+echo $(yes)
 
 # Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
@@ -6529,6 +6530,9 @@ ls * | cut -c 15 | uniq | grep -v '4'
 head -c 10MB /dev/zero > bigfile
 # Random bytes instead of null bytes.
 head -c 10MB /dev/urandom > bigfile
+
+# Make a 10 MB file with just the letter 'a'.
+yes 'a' | tr -d '\n' | head -c 10MB > bigfile
 
 # Create a 10GB file.
 dd if=/dev/zero of=./gentoo_root.img bs=4k iflag=fullblock,count_bytes count=10G
