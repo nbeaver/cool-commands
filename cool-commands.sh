@@ -1722,6 +1722,19 @@ nmap -p T:60000 chloride.phys.iit.edu
 #
 # Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
 
+# Scan remote host for IRC server.
+nmap -p 6667 onyx.lan.
+# 
+# Starting Nmap 7.60 ( https://nmap.org ) at 2021-03-18 20:50 EDT
+# Nmap scan report for onyx.lan. (192.168.174.113)
+# Host is up (0.0090s latency).
+# rDNS record for 192.168.174.113: onyx.lan
+# 
+# PORT     STATE SERVICE
+# 6667/tcp open  irc
+# 
+# Nmap done: 1 IP address (1 host up) scanned in 0.13 seconds
+
 # See what your browser is doing.
 nc -l -p 8000 -v
 
@@ -4133,9 +4146,15 @@ sudo escputil -n -r /dev/usb/lp0
 sudo escputil -a -r /dev/usb/lp0
 
 # Add a ppa (personal package archives)
-sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa
+sudo add-apt-repository 'ppa:ubuntu-mozilla-daily/ppa'
 sudo apt-get update
 sudo apt-get upgrade
+
+# Remove a ppa.
+sudo add-apt-repository --remove 'ppa:ubuntu-mozilla-daily/ppa'
+# Another example:
+sudo add-apt-repository --remove 'ppa:openscad/releases'
+# Note that this doesn't remove the file from /etc/apt/sources.list.d/
 
 # Figure out what is listening on port 80.
 netstat -tulpn | grep :80
@@ -6407,7 +6426,7 @@ xrdb -merge ~/.Xresources
 # See ssh activity.
 sudo tcpdump -i wlan1 port 22 -n -Q inout
 
-# Play audio backwards.
+# Play audio backwards with sox.
 play file.mp3 reverse
 
 # Play video backwards.
@@ -7529,3 +7548,21 @@ cp -P /path/to/my-symlink /the/path/to/new-symlink
 # Alternative method to copy symbolic links.
 cp -a --preserve=links /path/to/my-symlink /the/path/to/new-symlink
 # https://superuser.com/questions/138587/how-to-copy-symbolic-links
+
+# Get MP3 metadata.
+ffprobe my_file.mp3 2>&1 | less
+ffprobe -loglevel error -show_entries format_tags=title,artist,album,date my_file.mp3 2>&1 | less
+# [FORMAT]
+# TAG:album=Good Luck
+# TAG:title=Good Luck
+# TAG:artist=Broken Bells
+# TAG:date=2019
+# [/FORMAT]
+ffprobe -loglevel error -show_entries format_tags=title,artist,album,date -of default=noprint_wrappers=1:nokey=1 my_file.mp3 2>&1 | less
+# Good Luck
+# Good Luck
+# Broken Bells
+# 2019
+
+# Create a core dump of a running process.
+gcore 4413 -o my-process-id.core
