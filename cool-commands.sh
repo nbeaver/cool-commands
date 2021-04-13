@@ -361,10 +361,10 @@ find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 # find: `/usr/bin/git fsck ./': No such file or directory
 
 # Quick and dirty way to find large git repositories.
-find . -type d -name '.git' -execdir du -0sb \; -printf ' %p\n' | sort -n
+find . -type d -name '*.git' -execdir du -0sb \; -printf ' %p\n' | sort -n
 # Measure the size of the .git folder itself, not the parent folder.
-find . -type d -name '.git' -exec du -sb '{}' \+ | sort -rn
-find . -type d -name '.git' -exec du -sh '{}' \+
+find . -type d -name '*.git' -exec du -sb '{}' \+ | sort -rn
+find . -type d -name '*.git' -exec du -sh '{}' \+
 
 # Example of fsck on a borked drive.
 fsck -y /dev/sda
@@ -2994,6 +2994,9 @@ echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf
 # http://pushl.hatenablog.com/entry/2012/12/22/035018
 # silent version:
 echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf > /dev/null
+
+# Show information about a kernel module, including version.
+modinfo pcspkr | less
 
 # Instead of this:
 sudo su
@@ -7566,3 +7569,8 @@ ffprobe -loglevel error -show_entries format_tags=title,artist,album,date -of de
 
 # Create a core dump of a running process.
 gcore 4413 -o my-process-id.core
+
+# This doesn't work:
+dpkg -L 'apt-*' | less
+# This does work:
+dpkg -L $(apt-cache pkgnames 'vlc-' | apt_is_installed.py) | less
