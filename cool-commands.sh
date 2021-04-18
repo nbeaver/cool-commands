@@ -7574,3 +7574,7 @@ gcore 4413 -o my-process-id.core
 dpkg -L 'apt-*' | less
 # This does work:
 dpkg -L $(apt-cache pkgnames 'vlc-' | apt_is_installed.py) | less
+
+# Show what bash options are enabled.
+echo $-
+# himBHs
