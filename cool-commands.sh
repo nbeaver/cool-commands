@@ -283,6 +283,9 @@ grep -i '.*gry$' /usr/share/dict/words
 # demagogry
 # hungry
 
+# Filter out the words with uppercase / capital letters.
+grep -v '[A-Z]' /usr/share/dict/words | less
+
 # Debugging segfaults in C:
 printf("Line %d reached.\n",__LINE__); /* debug */
 # Debugging segfaults in Fortran:
@@ -1603,6 +1606,8 @@ shuf --head-count=5 /usr/share/dict/words
 shuf -n 5 /usr/share/dict/words
 # Get rid of the words with apostrophes.
 grep -v "'" /usr/share/dict/words | shuf -n 5
+# Get rid of apostrophes and capital letters.
+grep -v '[A-Z]' /usr/share/dict/words | grep -v "'" | shuf -n 5
 
 # Get five random files from a directory.
 shuf -en 5 /bin/*
@@ -4136,6 +4141,10 @@ lsusb
 # Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 # You can tell there is not point in getting a USB 3.0 device for this machine,
 # because all the hubs are 2.0. Also, when looking at the physical machine, USB 3 ports are painted blue.
+
+usb-devices
+# From usbutils package.
+# Reads stuff like /sys/bus/usb/devices/2-1.2/product
 
 # Identify printer model.
 sudo escputil -d -r /dev/usb/lp0
@@ -7578,3 +7587,6 @@ dpkg -L $(apt-cache pkgnames 'vlc-' | apt_is_installed.py) | less
 # Show what bash options are enabled.
 echo $-
 # himBHs
+
+# Add a white boarder around an image.
+convert example.png -bordercolor "#FFFFFF" -border 1 example_border_1px.png
