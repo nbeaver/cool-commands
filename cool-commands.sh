@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
-# Prevent this file from being run as a shell script.
+# Put this at the top
+# to Prevent this file from being run as a shell script.
+printf "ERROR: do not run this as a shell script.\n" >&2
 exit 1
 
 # Wireless access points
@@ -9,7 +11,7 @@ sudo iwlist scanning | less
 xrandr
 # Reset screen resolution if another program goofs it up
 xrandr -s 1600x900
-xrand --size 1600x900
+xrandr --size 1600x900
 
 # Automatically turn on a second screen
 xrandr --output VGA --auto
@@ -21,11 +23,9 @@ xrandr --output VGA --left-of LVDS
 
 # Finding in directories beneath
 # Find all files containing text 'NBMAX' and ending in .F90
-find . | xargs grep NBMAX *.F90
+find . -name '*.F90' | xargs grep 'NBMAX'
 # Find all files with 'cool' somewhere in the name
-find . -name  *cool*
-# Find all files ending in .html in current directory
-find . -name *.html
+find . -name  '*cool*'
 # Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
 
@@ -49,10 +49,12 @@ find . -type d -perm -a+w
 find . -type d \! -perm 0775
 
 # Find files or directories that are not writable in the current directory.
-find . ! -writable
+find . \! -writable
+# Equivalent, but not compliant with POSIX-standard `find` command.
+find . -not -writable
 
 # Make them writable again.
-find . ! -writable -exec chmod --changes +w '{}' \+ | less
+find . \! -writable -exec chmod --changes +w '{}' \+ | less
 
 # https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
 # https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
@@ -60,6 +62,7 @@ find . ! -writable -exec chmod --changes +w '{}' \+ | less
 # Skip symbolic links.
 find . \! -type l -perm 777
 find . '!' -type l -perm 777
+find . -not -type l -perm 777
 
 # Find directories and sort by permissions type.
 find . -type d -printf '%m %p\n' | sort | less
@@ -6353,31 +6356,36 @@ mono --debug /usr/lib/banshee/Banshee.exe |& tee mono.log
 # Or just use this instead:
 banshee --debug |& tee banshee.log
 
-# Arithmetic.
+# Bash arithmetic.
 
 # Addition.
 echo $((2+2))
-expr 2 + 2
 
 # Multiplication.
 echo $((2*2))
-expr 2 '*' 2
-expr 2 \* 2
+
+# Exponentiation
+echo $((2**10))
 
 # Integer division.
-expr 1 / 2
-# 0
 echo $((1/2))
 # 0
 echo $((1/0))
 # bash: 1/0: division by 0 (error token is "0")
-expr 1 / 0
-# expr: division by zero
 
 # Doing arithmetic in other bases with bash.
 # E.g. 1010011011 in binary.
 echo $(( 2#1010011011 ))
 # 667
+
+# Arithmetic with `expr` command.
+expr 2 + 2
+expr 2 '*' 2
+expr 2 \* 2
+expr 1 / 2
+# 0
+expr 1 / 0
+# expr: division by zero
 
 # Browse GNU info pages in the KDE web browser.
 konqueror info:bash
@@ -7590,3 +7598,19 @@ echo $-
 
 # Add a white boarder around an image.
 convert example.png -bordercolor "#FFFFFF" -border 1 example_border_1px.png
+
+
+# Useful in Firefox developer toolbar.
+# https://stackoverflow.com/questions/32743509/can-i-create-high-resolution-screenshots-in-firefox
+:screenshot --dpr 4
+:screenshot filename.png --dpr 4
+
+# Show message of the day without needing to log in all over again.
+cat /run/motd.dynamic
+
+# Update message of the day.
+sudo run-parts /etc/update-motd.d/
+
+# Show if packages are pending.
+/usr/lib/update-notifier/apt-check --human-readable
+# https://askubuntu.com/questions/1001114/run-tty-script-every-time-i-open-a-gui-terminal
