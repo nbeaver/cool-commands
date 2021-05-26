@@ -7614,3 +7614,15 @@ sudo run-parts /etc/update-motd.d/
 # Show if packages are pending.
 /usr/lib/update-notifier/apt-check --human-readable
 # https://askubuntu.com/questions/1001114/run-tty-script-every-time-i-open-a-gui-terminal
+
+# Use pathchk command on all files under current directory.
+find . -exec 'pathchk' --portability -- '{}' \; 2>&1 | less
+# Faster version.
+find . -exec 'pathchk' --portability -- '{}' \+ 2>&1 | less
+# Don't complain about every filename over 14 characters.
+find . -exec 'pathchk' -P -- '{}' \+ 2>&1 | less
+# Also print every filename.
+find . -print -exec 'pathchk' --portability -- '{}' \; 2>&1 | less
+
+# Use xargs (faster).
+find . -print0 | xargs --null pathchk --portability -- 2>&1 | less
