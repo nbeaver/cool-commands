@@ -7497,7 +7497,10 @@ otfinfo -i /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf | grep 'PostScript na
 # Interactive disk usage explorer that runs in the terminal.
 ncdu
 
-# Notify when insync finishes syncing.
+# Force insync to sync current directory.
+insync force_sync $(pwd -P)
+
+# Notify when insync's syncing status changes.
 watch -g 'insync get_status'; espeak 'insync is done syncing'
 
 # Debug a Qt-based application and save the logged output.
