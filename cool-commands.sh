@@ -4941,7 +4941,7 @@ xbacklight -set 100
 xbacklight -get
 
 # Show maximum brightness.
-cat /sys/class/backlight/intel_backlight/actual_brightness
+cat /sys/class/backlight/intel_backlight/max_brightness
 # 4437
 
 # Forcibly set it to max brightness.
