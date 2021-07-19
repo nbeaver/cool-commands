@@ -1484,7 +1484,7 @@ readom dev=/dev/sr0 f=./disc.iso && eject
 rsync
 
 # Also eject:
-cp /dev/sr0 my-disc.iso && eject
+cp /dev/sr0 my-disc.iso; eject
 # Also alert when something goes wrong:
 cp /dev/sr0 my-disc.iso && eject || zenity --error --text='Disc copy failed.'
 
@@ -1501,6 +1501,9 @@ safecopy --stage2 /dev/sr0 safecopy.iso
 safecopy /dev/cdrom out.iso
 safecopy /dev/dvd out.iso
 safecopy /dev/sr0 safecopy.iso
+
+# Safecopy with timing and eject, ignoring badblocks.
+time safecopy -o /dev/null /dev/sr0 my-disc.iso; eject
 
 isohybrid systemrescuecd-x86-4.8.0.iso
 # After formatting USB to FAT32 or ext3:
