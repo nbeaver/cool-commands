@@ -3042,6 +3042,11 @@ ALT-.
 # http://606u.dir.bg/avicheck/
 ffmpeg -v 5 -i file.avi -f null -
 ffmpeg -loglevel 5 -i file.avi -f null -
+# Alternative, piping to less.
+ffmpeg -v error -i file.avi -f null - 2>&1 | less
+ffmpeg -v error -i file.avi -map 0:1 -f null - 2>&1 | less
+# https://stackoverflow.com/questions/34077302/quickly-check-the-integrity-of-video-files-inside-a-directory-with-ffmpeg
+
 # Double video volume (256 is unchanged)
 # https://superuser.com/questions/31176/increase-volume-of-an-mkv-video-from-linux-terminal
 ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
@@ -4082,6 +4087,9 @@ convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 convert -density 600 temp.pdf out.jpeg
 
 convert -density 300 temp.pdf out.png
+
+# Digitize page 23 of a PDF (pages start from 0).
+convert -density 300 temp.pdf[22] out.png
 
 # Downscale a big JPEG to 999kB or less.
 convert big.jpg -define jpeg:extent=999kb smaller.jpg
@@ -7298,6 +7306,7 @@ xlogo
 xclock
 xload
 xeyes
+ico -sleep .05
 
 # Run GDB on existing Firefox.
 gdb /usr/lib/firefox/firefox -p $(pgrep firefox)
