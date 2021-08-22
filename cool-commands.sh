@@ -31,6 +31,8 @@ find . -name '*.html'
 
 # Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
 find . -type f -name '*.sw?'
+# Visit those swap files.
+find . -name '*.sw?' | visit_paths.py
 
 # Find files with spaces in the filename.
 find . -name '* *'
@@ -923,6 +925,9 @@ systemctl list-unit-files
 
 systemctl list-units
 # https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
+
+# Restart display managers such as lightdm, gdm3, sddm, etc.
+sudo systemctl restart display-manager.service
 
 apt-cache showpkg xserver-xorg-input-synaptics
 # Use synaptic to downgrade and lock
@@ -2624,7 +2629,7 @@ mv -- * .[^.]* ..
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/510c302e-fb2b-4a2a-898f-b98ba0326453.json
 
 # Re-encode a file to play on a standard device, e.g. Sony Bravia TV
-ffmpeg -i Firefly_special_features_1.m4v -target ntsc-dvd output.mpg
+ffmpeg -i sintel.m4v -target ntsc-dvd output.mpg
 
 # Do it for every file, and run on three processors (if it's compiled to support multithreading)
 for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).mpg; done
@@ -3059,7 +3064,7 @@ ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 -c copy out1.mpg -ss
 
 # Get audio file from video
 ffmpeg -i myvid.mp4 ./out.mp3
-# Get audio from vidoe without re-encoding
+# Get audio from video without re-encoding
 # http://www.commandlinefu.com/commands/view/13359/dump-audio-from-video-without-re-encoding.
 ffmpeg -i file.ext -acodec copy -vn out.ext
 
@@ -7276,6 +7281,12 @@ sudo systemctl edit cron.service
 # CPUSchedulingPolicy=idle
 # IOSchedulingClass=idle
 
+# Stop cron jobs from running.
+sudo systemctl stop cron.service
+
+# Start cron jobs running again.
+sudo systemctl start cron.service
+
 # Suppress fully blank lines.
 sed '/^$/d'
 # another method using grep:
@@ -7641,3 +7652,6 @@ find . -print -exec 'pathchk' --portability -- '{}' \; 2>&1 | less
 
 # Use xargs (faster).
 find . -print0 | xargs --null pathchk --portability -- 2>&1 | less
+
+# Eject an unmounted flash drive at /dev/sdc.
+udisksctl power-off -b /dev/sdc
