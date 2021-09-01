@@ -4678,6 +4678,7 @@ weborf --basedir ~/weborf/ --cache ~/Downloads/weborf-cache/ --noexec --mime -d
 
 # See security updates
 apt-get -s dist-upgrade | grep "^Inst" | grep -i securi
+# https://askubuntu.com/questions/81585/what-is-dist-upgrade-and-why-does-it-upgrade-more-than-upgrade
 
 # Login with mobile shell
 mosh username@remote.computer
@@ -6926,9 +6927,15 @@ gnome-font-viewer /usr/share/fonts/opentype/freefont/FreeSans.otf
 fontforge /usr/share/fonts/opentype/freefont/FreeSans.otf
 display /usr/share/fonts/opentype/freefont/FreeSans.otf
 
-# Dislpay format of core dump filename.
+# Display format of core dump filename.
 sysctl kernel.core_pattern
 cat /proc/sys/kernel/core_pattern
+
+# Display security setting for performance events.
+sysctl kernel.perf_event_paranoid
+# Set it to something different.
+sudo sysctl kernel.perf_event_paranoid=-1
+sudo sysctl kernel.nmi_watchdog=0
 
 # Send a notification at a later time.
 printf 'DISPLAY=:0.0 zenity --info --text "check your email"' | at now + 1 minutes
@@ -7655,3 +7662,12 @@ find . -print0 | xargs --null pathchk --portability -- 2>&1 | less
 
 # Eject an unmounted flash drive at /dev/sdc.
 udisksctl power-off -b /dev/sdc
+
+# Install package to run `perf' with current kernel.
+sudo apt install linux-tools-`uname -r`
+
+# Get performance statistics for a command, in this case `stress --cpu 1'
+perf stat -dd stress --cpu 1
+
+# Show performance info by process.
+perf top
