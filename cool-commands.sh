@@ -7671,3 +7671,6 @@ perf stat -dd stress --cpu 1
 
 # Show performance info by process.
 perf top
+
+# Show what udisks is doing.
+sudo udisksctl monitor
