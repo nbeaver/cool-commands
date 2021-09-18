@@ -511,7 +511,7 @@ curl --head --silent --write-out '%{http_code} %{url_effective}\n' --location 'h
 # https://stackoverflow.com/questions/12747929/linux-script-with-curl-to-check-webservice-is-up
 # https://unix.stackexchange.com/questions/26426/how-do-i-get-only-the-http-status-of-a-site-in-a-shell-script
 # https://unix.stackexchange.com/questions/105134/type-url-and-show-http-status
-# 
+#
 
 # Just the HTTP status code.
 curl --head --silent --write-out "%{http_code}\\n" --location 'http://www.reddit.com/r/obscurantism' -o /dev/null
@@ -1740,15 +1740,15 @@ nmap -p T:60000 chloride.phys.iit.edu
 
 # Scan remote host for IRC server.
 nmap -p 6667 onyx.lan.
-# 
+#
 # Starting Nmap 7.60 ( https://nmap.org ) at 2021-03-18 20:50 EDT
 # Nmap scan report for onyx.lan. (192.168.174.113)
 # Host is up (0.0090s latency).
 # rDNS record for 192.168.174.113: onyx.lan
-# 
+#
 # PORT     STATE SERVICE
 # 6667/tcp open  irc
-# 
+#
 # Nmap done: 1 IP address (1 host up) scanned in 0.13 seconds
 
 # See what your browser is doing.
@@ -4326,6 +4326,9 @@ recoll -t 'dir:"home/nathaniel/SpiderOak Hive/writings/looseleaf/posts/" orphan'
 
 recoll -t dir:posts whack
 
+# Find text files with mimetype text/plain that don't end with '.txt'.
+recoll -t -l 'mime:text/plain -ext:txt' 2>/dev/null | less
+
 # https://askubuntu.com/questions/641386/in-recoll-how-to-view-the-list-of-files-that-have-been-indexed-in-a-specific-di
 
 # See ten newest processes
@@ -6812,6 +6815,8 @@ ps -o pid,cmd,rss -p 29161
 
 # Show time and date started and elapsed time.
 ps -o pid,cmd,lstart,etime -p 29443
+# Omit the header.
+ps -o pid=,cmd=,lstart=,etime= -p 24684
 
 # Get process ID of program running apt-get or dpkg.
 sudo fuser /var/lib/dpkg/lock
@@ -7265,7 +7270,7 @@ sudo chvt 2
 
 file /usr/bin/plasmashell
 # /usr/bin/plasmashell: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/l, for GNU/Linux 3.2.0, BuildID[sha1]=5ea1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55, stripped
-file /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug 
+file /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug
 # /usr/lib/debug/.build-id/5e/a1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55.debug: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter *empty*, for GNU/Linux 3.2.0, BuildID[sha1]=5ea1f3f7b9124a0174abd8be8eb1a4a4c1a1ad55, with debug_info, not stripped
 
 # Show whether the OS is 32-bit or 64-bit.
@@ -7674,3 +7679,11 @@ perf top
 
 # Show what udisks is doing.
 sudo udisksctl monitor
+
+dir /b
+# Windows command to just show files without extra information.
+# /b  Displays a bare list of directories and files, with no additional information. The /b parameter overrides /w.
+# https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir
+
+systeminfo > systeminfo.txt
+# Save Windows version information to a text file.
