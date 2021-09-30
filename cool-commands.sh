@@ -7687,3 +7687,6 @@ dir /b
 
 systeminfo > systeminfo.txt
 # Save Windows version information to a text file.
+
+# Show files installed by a pip package.
+pip show -f requests
