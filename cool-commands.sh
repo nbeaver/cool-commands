@@ -3907,6 +3907,9 @@ whois domain iit.edu
 # Remove newlines, trailing and otherwise
 tr -d '\n'
 
+# Find trailing whitespace.
+grep -r '\s$'
+
 # Remove trailing whitespace in place.
 sed -i 's/[ \t]*$//' file.txt
 
@@ -4089,9 +4092,11 @@ gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutp
 convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 # http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
 
+convert -density 300 temp.pdf out.png
+
+
 convert -density 600 temp.pdf out.jpeg
 
-convert -density 300 temp.pdf out.png
 
 # Digitize page 23 of a PDF (pages start from 0).
 convert -density 300 temp.pdf[22] out.png
@@ -4864,6 +4869,9 @@ convert file.pdf[0] file.png
 convert -background white -flatten file.pdf[0] file.png
 # https://stackoverflow.com/questions/22994313/imagemagick-convert-pdf-with-transparency-to-jpg
 # https://tex.stackexchange.com/questions/64505/how-to-make-each-pdf-page-of-a-beamer-output-have-an-opaque-background-when-it-i
+
+# Also use higher density.
+convert -density 600 -background white -flatten file.pdf[0] file.png
 
 # Trim excess border of a uniform color.
 convert -trim image.png image-trimmed.png
@@ -6772,8 +6780,12 @@ update-desktop-database ~/.local/share/applications/
 # Get size of log files.
 locate '*.log' --null | du --files0-from=- | less
 
-# Get a nice table, like column -t, but properly parsing CSV files.
+# Get a nice table, like column -t, but
+# properly parsing and pretty-printing CSV files.
 csvtool readable myfile.csv | less
+# Use on a TSV file.
+csvtool -t TAB readable mydata.tsv | less
+# https://stackoverflow.com/questions/1875305/view-tabular-file-such-as-csv-from-command-line
 
 # Use grace plotting program.
 xmgrace -hdevice EPS -hardcopy -printfile out.eps myfile.agr
@@ -6817,6 +6829,10 @@ ps -o pid,cmd,rss -p 29161
 ps -o pid,cmd,lstart,etime -p 29443
 # Omit the header.
 ps -o pid=,cmd=,lstart=,etime= -p 24684
+
+# Wait 300 seconds (5 minutes) to run an apt command.
+apt-get -o DPkg::Lock::Timeout=300 dist-upgrade
+# https://blog.sinjakli.co.uk/2021/10/25/waiting-for-apt-locks-without-the-hacky-bash-scripts/
 
 # Get process ID of program running apt-get or dpkg.
 sudo fuser /var/lib/dpkg/lock
@@ -7032,6 +7048,9 @@ for file in "$(locate *.tex)" ; do grep -l 'newdimens' "$file" ; done
 apg -n 10 -M Ln
 # Use only lowercase letters.
 apg -n 10 -M L
+
+# 10 pronounceable passwords, minimum of 8 letters, maximum of 16.
+apg -n 10 -m 8 -x 16 -M L
 
 # Find which process is holding a lock file.
 sudo lslocks | grep /var/lib/tor/lock
@@ -7690,3 +7709,24 @@ systeminfo > systeminfo.txt
 
 # Show files installed by a pip package.
 pip show -f requests
+
+# Example of bup ls on a drive.
+bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ ls -a
+# Outputs this:
+# nathaniel-home
+
+# Example of bup ls for the branch.
+bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ ls -a /nathaniel-home
+# Outputs e.g.
+# 2017-06-17-005509
+# ....
+# 2020-06-01-094637
+# latest
+
+bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ ls -a /nathaniel-home/latest
+
+# Example of restoring:
+bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ restore -C test1 /nathaniel-home/latest/home/nathaniel
+
+# run movemail manually
+movemail /var/mail/nathaniel ~/.thunderbird/knqzw79a.beta/Mail/pop3.localhost/Inbox
