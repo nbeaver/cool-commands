@@ -422,6 +422,9 @@ find . \( -name '.cc' -o -name '*.cpp' -o -name '*.cxx' \)
 find . -type f -name '*.*' | sed 's/.*\.//' | sort -u
 # https://stackoverflow.com/questions/4998290/how-to-find-all-file-extensions-recursively-from-a-directory
 
+# List filenames without extensions.
+find . -type f -not -name '*.*' | less
+
 # Find duplicate files efficiently.
 find . -type f \( -name '*.pdf' -o -name '*.djvu' -o -name '*.epub' -o -name '*.mobi' \) -print0 | duff -0 | xargs -0 -n1 echo
 
@@ -3077,6 +3080,11 @@ faad -o my.wav my.m4a
 # Or the lame option. :)
 lame -h -b 192 my.wav my.mp3
 
+# Get frames from a video five and a half minutes in for 10 seconds.
+ffmpeg -ss 00:5:30 -i tmp.mkv -t 10 '%04d.png'
+# Get all frames from a video.
+ffmpeg myfile.mkv 'out/%04d.png'
+
 # See open files in home directory
 lsof ~
 lsof $HOME
@@ -3902,7 +3910,6 @@ xclip -selection clipboard -t image/png -o > out.png
 
 # Lookup information about a website or ip address
 whois iit.edu
-whois domain iit.edu
 
 # Remove newlines, trailing and otherwise
 tr -d '\n'
@@ -7730,3 +7737,11 @@ bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ restore -C test1 /nathanie
 
 # run movemail manually
 movemail /var/mail/nathaniel ~/.thunderbird/knqzw79a.beta/Mail/pop3.localhost/Inbox
+
+# Convert from UTF-16 to UTF-8.
+iconv --from-code UTF-16LE --to-code UTF-8 utf16.txt > utf8.txt
+dos2unix -f -ul -n utf16.txt utf8.txt
+
+# Take screenshot of a tty (i.e. framebuffer).
+fbcat > screenshot_01.ppm
+fbcat | pngtopng > screenshot_01.png
