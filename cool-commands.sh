@@ -2494,8 +2494,8 @@ find . -name '*[\*"><?:\\|]*' -exec rename 's/[\*"><\?:|]//g' '{}' \;
 # Change all spaces in file names into underscores, even files with weird names
 find . -depth | rename 's/\ /_/g'
 
-# Extract embedded images from a pdf and dump them into the current directory
-pdfimages -j mypdf ./
+# Extract embedded images from a pdf and dump them as JPEGs into the current directory
+pdfimages -j mypdf.pdf mypdf-images
 # A somewhat neater solution for all pdfs in current directory.
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
