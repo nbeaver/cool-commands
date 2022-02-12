@@ -4804,9 +4804,11 @@ stat /var/cache/apt/
 
 # Do speech to text
 # Convert to 16khz 16bit mono wav file
-ffmpeg -i file.mp3 -ar 16000 -ac 1 file.wav
+ffmpeg -i file.mp3 -ar 16000 -ac 1 -sample_fmt s16 file.wav
 # Convert the wavefile to text
 pocketsphinx_continuous -infile file.wav > file.txt
+# Specify the folder with pocketsphinx-en-us model.
+pocketsphinx_continuous -hmm /usr/share/pocketsphinx/model/en-us/en-us -infile file.wav > out.txt
 
 # Concatenate / combine mp3s files.
 ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy output.mp3
@@ -7745,3 +7747,6 @@ dos2unix -f -ul -n utf16.txt utf8.txt
 # Take screenshot of a tty (i.e. framebuffer).
 fbcat > screenshot_01.ppm
 fbcat | pngtopng > screenshot_01.png
+
+# Show process CPU status for process ID 3909 every 2 second.
+pidstat -u -p 3909 2
