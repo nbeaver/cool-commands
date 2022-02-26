@@ -1675,6 +1675,13 @@ sudo arp-scan --interface eth3 --localnet | less
 # *Ubuntu only*
 sudo restart cups && sudo restart avahi-daemon
 
+sudo service cups restart
+
+# Restart cups in Ubuntu 16.04 (?) and later.
+systemctl restart cups.service
+# or just:
+systemctl restart cups
+
 # Discover machines on the LAN
 ifconfig eth0
 # Note Bcast address. Now ping it:
