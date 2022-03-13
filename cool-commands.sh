@@ -7757,3 +7757,13 @@ fbcat | pngtopng > screenshot_01.png
 
 # Show process CPU status for process ID 3909 every 2 second.
 pidstat -u -p 3909 2
+
+# Rip a CD into the current directory as MP3 files.
+abcde -a tag,move,playlist,clean -d /dev/cdrom -o mp3 -V -x
+# tag: add tags to generated MP3s.
+# move: move them into the current directory labeled with the artist and album.
+# playlist: generate an M3U playlist.
+# clean: remove the temporary WAV files generated.
+# -V: show verbose output
+# -x: eject CD when finished
+abcde -a tag,move,playlist,clean -d /dev/cdrom -o mp3 -V -x
