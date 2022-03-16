@@ -5928,13 +5928,15 @@ tr -d '\r' < file.txt > out.txt
 dos2unix file.txt
 # https://stackoverflow.com/questions/82726/convert-dos-line-endings-to-linux-line-endings-in-vim
 
-# Recursively find text files that contain the DOS carriage return (octal 015, hexadecimal x0D).
+# Recursively find text files that contain the DOS carriage return / DOS line ending (octal 015, hexadecimal x0D).
 grep -Url $'\015' --include='*.txt'
 grep -Url $'\x0d' --include='*.txt'
 grep -Url $'\r' --include='*.txt'
 grep --binary --recursive --files-with-matches $'\r' --include='*.txt'
 # Or just ignore binary files.
 grep -IUrl $'\r'
+# and exclude git repos
+grep -IUrl $'\r' --exclude-dir='*.git'
 # https://unix.stackexchange.com/questions/79702/how-to-test-whether-the-file-is-crlf-or-lf-without-modyfing-it
 # http://unix.stackexchange.com/a/79713
 # http://vsingleton.blogspot.com/2009/03/grep-using-octal-patterns-and-avoid.html
