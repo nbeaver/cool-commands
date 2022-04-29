@@ -4760,7 +4760,9 @@ reportbug --kudos
 reportbug --mutt
 
 # Test local mail by sending a message to yourself.
-echo "This is a test email from $USER" | mail --subject='test message' "$USER@localhost"
+echo "This is a test email from $LOGNAME" | mail --subject='test message' "$LOGNAME@localhost"
+# For bsd-mailx:
+echo "This is a test email from $LOGNAME" | mail -s 'test message' -- "$LOGNAME@localhost"
 
 # Entering unicode on Linux.
 Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
@@ -7769,3 +7771,8 @@ abcde -a tag,move,playlist,clean -d /dev/cdrom -o mp3 -V -x
 # -V: show verbose output
 # -x: eject CD when finished
 abcde -a tag,move,playlist,clean -d /dev/cdrom -o mp3 -V -x
+
+# Debug a bash script
+bash -x my-script.sh 2>&1 | less
+# send to output file
+bash -x my-script.sh > debug.txt 2>&1
