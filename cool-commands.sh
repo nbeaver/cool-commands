@@ -7776,3 +7776,6 @@ abcde -a tag,move,playlist,clean -d /dev/cdrom -o mp3 -V -x
 bash -x my-script.sh 2>&1 | less
 # send to output file
 bash -x my-script.sh > debug.txt 2>&1
+
+# Display frames per second as measured by OpenGL.
+glxgears -info
