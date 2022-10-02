@@ -7779,3 +7779,9 @@ bash -x my-script.sh > debug.txt 2>&1
 
 # Display frames per second as measured by OpenGL.
 glxgears -info
+
+# Dump a SQLite database.
+sqlite3 metadata.db '.dump' > metadata.sql
+
+# Compare two SQLite databases.
+diffoscope metadata-old.db metadata-new.db
