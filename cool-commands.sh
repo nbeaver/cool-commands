@@ -7785,3 +7785,12 @@ sqlite3 metadata.db '.dump' > metadata.sql
 
 # Compare two SQLite databases.
 diffoscope metadata-old.db metadata-new.db
+
+# Virtual environment.
+sudo apt install python3.8-venv
+python3.8 -m venv env
+source env/bin/activate
+python3 -m pip install yt-dlp
+env/bin/yt-dlp -h
+deactivate
+# https://stackoverflow.com/questions/1534210/use-different-python-version-with-virtualenv
