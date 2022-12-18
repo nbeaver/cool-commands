@@ -3071,6 +3071,8 @@ ffmpeg -i vid.mkv -vol 512 -vcodec copy output.mkv
 ffmpeg -i source-file.foo -ss 0 -t 600 -c copy first-10-min.m4v
 ffmpeg -i source-file.foo -ss 600 -t 600 -c copy second-10-min.m4v
 ffmpeg -i input.mpg -ss 00:00:10 -t 00:00:30 -c copy out1.mpg -ss
+# Go all the way to the end.
+ffmpeg -i input.mp4 -ss 00:00:10 after-first-10-seconds.mp4
 
 # Get audio file from video
 ffmpeg -i myvid.mp4 ./out.mp3
