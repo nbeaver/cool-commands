@@ -4927,6 +4927,12 @@ mogrify -resize 640x480 *.jpg
 mogrify -resize 640x480! *.jpg
 # https://www.novell.com/coolsolutions/tip/16524.html
 
+# Specify a certain file size.
+convert original.jpeg -define jpeg:extent=300kb output.jpg
+# Also scale down.
+convert original.jpeg -define jpeg:extent=300kb -scale 25% output.jpg
+# https://stackoverflow.com/questions/6917219/imagemagick-scale-jpeg-image-with-a-maximum-file-size
+
 # Resize all the images in an .odt file:
 unzip images.odt -d out/
 cd out/
