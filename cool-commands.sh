@@ -1026,6 +1026,12 @@ system-config-printer
 # LPD, SMB, AppSocket/JetDirect also ok, but have reduced functionality.
 # https://askubuntu.com/questions/401119/should-i-set-up-my-cups-printing-to-use-ipp-lpd-or-url
 
+# Untar pretty much anything.
+tar xf example.tar
+tar xf example.tar.gz
+tar xf example.tar.xz
+# https://old.reddit.com/r/commandline/comments/12eqqa/dtrx_do_the_right_extract_a_frontend_for_many/c6ujuxc/
+
 # decompress and unarchive a bzipped file
 tar -jxvf firefox-18.0a1.en-US.linux-i686.tar.bz2
 
@@ -7802,3 +7808,6 @@ python3 -m pip install yt-dlp
 env/bin/yt-dlp -h
 deactivate
 # https://stackoverflow.com/questions/1534210/use-different-python-version-with-virtualenv
+
+# Read out Windows shortcut files.
+lnkinfo 'example - Shortcut.lnk'
