@@ -7811,3 +7811,7 @@ deactivate
 
 # Read out Windows shortcut files.
 lnkinfo 'example - Shortcut.lnk'
+
+# List probable graphical programs.
+dpkg --search '*.desktop' | awk '{print $1}' | sed "s/://" | sort --unique
+# https://askubuntu.com/questions/1091235/how-to-get-the-list-of-all-application-installed-which-has-gui
