@@ -258,6 +258,11 @@ rename  's/2014/2015/' 2014*
 # Rename all .jpeg files to .jpg.
 rename 's/.jpeg/.jpg/' *.jpeg
 
+# Remove non-ASCII characters from filenames.
+rename 's/[^\x00-\x7F]//g' *
+# Replace non-ASCII characters in filenames with underscores ('_').
+rename 's/[^\x00-\x7F]/_/g' *
+
 mv file.{txt,csv} # Quick file rename using brace expansion.
 
 # Similarly, can make a copy of a copy to work on the live.
@@ -960,6 +965,15 @@ for i in {16..25}; do j=$((4*($i-16))); echo $i'_'$(($j+61))-$(($j+64)); done
 # 23_89-92
 # 24_93-96
 # 25_97-100
+
+# Find non-ascii characters in filenames.
+LC_COLLATE=C find . -name '*[! -~]*'
+# https://unix.stackexchange.com/questions/109747/identify-files-with-non-ascii-or-non-printable-characters-in-file-name
+# https://askubuntu.com/questions/113188/character-encoding-problem-with-filenames-find-broken-filenames
+# How the regex works: space is first printing character (U+0020, decimal 32) and last is tilde ~ (U+007E, decimal 126).
+
+# Do the same thing but replace non-printing characters with question marks.
+LC_ALL=C find . -name '*[! -~]*'
 
 # find Unicode/non-ascii characters in text file by numbered line
 LC_COLLATE=C grep -n '[^ -~]' --color=always utf8.txt | less -r
@@ -1872,6 +1886,7 @@ pdflatex -synctex=1 -interaction=nonstopmode %.tex|bibtex %.aux|pdflatex -syncte
 
 # Generate combined file with name of file included
 tail --lines=+1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
+tail -n +1 version.log lsb_releaser-rd.log partial-crash-log.log lspci-vnvn.log > log-merge.log
 
 # Use awk to give column 2, space, column 1, tab, then the last column
 awk '{print $2,$1 "\t" $NF}' iit-phonebook-duplicates-removed-cleaned-up.txt | uniq > iit-name-and-email.txt
@@ -7646,7 +7661,9 @@ ps2pdf overlay.ps | pdftk input.pdf stamp - output output.pdf
 ps2pdf overlay.ps | pdftk input.pdf stamp /dev/stdin output output.pdf
 
 # Get bash history without line numbers.
-history -w /dev/stdout
+history | cut -c 8- # works as long as history is not too long.
+history | awk '{$1="";print substr($0,2)}'
+history -w /dev/stdout # requires access to /dev/stdout
 # https://stackoverflow.com/questions/7110119/bash-history-without-line-numbers
 
 # Get just the systemctl commands.
@@ -7815,3 +7832,35 @@ lnkinfo 'example - Shortcut.lnk'
 # List probable graphical programs.
 dpkg --search '*.desktop' | awk '{print $1}' | sed "s/://" | sort --unique
 # https://askubuntu.com/questions/1091235/how-to-get-the-list-of-all-application-installed-which-has-gui
+
+# Test SSH connection.
+ssh -T git@github.com
+# Save to log file.
+ssh -v -E my-ssh-log.txt -T git@github.com
+# Get SSH version.
+ssh -V
+
+# Attach to the most recent session.
+tmux attach
+# List sessions.
+tmux ls
+# Attach to session '1'
+tmux attach -t 1
+# Create new session named 'mysession'.
+tmux new -s mysession
+# https://arcolinux.com/everthing-you-need-to-know-about-tmux-panes/
+# https://gist.github.com/andreyvit/2921703
+# Detach from session: C-b d
+
+# Windows Subsystem for Linux commands:
+
+# Get Windows path corresponding to this path:
+wslpath -w .
+# Open Windows Explorer to current directory.
+wslview .
+
+# Terminator quad pane commands.
+atop -pM
+journalctl -xf
+tail -f ~/.xsession-errors
+dmesg -wT
