@@ -1569,6 +1569,11 @@ sudo cp debian-live-8.4.0-amd64-xfce-desktop.iso /dev/sdg && sync
 # https://www.debian.org/CD/faq/#write-usb
 # https://unix.stackexchange.com/questions/360693/how-does-copying-the-debian-iso-directly-to-a-usb-drive-work
 
+
+# Write a disk image to USB flash drive at /dev/sdc.
+sudo dd if=./memtest86-usb.img of=/dev/sdc conv=fsync status=progress
+sudo dd if=./memtest86-usb.img of=/dev/sdc bs=16M status=progress oflag=sync
+
 umount /media/nathaniel/SIMMAX
 # > Error unmounting block device 8:16: GDBus.Error:org.freedesktop.UDisks2.Error.DeviceBusy: Error unmounting /dev/sdb: target is busy
 # Can also do this:
