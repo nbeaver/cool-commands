@@ -5829,6 +5829,9 @@ iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt > utf-8.txt
 iconv --from-code=iso-8859-1 --to-code=utf-8 latin-1.txt --output utf-8.txt
 iconv -f iso-8859-1 -t utf-8 latin-1.txt -o utf-8.txt
 
+# Convert file from UTF-16LE to UTF-8.
+iconv -f UTF-16LE -t UTF-8 infile.txt -o outfile.txt
+
 # Alternative conversion method.
 recode windows-1252..utf-8 < in.txt > out.txt
 
