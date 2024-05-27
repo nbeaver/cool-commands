@@ -1153,10 +1153,11 @@ find . -delete
 # Print all empty directories under current directory.
 find ./ -type d -empty
 # Recursively remove all empty directories under current directory.
-find ./ -type d -empty -delete
+find ./ -depth -type d -empty -delete
 # http://robotbutler.org/article/31
 # http://www.thegeekstuff.com/2010/03/find-empty-directories-and-files/
 # http://itsmetommy.com/2013/07/11/useful-linux-find-commands/
+# https://stackoverflow.com/questions/2810838/finding-empty-directories
 
 # Limit it to the current directory only.
 find . -maxdepth 1 -type d -empty
