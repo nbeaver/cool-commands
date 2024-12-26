@@ -6094,9 +6094,10 @@ gocr -a 50 file.png -o gocr_50.txt
 # gocr seems to be better at screenshots.
 # http://jorgenmodin.net/index_html/archive/2010/06/15/linux-ocr-for-getting-text-from-a-screenshot
 
-tesseract file.png stdout
+tesseract file.png stdout | less
 # tesseract seems to be better at scanned books,
 # or at any rate larger text.
+tesseract -l eng file.jpg output # creates 'output.txt'
 
 # https://askubuntu.com/questions/280475/how-can-instantaneously-extract-text-from-a-screen-area-using-ocr-tools
 
