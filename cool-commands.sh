@@ -7897,3 +7897,7 @@ atop -pM
 journalctl -xf
 tail -f ~/.xsession-errors
 dmesg -wT
+
+# Ubuntu pro :-(
+# https://ubuntu.com/pro/dashboard?
+sudo pro attach $MY_PRO_TOKEN
