@@ -4165,7 +4165,13 @@ convert -density 300 temp.pdf[22] out.png
 convert big.jpg -define jpeg:extent=999kb smaller.jpg
 
 # Convert JPEG to PDF with rotation.
-convert -rotate 90 in.jpg out.pdf
+convert -rotate 90 input.jpg out.pdf
+
+# Convert JPEG to PDF and limit page size to letter.
+convert -units pixelsperinch -density 72 -page letter input.jpg out.pdf
+convert -units pixelsperinch -density 72 -page a4 input.jpg out.pdf
+convert -units pixelsperinch -page letter -units PixelsPerInch -density 300x300 -resize 2551x3295 -extent 2551x3295 input.jpg out.pdf
+# https://stackoverflow.com/questions/11693137/how-do-i-control-pdf-paper-size-with-imagemagick
 
 # Oh my gosh, I just entered my password in the terminal
 # and now it will be in the bash history! What can I do?
