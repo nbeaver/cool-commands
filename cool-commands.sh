@@ -1084,6 +1084,23 @@ gzip < file > file.gz
 gzip -k -- file
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/b70da7de-745f-4774-93eb-6eb034ccbd57.json
 
+# Tar a directory (create an archive that is not compressed).
+tar -C /path/to/parent/ -cf /other/parent/myfile.tar my-directory/
+tar --directory=/path/to/parent/ --create --file=/other/parent/myfile.tar my-directory/
+
+# Tar and compress a directory with gzip (create a compressed archive).
+tar -C /path/to/parent/ -czf /other/parent/myfile.tar.gz my-directory/
+tar --directory=/path/to/parent/ --create --gzip --file=/other/parent/myfile.tar.gz my-directory/
+
+# Tar and compress a directory with xz (create a compressed archive).
+tar -C /path/to/parent/ -cJf /other/parent/myfile.tar.xz my-directory/
+tar --directory=/path/to/parent/ --create --xz --file=/other/parent/myfile.tar.xz my-directory/
+
+# Tar and compress a directory with zstd (create a compressed archive).
+tar -C /path/to/parent/ --use-compress-program zstd -cf /other/parent/myfile.tar.zst my-directory/ # older tar that doesn't have --zstd
+tar -C /path/to/parent/ --zstd -cf /other/parent/myfile.tar.zst my-directory/
+tar --directory=/path/to/parent/ --create --zstd --file=/other/parent/myfile.tar.zst my-directory/
+
 cat /bin/cat # mojibake-fy the screen
 reset # fix it
 
