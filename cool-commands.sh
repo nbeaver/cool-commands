@@ -3138,6 +3138,22 @@ ffmpeg -ss 00:5:30 -i tmp.mkv -t 10 '%04d.png'
 # Get all frames from a video.
 ffmpeg myfile.mkv 'out/%04d.png'
 
+# Convert a sequence of JPEG images into a video running at 3 frames per second.
+# Images in jpg/ directory and named like image_0001.jpg, image_0002.jpg, ...
+ffmpeg -y -start_number 0 -framerate 3 -i jpg/image%04d.jpg -c:v libx264 -pix_fmt yuv420p out.mp4
+# https://unix.stackexchange.com/questions/68770/converting-png-frames-to-video-at-1-fps
+
+
+# Convert a sequence of JPEG images into a video running at 30 frames per second,
+# but duplicate the frames so it's effective framerate is 3 fps.
+# Images in jpg/ directory and named like image_0001.jpg, image_0002.jpg, ...
+ffmpeg -y -start_number 0 -framerate 3 -i jpg/image%04d.jpg -c:v libx264 -pix_fmt yuv420p -r 30 out.mp4
+
+# Convert a sequence of JPEG images into a video running at 30 frames per second,
+# but duplicate the frames so it's effective framerate is 3 fps.
+# Images in jpg/ directory and anything ending in `.jpg'.
+ffmpeg -y -start_number 0 -framerate 3 -pattern_type glob -i 'jpg/*.jpg' -c:v libx264 -pix_fmt yuv420p -r 30 out.mp4
+
 # See open files in home directory
 lsof ~
 lsof $HOME
