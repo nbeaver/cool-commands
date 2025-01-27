@@ -4985,6 +4985,11 @@ convert -size '100x100' 'canvas:red' red.png
 convert in.png -negate out.png
 mogrify -negate in.png
 
+# Convert a color image to black and white,
+# or keep it black and white when convert formats
+convert -colorspace Gray  color.jpg black_and_white.jpg
+# https://stackoverflow.com/questions/13317753/convert-rgb-to-grayscale-in-imagemagick-command-line
+
 # Use imagemagick to reduce the size to 10% of all jpegs, over writing the originals (in place).
 mogrify -resize 10x10% *.jpg
 # If you want a set resolution.
