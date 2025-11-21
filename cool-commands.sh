@@ -878,9 +878,15 @@ ldd "$(which factor)"
 factor 340282366920938463463374607431768211456
 # factor: ‘340282366920938463463374607431768211456’ is too large
 # or this:
-echo '2^127' | bc | factor
+echo '2^127 - 1' | bc | factor
 # factor: ‘170141183460469231731687303715884105728’ is too large
 # Most Debian versions are not built with bignum support.
+
+# Factor large integers by disabling line wrapping.
+echo '2^8191 - 1' | BC_LINE_LENGTH=0 bc | time factor
+# https://unix.stackexchange.com/questions/365510/how-to-avoid-wrapping-in-bc-output
+# https://stackoverflow.com/questions/51884432/how-to-handle-integers-in-bash-with-values-larger-than-263
+
 
 objdump -p /usr/bin/factor | grep NEEDED
 #   NEEDED               libc.so.6
@@ -1770,6 +1776,13 @@ telnet chloride.phys.iit.edu 80
 # telnet> q
 # Connection closed.
 
+# The famous ASCII Star Wars movie over telnet.
+telnet towel.blinkenlights.nl
+# https://www.asciimation.co.nz/asciimation/ascii_faq.html
+# https://lifehacker.com/watch-star-wars-in-text-via-telnet-373571
+# http://web.archive.org/web/20011123045625/http://www.blinkenlights.nl/services.html#starwars
+# "The though work was done by simon jansen, he made it into a java applet. This is the same thing, but now via telnet."
+
 # Check if a port is filtered on a remote machine.
 nmap -p T:60000 chloride.phys.iit.edu
 # $ nmap -p T:60000 chloride.phys.iit.edu
@@ -2382,6 +2395,9 @@ cat /dev/urandom | hexdump
 exiftool -a -u -g1 IMG_3689.JPG
 exiftool -duplicates -unknown -groupHeadings 1 IMG_3689.JPG
 
+# Extract absolutely all metadata.
+exiftool -a -u -g1 -ee -api 'RequestAll=3' IMG_3689.JPG
+
 # All GPS metadata.
 exiftool -n -GPS'*' img_0001.jpg
 
@@ -2393,6 +2409,17 @@ exiftool -all= IMG_3689.JPG
 mogrify -strip IMG_3689.JPG
 # http://www.hacktux.com/read/remove/exif
 # http://www.linux-magazine.com/Online/Blogs/Productivity-Sauce/Remove-EXIF-Metadata-from-Photos-with-exiftool
+
+# Change EXIF metadata.
+exiftool -title="my title" input.jpg -o output.jpg
+# Change EXIF metadata in place.
+exiftool -title="my title" file.jpg
+# https://exiftool.org/exiftool_pod.html
+# https://exiftool.org/examples.html
+
+# Recursively extract common meta information from files in "pictures"
+# directory, writing text output to ".txt" files with the same names.
+exiftool -r -w '.txt' -common "pictures/"
 
 # Crop a white border.
 convert -trim myfile.png myfile-cropped.png
@@ -2690,6 +2717,11 @@ for f in *.m4v; do ffmpeg -threads 3 -i $f -target ntsc-dvd $(basename $f .m5v).
 # Do it for a big TV, and run it on 4 processors
 for f in *.m4v; do ffmpeg -threads 4 -i $f -s wxga -vcodec mpeg1video $(basename $f .m4v).mpg; done
 
+# Mirror a video horizontally.
+ffmpeg -i INPUT.mp4 -vf hflip -c:a copy OUTPUT.mp4
+# https://stackoverflow.com/questions/69593178/ffmpeg-flip-video-horizontally
+# https://superuser.com/questions/1857276/ffmpeg-display-rotation-display-hflip-and-display-vflip-to-mirror-image-vid
+
 # Run handbrake from the commandline to do much the same thing, but for an .iso disk image
 HandBrakeCLI -Z "High Profile" -i a_movie.iso -o a_movie.mp4
 # http://superuser.com/questions/329349/how-do-i-convert-iso-to-mp4-without-mounting-with-ffmpeg
@@ -2828,6 +2860,9 @@ ls -d1 "$PWD"/*
 
 # Use a text file as a command line argument
 w3m $(<temp.txt)
+
+# Add an OCR layer to a PDF.
+ocrmypdf input.pdf out-with-ocr.pdf
 
 # Get the fonts used by a pdf; useful to determine if it's OCR'ed or not,
 # and also if the fonts are embedded or not.
@@ -3138,11 +3173,15 @@ ffmpeg -ss 00:5:30 -i tmp.mkv -t 10 '%04d.png'
 # Get all frames from a video.
 ffmpeg myfile.mkv 'out/%04d.png'
 
+# Snip out a video starting from 2:09 and continuing for 10 seconds to 2:19.
+ffmpeg -y -ss 00:02:09 -i 'in.mp4' -to 00:00:10 -c copy 'out.mp4'
+
+
 # Convert a sequence of JPEG images into a video running at 3 frames per second.
 # Images in jpg/ directory and named like image_0001.jpg, image_0002.jpg, ...
 ffmpeg -y -start_number 0 -framerate 3 -i jpg/image%04d.jpg -c:v libx264 -pix_fmt yuv420p out.mp4
 # https://unix.stackexchange.com/questions/68770/converting-png-frames-to-video-at-1-fps
-
+# https://stackoverflow.com/questions/19267443/vlc-freezes-for-low-1-fps-video-created-from-images-with-ffmpeg
 
 # Convert a sequence of JPEG images into a video running at 30 frames per second,
 # but duplicate the frames so it's effective framerate is 3 fps.
@@ -3158,8 +3197,9 @@ ffmpeg -y -start_number 0 -framerate 3 -pattern_type glob -i 'jpg/*.jpg' -c:v li
 lsof ~
 lsof $HOME
 
-# Start less at the first instance of a pattern
-less -p ghemical /var/log/dpkg.log
+# Start less at the first instance of a pattern,
+# in this case the pattern is 'ghemical'.
+less -p 'ghemical' /var/log/dpkg.log
 
 # Start less at the 100th line.
 less +100 /var/log/messages
@@ -4180,6 +4220,9 @@ convert -density 300 temp.pdf[22] out.png
 # Downscale a big JPEG to 999kB or less.
 convert big.jpg -define jpeg:extent=999kb smaller.jpg
 
+# Downscale a big JPEG to 30% of original dimensions.
+convert big.jpg -resize '30%' smaller.jpg
+
 # Convert JPEG to PDF with rotation.
 convert -rotate 90 input.jpg out.pdf
 
@@ -4891,6 +4934,13 @@ pocketsphinx_continuous -hmm /usr/share/pocketsphinx/model/en-us/en-us -infile f
 ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy output.mp3
 # https://superuser.com/questions/314239/how-to-join-merge-many-mp3-files#314245
 
+# Concatenate / combine video files.
+ffmpeg -y -f concat -i files.txt -c copy out.mp4
+# files.txt is like this:
+# file '01.mp4'
+# file '02.mp4'
+# file '03.mp4'
+
 # Gnuplot png output
 set term png # or pngcairo
 set output "out.png"
@@ -5199,6 +5249,8 @@ cat
 showkey
 # Can also do:
 xev
+# or
+evemu-record
 
 # Shows all keys going to the X server.
 screenkey
@@ -5940,6 +5992,7 @@ aptitude -F'|%p|%d|' search '?section(hamradio)'
 # Find upgradable packages.
 aptitude search '~U'
 apt list --upgradable
+# Best to run `sudo apt update` first.
 # http://askubuntu.com/questions/99834/how-do-you-see-what-packages-are-available-for-update
 
 # Package names only.
@@ -6035,11 +6088,17 @@ grep -r --include=Makefile 'example-pattern'
 ag --file-search-regex Makefile 'example-pattern'
 ag -G Makefile 'example-pattern'
 
+# Use rg (ripgrep) on just Makefiles
+rg --iglob Makefile 'example-pattern'
+
 # Search for .c files with 'sprintf('.
 ag -G '.*\.c$' 'sprintf('
 
 # Sesarch for .sh files with '<<<' (here-doc).
 ag -G '.*\.sh' '<<<' .
+
+# Search for .tex files with 'x^{2n}'
+ag -G '.*\.tex' -F 'x^{2n}'
 
 # Save a transcript of terminal session.
 script
@@ -6314,6 +6373,9 @@ virtualenv my-virtualenv
 cd my-virtualenv
 source bin/activate
 deactivate
+
+# Example
+source ~/src/venv/streetview-dl/Scripts/activate
 
 # Generate a random (type 4) UUID (a.k.a GUID).
 uuidgen
@@ -7501,6 +7563,13 @@ stress --cpu 4
 # Example from the man page:
 stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10s
 
+# Use openssl if e.g. stress is not available.
+openssl speed
+# Use 4 cores.
+openssl speed -multi 4
+# Do just 16-byte sha256 for 1 seconds (shorter).
+openssl speed -elapsed -seconds 1 -bytes 16 sha256
+
 # Run octave in the terminal.
 octave --no-gui
 
@@ -7922,3 +7991,6 @@ dmesg -wT
 # Ubuntu pro :-(
 # https://ubuntu.com/pro/dashboard?
 sudo pro attach $MY_PRO_TOKEN
+
+# Check HTML for errors.
+tidy -errors -quiet example.html
