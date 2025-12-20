@@ -1557,6 +1557,12 @@ safecopy /dev/sr0 safecopy.iso
 # Safecopy with timing and eject, ignoring badblocks.
 time safecopy -o /dev/null /dev/sr0 my-disc.iso; eject
 
+# Check a drive for bad blocks.
+sudo badblocks -w -s -o error.log /dev/sdX
+# -w use write-test mode
+# -s show progress of scan
+# https://www.cyberciti.biz/faq/linux-check-the-physical-health-of-a-usb-stick-flash-drive/
+
 isohybrid systemrescuecd-x86-4.8.0.iso
 # After formatting USB to FAT32 or ext3:
 sudo cp systemrescuecd-x86-4.8.0.iso /dev/sdb
@@ -1647,6 +1653,9 @@ sudo NetworkManager --no-daemon 2>&1 | tee NetworkManager.log
 journalctl -fu NetworkManager
 # Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
+
+# Look at journal for GNOME shell.
+journalctl -f /usr/bin/gnome-shell
 
 # Detach process from gnome-terminal
 Ctrl-Z # Access shell prompt
@@ -4291,6 +4300,9 @@ lsusb
 # You can tell there is not point in getting a USB 3.0 device for this machine,
 # because all the hubs are 2.0. Also, when looking at the physical machine, USB 3 ports are painted blue.
 
+# See details about attached USB devices
+sudo lsusb -v | less
+
 usb-devices
 # From usbutils package.
 # Reads stuff like /sys/bus/usb/devices/2-1.2/product
@@ -4745,6 +4757,7 @@ date +"%Y-%m-%d_%T%p_%Z"
 date +%s
 # Example: 1441752464
 # Drawback: not very human-readable, not portable.
+echo $EPOCHSECONDS
 
 # Convert Unix epoch (timestamp) to human-readable time.
 date --date='@1441752464' +%c
@@ -7415,6 +7428,11 @@ sudo snap install --classic skype
 # Update all snap packages,
 # like apt-get upgrade.
 sudo snap refresh
+
+# Disable a snap package but don't remove the data, e.g. a Firefox profile.
+snap disable firefox
+# Remove the snap package and remove the data also.
+snap remove plexmediaserver
 
 # Generate PostScript output from a text file.
 enscript -f Helvetica-Narrow12 example.txt -p example.ps
