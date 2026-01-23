@@ -943,6 +943,9 @@ systemctl list-units
 # Restart display managers such as lightdm, gdm3, sddm, etc.
 sudo systemctl restart display-manager.service
 
+# See status.
+systemctl status display-manager.service
+
 apt-cache showpkg xserver-xorg-input-synaptics
 # Use synaptic to downgrade and lock
 sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
@@ -8012,3 +8015,16 @@ sudo pro attach $MY_PRO_TOKEN
 
 # Check HTML for errors.
 tidy -errors -quiet example.html
+
+# Write to syslog
+logger 'Example log entry'
+
+# Get status of GNOME keyring daemon
+systemctl --user status gnome-keyring-daemon
+busctl --user introspect org.freedesktop.secrets /org/freedesktop/secrets/collection/login
+# https://superuser.com/questions/1618970/query-status-of-gnome-keyring
+# https://gist.github.com/plowsters/dde74f4ca08c55588faeacbb3bbd113d
+
+gnome-extensions info 'ding@rastersoft.com'
+gnome-extensions disable 'ding@rastersoft.com'
+gnome-extensions enable 'ding@rastersoft.com'
