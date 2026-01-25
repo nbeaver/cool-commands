@@ -7695,9 +7695,10 @@ dropbox filestatus
 # Get a random process ID (PID).
 ps -eo pid | tail -n +2 | shuf -n 1
 
-# Get all but the first line.
+# Get all but the first line (removed header).
 tail -n +2
 # https://stackoverflow.com/questions/7318497/omitting-the-first-line-from-any-linux-command-output
+# https://stackoverflow.com/questions/62688057/bash-having-trouble-removing-header-line-using-the-tail-n-1-filename-in-bas
 
 # Test a process looking at PIDs.
 watch --errexit -n 1 'ps -fp $(ps -eo pid | tail -n +2 | shuf -n 1)'
