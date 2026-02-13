@@ -9,41 +9,48 @@ sudo iwlist scanning | less
 
 # Connecting to s-video out, changing display resolution, connecting to projector or external display
 xrandr
+
 # Reset screen resolution if another program goofs it up
 xrandr -s 1600x900
 xrandr --size 1600x900
 
 # Automatically turn on a second screen
 xrandr --output VGA --auto
+
 # Clone screens
 xrandr --output VGA --same-as LVDS
+
 # Extend screens
 xrandr --output VGA --left-of LVDS
 # http://forums.debian.net/viewtopic.php?f=10&t=40955
 
-# Finding in directories beneath
 # Find all files containing text 'NBMAX' and ending in .F90
 find . -name '*.F90' | xargs grep 'NBMAX'
+
 # Find all files with 'cool' somewhere in the name
 find . -name  '*cool*'
+
 # Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
 
 # Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
 find . -type f -name '*.sw?'
+
 # Visit those swap files.
 find . -name '*.sw?' | visit_paths.py
 
 # Find files with spaces in the filename.
 find . -name '* *'
 
-# Find all files with certain permissions.
-# World-readable (777)
+# Find all files with world-readable (777) permissions.
 find . -perm 777
-
 find . -perm -g+s
-# World readable, writable, and executable.
+# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
+# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
+
+# Find all files with world-readable, writable, and executable permissions.
 find . -perm -a+rwx
+
 # Find directories that are world-writable.
 find . -type d -perm -a+w
 
@@ -52,16 +59,12 @@ find . -type d \! -perm 0775
 
 # Find files or directories that are not writable in the current directory.
 find . \! -writable
-# Equivalent, but not compliant with POSIX-standard `find` command.
-find . -not -writable
+find . -not -writable # Equivalent, but not compliant with POSIX-standard `find` command.
 
-# Make them writable again.
+# Find files or directories that are not writable and make them writable again.
 find . \! -writable -exec chmod --changes +w '{}' \+ | less
 
-# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
-# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
-# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
-# Skip symbolic links.
+# Find all files with world-readable (777) permissions, but skip symbolic links.
 find . \! -type l -perm 777
 find . '!' -type l -perm 777
 find . -not -type l -perm 777
@@ -83,8 +86,12 @@ find / -xdev -user root -perm -u+w -name hello 2>/dev/null
 
 # Show permissions of a directory.
 ls -ld /var/log
+# Example output:
 # drwxr-xr-x 23 root root 4096 May 23 08:18 /var/log
+
+# Show permissions of a directory.
 stat /var/log
+# Example output:
 #   File: ‘/var/log’
 #   Size: 4096      	Blocks: 8          IO Block: 4096   directory
 # Device: 801h/2049d	Inode: 30416373    Links: 23
@@ -97,7 +104,9 @@ stat /var/log
 # Show permisisons in octal.
 stat -c '%a %n' -- *
 stat --format='%a %n' -- *
-# Include the human-readable permissions.
+# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
+
+# Show permissions in octal, but also include the human-readable permissions.
 stat -c '%a %A %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
 
@@ -114,6 +123,7 @@ find . -name '*.txt' -printf '%s ' -print | less
 
 # Find executables.
 find . -type f -executable -print
+
 # Find non-executables.
 find . -type f \! -executable -print
 find . -type f -not -executable -print
@@ -3284,8 +3294,7 @@ vim - # the command to pass it to
 blueman-manager
 
 # Change mp3 sample rate of every mp3 file in a directory
-mkdir converted
-for i in *.mp3; do sox --multi-threaded "$i" -r 44100 "converted/$i"; done
+mkdir converted; for i in *.mp3; do sox --multi-threaded "$i" -r 44100 "converted/$i"; done
 # Make sure you don't try to to change the files in place; they will be trashed.
 # Either put them in a another directory, as above, or modify the file name.
 
@@ -7649,7 +7658,10 @@ wormhole send myfile.txt
 # > One the other computers, please run: wormhole receive
 # > Wormhole code is: 5-october-stockman
 # On receiving machine:
+wormhole receive 5-october-stockman
+# Or just
 wormhole receive
+# and then enter code
 
 # List all the package names starting with "libstdc++".
 apt-cache pkgnames "libstdc++"
@@ -8029,3 +8041,11 @@ busctl --user introspect org.freedesktop.secrets /org/freedesktop/secrets/collec
 gnome-extensions info 'ding@rastersoft.com'
 gnome-extensions disable 'ding@rastersoft.com'
 gnome-extensions enable 'ding@rastersoft.com'
+
+# Flush DNS cache
+sudo systemd-resolve --flush-caches # Ubuntu 18.04
+sudo resolvectl flush-caches # Ubuntu 22.04 and 24.04
+
+# Create new user on Debian-based OS.
+sudo adduser username
+id username
