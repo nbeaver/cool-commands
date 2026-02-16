@@ -8049,3 +8049,6 @@ sudo resolvectl flush-caches # Ubuntu 22.04 and 24.04
 # Create new user on Debian-based OS.
 sudo adduser username
 id username
+
+# Get the 3rd line of every text file and sort.
+find . -type f -name '*.txt' -exec sed -n '3p' '{}' \; | sort | less -c
