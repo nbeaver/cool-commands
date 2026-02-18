@@ -4,9 +4,6 @@
 printf "ERROR: do not run this as a shell script.\n" >&2
 exit 1
 
-# Wireless access points
-sudo iwlist scanning | less
-
 # Connecting to s-video out, changing display resolution, connecting to projector or external display
 xrandr
 
@@ -14,7 +11,7 @@ xrandr
 xrandr -s 1600x900
 xrandr --size 1600x900
 
-# Automatically turn on a second screen
+# Automatically turn on a second screen connected with VGA
 xrandr --output VGA --auto
 
 # Clone screens
@@ -27,114 +24,35 @@ xrandr --output VGA --left-of LVDS
 # Find all files containing text 'NBMAX' and ending in .F90
 find . -name '*.F90' | xargs grep 'NBMAX'
 
-# Find all files with 'cool' somewhere in the name
-find . -name  '*cool*'
-
-# Find all files ending in .html in current directory and subdirectories
-find . -name '*.html'
-
-# Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
-find . -type f -name '*.sw?'
-
-# Visit those swap files.
+# Visit vim swap files.
 find . -name '*.sw?' | visit_paths.py
-
-# Find files with spaces in the filename.
-find . -name '* *'
-
-# Find all files with world-readable (777) permissions.
-find . -perm 777
-find . -perm -g+s
-# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
-# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
-
-# Find all files with world-readable, writable, and executable permissions.
-find . -perm -a+rwx
-
-# Find directories that are world-writable.
-find . -type d -perm -a+w
-
-# Find directories that aren't permissions 0775 (drwxr-xr-x).
-find . -type d \! -perm 0775
-
-# Find files or directories that are not writable in the current directory.
-find . \! -writable
-find . -not -writable # Equivalent, but not compliant with POSIX-standard `find` command.
-
-# Find files or directories that are not writable and make them writable again.
-find . \! -writable -exec chmod --changes +w '{}' \+ | less
-
-# Find all files with world-readable (777) permissions, but skip symbolic links.
-find . \! -type l -perm 777
-find . '!' -type l -perm 777
-find . -not -type l -perm 777
-
-# Find directories and sort by permissions type.
-find . -type d -printf '%m %p\n' | sort | less
 
 # Create permissions report.
 find . -printf '%m\n' | sort | uniq -c | tee permissions-report.txt | less
 
-# Fix permissions recursively.
+# Find all files with world-readable (777) permissions.
+find . -perm 777
+find . -perm -g+s
+find . -perm -o+r
+# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
+# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
+# TODO: what is the right way to do this?
+
+# Fix permissions recursively by changing 777 (world readable) to 755.
 find . -perm 777 -exec chmod 755 '{}' \;
 find . -perm 777 -exec chmod 775 '{}' \;
+# TODO: what is the right way to do this?
 
 # Find a writable file owned by root.
 find / -xdev -user root -perm -u+w -name hello 2>/dev/null
 # https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
-
-
-# Show permissions of a directory.
-ls -ld /var/log
-# Example output:
-# drwxr-xr-x 23 root root 4096 May 23 08:18 /var/log
-
-# Show permissions of a directory.
-stat /var/log
-# Example output:
-#   File: ‘/var/log’
-#   Size: 4096      	Blocks: 8          IO Block: 4096   directory
-# Device: 801h/2049d	Inode: 30416373    Links: 23
-# Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-# Access: 2016-05-23 09:59:45.411033488 -0500
-# Modify: 2016-05-23 08:18:12.333311420 -0500
-# Change: 2016-05-23 08:18:12.333311420 -0500
-#  Birth: -
-
-# Show permisisons in octal.
-stat -c '%a %n' -- *
-stat --format='%a %n' -- *
-# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
-
-# Show permissions in octal, but also include the human-readable permissions.
-stat -c '%a %A %n' -- *
-# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
-
-# Show human-readable and octal permissions of files recursively.
-find . -type f -printf "%m %M %f\n" | less
-# https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
-
-# Find all files over a certain size (500MB in this case.)
-find . -size +500M
-
-# Find smallest text files.
-find . -name '*.txt' -printf '%s %f\n' | sort -n | head
-find . -name '*.txt' -printf '%s ' -print | less
-
-# Find executables.
-find . -type f -executable -print
-
-# Find non-executables.
-find . -type f \! -executable -print
-find . -type f -not -executable -print
-find /usr/bin/ -type f -not -executable -print
-find /bin/ -type f -not -executable -print
 
 # View only files not ending in '.txt'
 ls --ignore=*.txt
 
 # Viewing active processes
 top
+
 # Sorting by memory
 top -o %MEM
 # Interactively
@@ -170,56 +88,47 @@ cat commands.sh >> ~/.bash_history
 # (another non-useless use of cat).
 ls * | cat
 
-# Append a line to a non-empty file.
-sed -i '$ a\this is a line of text' myfile.txt
-
 # Grepping
 grep PHY unofficial-transcript-11-24-11.txt
-grep ALLOCATE COORD *.F90
-grep -Fxv -f DERIVT.F90 MODULE.F90 # subtract first file from second file
-grep -Fx -f DERIVT.F90 MODULE.F90 # intersection of first file and second file
-grep --fixed-strings --line-regexp --invert-match --file=DERIVT.F90 MODULE.F90 # long version
 grep --recursive dveff *.f90
 grep '=>' *.f90
-grep --recursive *.mp3 .
 grep Offenbach .
+
+# Grep recursively with a fixed string.
+grep --recursive 'fixed-string' .
 ls --recursive | grep kim *.f90
 grep --ignore-case --recursive "kim_api" . --include=*.f90
 grep --recursive "kim-str" .
 
-time grep "hi"
-
-ls /usr/bin | grep "csound"
-
-nano | ls | grep "ann"
-
 # Grepping literal, raw strings without having to escape everything.
 grep -F
 grep --fixed-strings
-
+# For example, use
 grep -rF '[*'
 # instead of
 grep -r '\[\*'
-
-find | grep NBMAX *.F90
 
 # View error messages in less by redirecting stderr to stdout
 bash compile.sh 2>&1 | less
 bash compile.sh 2>&1 >/dev/null | less
 # https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+
 # Send stderr to text file
 bash env.sh 2> err_log.txt
+
 # Send stdout and stderr to text file
 bash env.sh &> full_log.txt
 bash env.sh > full_log.txt 2>&1
-# This won't work.
+
+# Note that this will not work.
 bash env.sh 2>&1 > full_log.txt
 
-# If you want to pipe stdout and stderr together:
+# Pipe stdout and stderr together to another command.
 command > /dev/null |& grep "something"
 # e.g.
 make > /dev/null |& grep "something"
-# another example:
+
+# Grep HTTP requests from wget.
 wget --timeout=3 --tries=1 --spider --no-check-certificate http://google.com |& grep 'HTTP request'
 # Shorter version:
 wget --spider http://google.com |& grep 'HTTP request\|Location:'
@@ -228,15 +137,24 @@ wget --spider http://google.com |& grep 'HTTP request\|Location:'
 grep -ir "kim_api" . --include=*.f90
 grep -ir 'discrepancy' /var/log/messages | less
 
+# Find non-executables in /usr/bin
+find /usr/bin/ -type f -not -executable -print
+
+# Find non-executables in /bin/
+find /bin/ -type f -not -executable -print
+
 # Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
 # This would work also:
 for i in *.png; do mv $i digital_media_archive_assistant_$i; done
 
 # Rename all files starting with Ch so that they now end with .doc.
+# Dry run with --no-act --verbose to check for correctness.
 rename -nv 's/$/.doc/' Ch*
 rename --no-act --verbose 's/$/.doc/' Ch*
-rename -v 's/$/.doc/' Ch*
+
+# Rename all files starting with Ch so that they now end with .doc.
+rename 's/$/.doc/' Ch*
 
 # Rename all files ending with .csv so that they end with .dat instead.
 # Also handles names with spaces and weird names like my.csv.file.csv properly.
@@ -247,19 +165,7 @@ rename -nv 's/Cu/C/' Te_Na2Cu2Te.*
 rename 's/Cu/C/' Te_Na2Cu2Te.*
 # Te_Na2Cu2Te.001 renamed as Te_Na2C2Te.001
 
-# From commandlinefu.com
-rename 'y/ /_/' * # replace spaces with underscores
-# https://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
-
-# Replace colons with dashes.
-rename 's/:/-/g' *
-# Do it hierarchically.
-find . -name "*:*" -exec rename 's/:/-/g' {} \+
-
-# Remove the colons entirely.
-find . -name '*:*' -exec rename -n 's/://g' '{}' \+
-
-# Do the same with pipe characters.
+# Remove pipe characters from filenames recursively.
 find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
 
 # Rename folders starting with 2014 so that they start with 2015 instead.
@@ -273,20 +179,23 @@ rename 's/[^\x00-\x7F]//g' *
 # Replace non-ASCII characters in filenames with underscores ('_').
 rename 's/[^\x00-\x7F]/_/g' *
 
-mv file.{txt,csv} # Quick file rename using brace expansion.
+# Quick file rename using bash brace expansion.
+mv file.{txt,csv}
 
-# Similarly, can make a copy of a copy to work on the live.
+# Make a backup copy of a file with '.old' appended using bash brace expansion.
 cp ~/.local/share/mime/mime.cache{,.old}
 # http://www.shell-fu.org/lister.php?id=46
 
-# Using the system dictionary;
+# Grepping the system dictionary for words starting with 's'
+# and containing 'm' and 'b';
 # this is how samba was named:
-egrep -i '^S.*M.*B' /usr/share/dict/words
+egrep -i '^S.*M.*B' /usr/share/dict/words | less
 # http://www.rxn.com/services/faq/smb/samba.history.txt
-grep -i '^s.*m.*b' /usr/share/dict/words
+grep -i '^s.*m.*b' /usr/share/dict/words | less
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
+
 # All words without vowels.
 grep -iv '[aeiouy]' /usr/share/dict/words
 
@@ -306,11 +215,6 @@ grep -i '.*gry$' /usr/share/dict/words
 # Filter out the words with uppercase / capital letters.
 grep -v '[A-Z]' /usr/share/dict/words | less
 
-# Debugging segfaults in C:
-printf("Line %d reached.\n",__LINE__); /* debug */
-# Debugging segfaults in Fortran:
-print*,__FILE__,__LINE__
-
 # Disk usage:
 du | sort --numeric-sort --reverse
 du | sort -nr # quick version
@@ -322,42 +226,72 @@ mkvextract tracks movie5.mkv 2:audio_track.ac3
 # Show list of all files except . and .. in a single column.
 ls --almost-all --format=single-column
 
+# Make all files in '.mozilla' readable and writable.
 sudo chmod -R +rwx .mozilla
-!! # repeat previous command
+# CLEANUP
 
+# shortcut to repeat previous command in bash
+!!
+
+# TODO: explain
 chmod u+rw,g+r,o+r myfile.txt
+# CLEANUP
 
+# TODO: explain
 chmod a-w,u+w,g+w mydir/
+# CLEANUP
 
-# Change to only user can access.
+# Change permission so only user can access.
 chmod 0700 mydir/
 chmod u+rwx,g-rwx,o-rwx mydir/
 
-type ls # identify the kind of command ls is
-type -a ls # print all the places that contain an executable named 'ls', including aliases, functions, and builtins.
-# For example, `type -a ls` shows:
+# Identify what kind of command 'ls' is
+type ls
+
+# Print all the definitions of 'ls', including executables in $PATH, aliases, functions, and builtins.
+type -a ls
+# Example output:
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
-type -a ipython
-# ipython is /home/nathaniel/.local/bin/ipython
-# ipython is /usr/bin/ipython
 
 # Run the "real" ls, in case it is aliased.
 command ls
 \ls
 
+# Print all the definitions of 'echo'
+type -a echo
+# Example output:
+# echo is a shell builtin
+# echo is /usr/bin/echo
+# echo is /bin/echo
+
+# Print all the definitions of 'time'
+type -a time
+# Example output:
+# time is a shell keyword
+# time is /usr/bin/time
+# time is /bin/time
+
+# Identify the kind of command 'ipython' is.
+type -a ipython
+# Example output:
+# ipython is /home/username/.local/bin/ipython
+# ipython is /usr/bin/ipython
+
 # See a list of all functions.
 compgen -A function
+
 # List of all functions, aliases, and variables.
 declare
 
 # See where the function `quote` was defined.
 shopt -s extdebug; declare -F quote; shopt -u extdebug
 
-source .bashrc # make bash re-read modified .bashrc file
-. .bashrc      # make bash re-read modified .bashrc file (portable)
+# make bash re-read modified .bashrc file
+source .bashrc
 
-apt-cache search my-package # search apt packages for 'my-package', case insensitive
+# search apt packages for 'my-package', case insensitive
+apt-cache search my-package
 
 # For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
 apt-cache search --names-only '^gnash$'
@@ -370,29 +304,37 @@ apt-cache search '.{4000,}'
 
 # Search for a package in all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
 dcontrol warsow | less
+# CLEANUP
 
 # Show the release for the package.
 dcontrol --show-suite warsow | less
 
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
+
 # find all git repositories and run `git fsck` on them, saving the output to a log file.
 find "$HOME" -name '.git' -print -execdir git fsck \; &> log.txt
 # Don't do it like this:
-find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
+# find "$HOME" -name '.git' -print -execdir "git fsck" \; &> log.txt
 # or you will get error messages like these:
 # find: `/usr/bin/git fsck ./': No such file or directory
 
 # Quick and dirty way to find large git repositories.
 find . -type d -name '*.git' -execdir du -0sb \; -printf ' %p\n' | sort -n
+
+# Quick and dirty way to find large git repositories.
 # Measure the size of the .git folder itself, not the parent folder.
 find . -type d -name '*.git' -exec du -sb '{}' \+ | sort -rn
-find . -type d -name '*.git' -exec du -sh '{}' \+
 
-# Example of fsck on a borked drive.
+# Quick and dirty way to find large git repositories.
+# Measure the size of the .git folder itself, not the parent folder.
+# Use human-readable sizes.
+find . -type d -name '*.git' -exec du -sh '{}' \+ | sort -hr | less -c
+
+# Example of fsck on a hard drive.
 fsck -y /dev/sda
 
-# On a USB flash drive.
+# Example of fsck on a USB flash drive.
 sudo fsck /dev/sdb
 # https://superuser.com/questions/418053/i-tell-fsck-to-fix-usb-stick-it-says-leaving-file-system-unchanged
 # https://serverfault.com/questions/571458/unable-to-resolve-data-corruption-warning-with-fsck
@@ -404,14 +346,18 @@ fsck -y /dev/sda1 && exit
 find . -name '.git' -prune -o -type f -print | less -c
 # https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
 # https://unix.stackexchange.com/questions/109900/find-prune-does-not-ignore-specified-path
+
 # Find all files not in a git repository and run `wc -l` on them.
 find . -name '*.git' -prune -o -type f -exec 'wc' '-l' '{}' \+
 # -o means 'or', so either prune '*.git' or if they are files (not directories) run wc -l filename on them.
-# Same, but skip mercurial repositories (*.hg) as well.
+
+# Find all files not in a git or mercurial repository and run `wc -l` on them.
 find . -name '*.git' -prune -o -name '*.hg' -prune -o -type f -exec 'wc' '-l' '{}' \+
 
-# Also prune the empty files.
+# Find all non-empty files not in a git or mercurial repository and run `wc -l` on them.
 find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -exec wc '-l' '-c' '{}' \+ | grep ' 0 ' | less
+
+# Find all non-empty files not in a git or mercurial repository and run `wc -l` on them.
 # Use pipe instead of exec.
 find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -print0 | wc -l --files0-from=- | grep '^0 \|^1 ' | less
 
@@ -419,12 +365,14 @@ find . -name '*.git' -prune -o -name '*.hg' -prune -o -empty -prune -o -type f -
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print | less
 find / -path '/home' -prune -o -path '/tmp' -prune -o -path '/proc' -prune -o -writable -print 2> /dev/null | less
 # We can use brace expansion for the pruned paths instead of writing them all out by hand.
-# TODO: why doesn't this work?
-find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
 # http://www.liamdelahunty.com/tips/linux_find_exclude_multiple_directories.php
 # https://askubuntu.com/questions/206277/find-files-in-linux-and-exclude-specific-directories
 # http://www.cyberciti.biz/faq/linux-unix-osx-bsd-find-command-exclude-directories/
 # https://stackoverflow.com/questions/1489277/how-to-use-prune-option-of-find-in-sh
+
+# TODO: why doesn't this work?
+find / ' -path '{'/home','/tmp','/proc'}' -prune -o' -writable -print | less
+# cleanup
 
 find . -name '*.git' -prune -o -type f -print0 | wc -l --files0-from=-
 # https://stackoverflow.com/questions/13727917/use-wc-on-all-subdirectories-to-count-the-sum-of-lines
@@ -925,10 +873,6 @@ python -m cProfile myscript.py > profile.log
 # Trace function calls.
 python3 -m trace --listfuncs -- /path/to/myscript.py
 
-# sage command
-plot_vector_field((y, -x), (x,-3,3), (y,-3,3))
-VectorPlot[{y, -x}, {x, -3, 3}, {y, -3, 3}]
-
 # Create PNG images from LaTeX DVI document
 dvipng -D 400 poisson-sep-pages.dvi -T tight -bg transparent
 
@@ -940,13 +884,15 @@ pmi suspend
 # sudo apt install powermanagement-interface
 # https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line
 
-# Use systemd
+# Use systemd to suspend from command line.
 systemctl suspend
 # https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line
 
+# List systemd unit files.
 systemctl list-unit-files
 # https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
 
+# List systemd unit files.
 systemctl list-units
 # https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
 
@@ -960,10 +906,10 @@ apt-cache showpkg xserver-xorg-input-synaptics
 # Use synaptic to downgrade and lock
 sudo vim /etc/apt/apt.conf.d/99unattended-upgrades
 # Add this to prevent upgrades to package
-// List of packages to not update
-Unattended-Upgrade::Package-Blacklist {
-      "xserver-xorg-input-synaptics";
-};
+# // List of packages to not update
+# Unattended-Upgrade::Package-Blacklist {
+#       "xserver-xorg-input-synaptics";
+# };
 
 # Get rid of network popups
 killall nm-applet ; nm-applet &
@@ -1182,7 +1128,6 @@ find ./ -type f -name "*.deadtime" -delete
 # Number starting with 0.
 find . -type f -exec nl -v 0 '{}' \; | less
 
-
 # Delete all files and directories, including hidden files.
 find . -delete
 
@@ -1215,13 +1160,11 @@ ssh -D 9999 nbeaver@216.47.138.69  # secure shell into desktop at physics office
 # Run browser through SOCKS proxy.
 chromium --proxy-server="socks5://localhost:9999" --host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"
 
-# in python, save interactive history in current directory:
-import readline
-readline.write_history_file("my_history.txt")
-
 # instant memory leak!
+$(yes)
 echo $(yes hurpaflerp)
 echo $(yes)
+# CLEANUP
 
 # Check ip address to see if it responds, then load the video
 ping -q -c 1 upload.wikimedia.org && vlc https://upload.wikimedia.org/wikipedia/commons/d/dd/Annie_Oakley_shooting_glass_balls%2C_1894.ogg
@@ -1855,9 +1798,9 @@ w
 last
 # to see who was logged in previously.
 # To message user nbeaver, enter
-write nbeaver <enter>
+write nbeaver # press enter when finished
 # Type message. They can write you back, too.
-wall <enter>
+wall # press enter
 # Type message, Ctrl-D
 
 # Grep wifi connections for WPA passkeys.
@@ -2642,17 +2585,19 @@ apt-get download --print-uris php5-imagick
 apt-get download --print-uris php5-imagick | cut -d' ' -f1 | sed -e 's/^.//' -e 's/.$//'
 # http://ftp.debian.org/debian/pool/main/p/php-imagick/php5-imagick_3.2.0~rc1-1_amd64.deb
 
-# If you want to get the source code for a package, run this. It does not require root priveleges.
-apt-get source <package-name>
+# If you want to get the source code for a package, run this.
+# It does not require root priveleges.
+# For example, for coreutils.
+apt-get source coreutils
 # If you want to build it from source, do this:
-sudo apt-get build-dep <package-name>
-apt-get -b source <package-name>
+sudo apt-get build-dep coreutils
+apt-get -b source coreutils
 # Alternatives that do the same thing:
-# apt-get --build source <package-name>
-# apt-get --compile source <package-name>
+# apt-get --build source coreutils
+# apt-get --compile source coreutils
 
 # TODO: does this work?
-DEB_BUILD_OPTIONS=nostrip,noopt apt-get source -b <package-name>
+DEB_BUILD_OPTIONS=nostrip,noopt apt-get source -b coreutils
 
 # If you have the sources from other repos available,
 # you can download and try to build those instead.
