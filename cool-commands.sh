@@ -2907,13 +2907,7 @@ printf 'This is only a test.\n' | md5sum
 # b9fdcb35dba569b1ca651f2b243b5144  -
 printf 'This is only a test.\n' | cksum
 # 2744897339 21
-# Python version.
-import binascii
-binascii.crc32("This is only a test.\n")
-# 828642827
-import hashlib
-hashlib.md5("This is only a test.\n").hexdigest()
-# 'b9fdcb35dba569b1ca651f2b243b5144'
+
 
 # From here: http://mmb.pcb.ub.es/~carlesfe/unix/tricks.txt
 # let people in your group access folders without messing up file permissions (never do 'chmod g+x * -R'!)
@@ -3184,15 +3178,15 @@ sleep 1; xset dpms force off
 # Use less on multiple files
 less file1 file2 file3
 # While in less:
-:n
-:p
+# :n
+# :p
 # Save logfile with less (if it's a stream).
-:s
+# :s
 # When getting this: "Cannot edit standard input"
 # Pipe it on to vim.
-g # top of file
-| # pipe
-$ # to end of file
+# g # top of file
+# | # pipe
+# $ # to end of file
 vim - # the command to pass it to
 # http://unix.itsprite.com/unixpiping-into-less-and-editing-cannot-edit-standard-input-error-workarounds/
 # https://unix.stackexchange.com/questions/23304/piping-into-less-and-editing-cannot-edit-standard-input-error-workarounds
@@ -3767,44 +3761,44 @@ echo /usr/share/applications/!(*.desktop)
 w3m 'http://www.aps.anl.gov/aod/blops/status/srStatus.html' | grep "Operations Status"
 
 # Insert all possible completions (readline completion trick)
-<Alt><Shift>8 # i.e. M-*
+# <Alt><Shift>8 # i.e. M-*
 
 # More readline stuff
-C-x C-u # undo
-M-f # forward one word. M is meta, i.e. alt key.
-M-b # back one word. M is meta, i.e. alt key.
+# C-x C-u # undo
+# M-f # forward one word. M is meta, i.e. alt key.
+# M-b # back one word. M is meta, i.e. alt key.
 
 # Put this in .inputrc for menu completion (like vim, where it cycles through options)
-"\C-f": menu-complete
+# "\C-f": menu-complete
 
 # Fun on the beamline. :)
-iit@bm1:~$ w
- 21:06:54 up 272 days,  3:11, 10 users,  load average: 0.00, 0.00, 0.04
-USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
-segre    tty1                      19Dec12 177days  0.37s  0.35s -bash
-kwiatal  tty2                      26Mar13 80days  0.46s  0.39s -bash
-katsouda pts/0    :0.0             Thu14    2.00s  2:02   5:18  gnome-terminal
-katsouda pts/1    :0.0             14:46    1:02m 13.10s  5:18  gnome-terminal
-katsouda pts/4    :0.0             14:46    1:32m 17:04   5:18  gnome-terminal
-iit      pts/5    mr116.mr.aps.anl 20:05    0.00s  0.05s  0.01s w
-katsouda pts/8    :0.0             14:46    1:03m  0.02s  5:18  gnome-terminal
-katsouda pts/7    :0.0             14:46    1:01m  0.02s  5:18  gnome-terminal
-iit      pts/11   mr116.mr.aps.anl 19:17    1:33m  0.10s  0.02s pager -s
-gu34012  pts/9    mr011.mr.aps.anl 07Jun13  1:08m 22:37  22:36  /opt/mx/bin/mxmotor -F /opt/mx/etc/motor.dat -s /home/gu34012/.mx/bm1_scan.dat
+# iit@bm1:~$ w
+#  21:06:54 up 272 days,  3:11, 10 users,  load average: 0.00, 0.00, 0.04
+# USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+# segre    tty1                      19Dec12 177days  0.37s  0.35s -bash
+# kwiatal  tty2                      26Mar13 80days  0.46s  0.39s -bash
+# katsouda pts/0    :0.0             Thu14    2.00s  2:02   5:18  gnome-terminal
+# katsouda pts/1    :0.0             14:46    1:02m 13.10s  5:18  gnome-terminal
+# katsouda pts/4    :0.0             14:46    1:32m 17:04   5:18  gnome-terminal
+# iit      pts/5    mr116.mr.aps.anl 20:05    0.00s  0.05s  0.01s w
+# katsouda pts/8    :0.0             14:46    1:03m  0.02s  5:18  gnome-terminal
+# katsouda pts/7    :0.0             14:46    1:01m  0.02s  5:18  gnome-terminal
+# iit      pts/11   mr116.mr.aps.anl 19:17    1:33m  0.10s  0.02s pager -s
+# gu34012  pts/9    mr011.mr.aps.anl 07Jun13  1:08m 22:37  22:36  /opt/mx/bin/mxmotor -F /opt/mx/etc/motor.dat -s /home/gu34012/.mx/bm1_scan.dat
 # Tell Razib to open a new terminal while we're waiting for a raster scan to complete and tell me what he sees with 'who am i'.
-iit@bm1:~$ who am i
-iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
-it@bm1:~$ write katsoudas pts/10
-Hello, Razib!
-iit@bm1:~$ who am i
-iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
-iit@bm1:~$
-Message from katsoudas@bm1 on pts/10 at 21:18 ...
-Is this some kind of joke
-EOF
-iit@bm1:~$ ps aux | grep ssh
+# iit@bm1:~$ who am i
+# iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
+# it@bm1:~$ write katsoudas pts/10
+# Hello, Razib!
+# iit@bm1:~$ who am i
+# iit      pts/5        2013-06-14 20:05 (mr116.mr.aps.anl.gov)
+# iit@bm1:~$
+# Message from katsoudas@bm1 on pts/10 at 21:18 ...
+# Is this some kind of joke
+# EOF
+# iit@bm1:~$ ps aux | grep ssh
 # Blah blah blah...
-iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5
+# iit       6467  0.0  0.0  11640  1608 ?        SN   20:05   0:00 sshd: iit@pts/5
 # That's me!
 
 # Display which tty you are on
@@ -4582,8 +4576,9 @@ watch -e -n 1 false
 
 # Process files with spaces in the filenames
 IFS=$'\n'
-for file in *.txt ; do
-    # commands on $file here
+for file in *.txt ;
+do
+    : # commands on $file here
 done
 # Another option is to use find with --exec flag
 
@@ -4809,12 +4804,12 @@ echo "This is a test email from $LOGNAME" | mail --subject='test message' "$LOGN
 echo "This is a test email from $LOGNAME" | mail -s 'test message' -- "$LOGNAME@localhost"
 
 # Entering unicode on Linux.
-Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
-Ctrl-Shift-U b0   <Enter> # Insert ° (degree symbol)
-Ctrl-Shift-U 3b1  <Enter> # Insert α (alpha)
-Ctrl-Shift-U 3b2  <Enter> # Insert β (beta)
-Ctrl-Shift-U 2082 <Enter> # Insert ₂ 
-Ctrl-Shift-U ae   <Enter> # Insert ® (registered trademark sign)
+# Ctrl-Shift-U 2103 <Enter> # Insert ℃ (degrees Celsius)
+# Ctrl-Shift-U b0   <Enter> # Insert ° (degree symbol)
+# Ctrl-Shift-U 3b1  <Enter> # Insert α (alpha)
+# Ctrl-Shift-U 3b2  <Enter> # Insert β (beta)
+# Ctrl-Shift-U 2082 <Enter> # Insert ₂ 
+# Ctrl-Shift-U ae   <Enter> # Insert ® (registered trademark sign)
 
 # Using zsync for downloads
 zsync 'http://releases.ubuntu.com/12.04.4/ubuntu-12.04.4-desktop-i386.iso.zsync'
@@ -7771,12 +7766,6 @@ echo $-
 
 # Add a white boarder around an image.
 convert example.png -bordercolor "#FFFFFF" -border 1 example_border_1px.png
-
-
-# Useful in Firefox developer toolbar.
-# https://stackoverflow.com/questions/32743509/can-i-create-high-resolution-screenshots-in-firefox
-:screenshot --dpr 4
-:screenshot filename.png --dpr 4
 
 # Show message of the day without needing to log in all over again.
 cat /run/motd.dynamic
