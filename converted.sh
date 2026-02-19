@@ -1,8 +1,4 @@
 #! /usr/bin/env bash
-# Put this at the top
-# to Prevent this file from being run as a shell script.
-printf "ERROR: do not run this as a shell script.\n" >&2
-exit 1
 
 # List wireless access points
 sudo iwlist scanning | less
@@ -97,15 +93,56 @@ find . -type f -executable -print
 find . -type f \! -executable -print
 
 # Replace spaces with underscores for all filenames in current directory.
-rename 'y/ /_/' *
+rename 'y/ /_/' -- *
 # https://www.commandlinefu.com/commands/view/2518/replace-spaces-in-filenames-with-underscores
 
 # Replace colons with dashes for filenames in current directory.
-rename 's/:/-/g' *
+rename 's/:/-/g' -- *
 
 # Replace colons with dashes recursively.
 find . -name "*:*" -exec rename 's/:/-/g' {} \+
 
 # Remove colons from filenames recursively.
 find . -name '*:*' -exec rename -n 's/://g' '{}' \+
+
+# Remove non-ASCII characters from filenames.
+rename 's/[^\x00-\x7F]//g' -- *
+# Replace non-ASCII characters in filenames with underscores ('_').
+rename 's/[^\x00-\x7F]/_/g' -- *
+
+# Rename all .jpeg files to .jpg.
+rename 's/.jpeg/.jpg/' -- *.jpeg
+
+# Quick file rename using bash brace expansion.
+mv file.{txt,csv}
+
+# Make a backup copy of a file with '.old' appended using bash brace expansion.
+cp ~/.local/share/mime/mime.cache{,.old}
+# http://www.shell-fu.org/lister.php?id=46
+
+# Grepping the system dictionary for words starting with 's'
+# and containing 'm' and 'b';
+# this is how samba was named:
+grep -E -i '^S.*M.*B' /usr/share/dict/words | less
+# http://www.rxn.com/services/faq/smb/samba.history.txt
+grep -i '^s.*m.*b' /usr/share/dict/words | less
+
+# Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
+grep -E -i "^[^aeiouy']{3}$" /usr/share/dict/words
+
+# All words without vowels.
+grep -iv '[aeiouy]' /usr/share/dict/words
+
+# Words that can be spelled with hexadecimal alone, like 0xDEADBEEF.
+grep -E -i "^[a-fA-F]+$" /usr/share/dict/words | less -c
+# https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Magic_debug_values
+# http://www.urbandictionary.com/define.php?term=0xDEADBEEF
+# https://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
+
+# Grep system dictionary for words that end in "gry"
+grep -i '.*gry$' /usr/share/dict/words
+# Example output:
+# angry
+# demagogry
+# hungry
 

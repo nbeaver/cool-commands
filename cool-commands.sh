@@ -100,6 +100,11 @@ ls --recursive | grep kim *.f90
 grep --ignore-case --recursive "kim_api" . --include=*.f90
 grep --recursive "kim-str" .
 
+# Return all lines containing "kim_api" (case insensitive) and ending with .f90
+grep -ir "kim_api" . --include=*.f90
+grep -ir 'discrepancy' /var/log/messages | less
+
+
 # Grepping literal, raw strings without having to escape everything.
 grep -F
 grep --fixed-strings
@@ -129,13 +134,9 @@ command > /dev/null |& grep "something"
 make > /dev/null |& grep "something"
 
 # Grep HTTP requests from wget.
-wget --timeout=3 --tries=1 --spider --no-check-certificate http://google.com |& grep 'HTTP request'
+wget --timeout=3 --tries=1 --spider --no-check-certificate 'http://google.com' |& grep 'HTTP request'
 # Shorter version:
 wget --spider http://google.com |& grep 'HTTP request\|Location:'
-
-# Return all lines containing "kim_api" (case insensitive) and ending with .f90
-grep -ir "kim_api" . --include=*.f90
-grep -ir 'discrepancy' /var/log/messages | less
 
 # Find non-executables in /usr/bin
 find /usr/bin/ -type f -not -executable -print
@@ -171,47 +172,6 @@ find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
 # Rename folders starting with 2014 so that they start with 2015 instead.
 rename  's/2014/2015/' 2014*
 
-# Rename all .jpeg files to .jpg.
-rename 's/.jpeg/.jpg/' *.jpeg
-
-# Remove non-ASCII characters from filenames.
-rename 's/[^\x00-\x7F]//g' *
-# Replace non-ASCII characters in filenames with underscores ('_').
-rename 's/[^\x00-\x7F]/_/g' *
-
-# Quick file rename using bash brace expansion.
-mv file.{txt,csv}
-
-# Make a backup copy of a file with '.old' appended using bash brace expansion.
-cp ~/.local/share/mime/mime.cache{,.old}
-# http://www.shell-fu.org/lister.php?id=46
-
-# Grepping the system dictionary for words starting with 's'
-# and containing 'm' and 'b';
-# this is how samba was named:
-egrep -i '^S.*M.*B' /usr/share/dict/words | less
-# http://www.rxn.com/services/faq/smb/samba.history.txt
-grep -i '^s.*m.*b' /usr/share/dict/words | less
-
-# Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
-egrep -i "^[^aeiouy']{3}$" /usr/share/dict/words
-
-# All words without vowels.
-grep -iv '[aeiouy]' /usr/share/dict/words
-
-# Words that can be spelled with hexadecimal alone, like 0xDEADBEEF.
-egrep -i "^[a-fA-F]+$" /usr/share/dict/words
-# https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Magic_debug_values
-# http://www.urbandictionary.com/define.php?term=0xDEADBEEF
-# https://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
-
-# words that end in "gry"
-grep -i '.*gry$' /usr/share/dict/words
-# For the record, here's what I got:
-# angry
-# demagogry
-# hungry
-
 # Filter out the words with uppercase / capital letters.
 grep -v '[A-Z]' /usr/share/dict/words | less
 
@@ -228,18 +188,16 @@ ls --almost-all --format=single-column
 
 # Make all files in '.mozilla' readable and writable.
 sudo chmod -R +rwx .mozilla
-# CLEANUP
+# TODO: why is this necessary?
 
 # shortcut to repeat previous command in bash
 !!
 
 # TODO: explain
 chmod u+rw,g+r,o+r myfile.txt
-# CLEANUP
 
 # TODO: explain
 chmod a-w,u+w,g+w mydir/
-# CLEANUP
 
 # Change permission so only user can access.
 chmod 0700 mydir/
@@ -254,8 +212,10 @@ type -a ls
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
 
-# Run the "real" ls, in case it is aliased.
+# Run the "real" `ls', for when it is aliased.
 command ls
+
+# A method to run the un-aliased version of `ls'.
 \ls
 
 # Print all the definitions of 'echo'
@@ -2797,7 +2757,10 @@ tar --create --gzip --verbose --file meansum.tgz meansum/
 unicode ಠ
 # U+0CA0 KANNADA LETTER TTHA
 # UTF-8: e0 b2 a0  UTF-16BE: 0ca0  Decimal: &#3232;
-Ctrl-Shift-U 0ca0 <Enter> # Insert ಠ
+
+# Insert Unicode using unicode
+# Ctrl-Shift-U 0ca0 <Enter> # Insert ಠ
+# https://superuser.com/questions/59418/how-can-i-type-special-characters-in-linux
 
 # Find out which fonts support a particular glyph.
 # https://askubuntu.com/questions/368121/list-of-installed-fonts-that-support-a-certain-character
