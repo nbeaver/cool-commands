@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # List wireless access points
-sudo iwlist scanning | less
+sudo iwlist scanning
 # https://hewlettpackard.github.io/wireless-tools/Tools
 
 # Find all files with 'cool' somewhere in the filename
@@ -36,7 +36,7 @@ find . \! -writable
 find . -not -writable
 
 # Find files or directories that are not writable and make them writable again.
-find . \! -writable -exec chmod --changes +w '{}' \+ | less
+find . \! -writable -exec chmod --changes +w '{}' \+
 
 # Find all files with world-readable (777) permissions, but skip symbolic links.
 find . \! -type l -perm 777
@@ -44,7 +44,7 @@ find . '!' -type l -perm 777
 find . -not -type l -perm 777
 
 # Find directories and sort by permissions type.
-find . -type d -printf '%m %p\n' | sort | less
+find . -type d -printf '%m %p\n' | sort
 
 # Show permissions of a directory.
 ls -ld /var/log
@@ -74,7 +74,7 @@ stat --format='%a %A %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
 
 # Show human-readable and octal permissions of files recursively.
-find . -type f -printf "%m %M %f\n" | less
+find . -type f -printf "%m %M %f\n"
 # https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
 
 # Find all files over a certain size (500MB in this case.)
@@ -84,7 +84,7 @@ find . -size +500M
 
 # Find smallest text files.
 find . -name '*.txt' -printf '%s %f\n' | sort -n | head
-find . -name '*.txt' -printf '%s ' -print | less
+find . -name '*.txt' -printf '%s ' -print
 
 # Find executables recursively.
 find . -type f -executable -print
@@ -107,6 +107,7 @@ find . -name '*:*' -exec rename -n 's/://g' '{}' \+
 
 # Remove non-ASCII characters from filenames.
 rename 's/[^\x00-\x7F]//g' -- *
+
 # Replace non-ASCII characters in filenames with underscores ('_').
 rename 's/[^\x00-\x7F]/_/g' -- *
 
@@ -123,9 +124,9 @@ cp ~/.local/share/mime/mime.cache{,.old}
 # Grepping the system dictionary for words starting with 's'
 # and containing 'm' and 'b';
 # this is how samba was named:
-grep -E -i '^S.*M.*B' /usr/share/dict/words | less
+grep -E -i '^S.*M.*B' /usr/share/dict/words
 # http://www.rxn.com/services/faq/smb/samba.history.txt
-grep -i '^s.*m.*b' /usr/share/dict/words | less
+grep -i '^s.*m.*b' /usr/share/dict/words
 
 # Three-letter words without vowels, e.g. 'brr', 'nth', Mrs'.
 grep -E -i "^[^aeiouy']{3}$" /usr/share/dict/words
@@ -134,7 +135,7 @@ grep -E -i "^[^aeiouy']{3}$" /usr/share/dict/words
 grep -iv '[aeiouy]' /usr/share/dict/words
 
 # Words that can be spelled with hexadecimal alone, like 0xDEADBEEF.
-grep -E -i "^[a-fA-F]+$" /usr/share/dict/words | less -c
+grep -E -i "^[a-fA-F]+$" /usr/share/dict/words
 # https://en.wikipedia.org/wiki/Magic_number_%28programming%29#Magic_debug_values
 # http://www.urbandictionary.com/define.php?term=0xDEADBEEF
 # https://stackoverflow.com/questions/5907614/0xdeadbeef-vs-null
@@ -183,5 +184,5 @@ uname -o
 # GNU/Linux
 
 # List all signals.
-compgen -A signal | less -c
+compgen -A signal
 
