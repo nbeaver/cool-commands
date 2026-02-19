@@ -6072,7 +6072,8 @@ export NSPR_LOG_MODULES=imap:5,timestamp; export NSPR_LOG_FILE=/tmp/imap.log; ic
 # https://wiki.mozilla.org/MailNews:Logging#Linux.2Funix
 # http://wiki2.dovecot.org/Debugging/Thunderbird
 
->C:\Python27\python.exe myscript.py first_argument.txt > outfile.txt
+# Run Python script on Windows
+# >C:\Python27\python.exe myscript.py first_argument.txt > outfile.txt
 
 # Using ANSI color codes in the terminal.
 black='\E[30;47m'
@@ -6089,32 +6090,6 @@ no_color='\033[0m'
 # http://www.tldp.org/LDP/abs/html/colorizing.html
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 # https://stackoverflow.com/questions/30868750/xargs-echo-colored-output
-
-# How many processors does this machine have?
-getconf _NPROCESSORS_ONLN
-# or
-nproc
-
-# How long can paths be?
-getconf PATH_MAX /
-
-# Hey, what operating system is this?
-echo $OSTYPE
-# Note: bash-only.
-# linux-gnu
-# darwin13
-uname
-# Darwin
-# Linux
-uname -s
-# Same as uname.
-uname -o
-# GNU-only extension.
-# GNU/Linux
-#
-
-# List all signals.
-compgen -A signal
 
 # http://zwischenzugs.tk/index.php/2015/07/01/bash-shortcuts-gem/
 bind -P

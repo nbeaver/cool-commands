@@ -146,3 +146,42 @@ grep -i '.*gry$' /usr/share/dict/words
 # demagogry
 # hungry
 
+# Print how many cores the CPU has.
+getconf _NPROCESSORS_ONLN
+# Example output:
+# 8
+# https://stackoverflow.com/questions/6481005/how-to-obtain-the-number-of-cpus-cores-in-linux-from-the-command-line
+
+# Print how many cores the CPU has.
+nproc
+# Example output:
+# 8
+# https://stackoverflow.com/questions/6481005/how-to-obtain-the-number-of-cpus-cores-in-linux-from-the-command-line
+
+# Print maximum path length.
+getconf PATH_MAX /
+# Example output:
+# 4096
+
+# Print operating system type (OS identifier).
+echo "$OSTYPE"
+# Note: bash-only.
+# Example output:
+# linux-gnu
+# darwin13
+
+# Print operating system kernel name (OS identifier).
+uname -s
+# Example output:
+# Darwin
+# Linux
+
+# Print operating system name (OS identifier).
+uname -o
+# GNU-only extension.
+# Example output:
+# GNU/Linux
+
+# List all signals.
+compgen -A signal | less -c
+
