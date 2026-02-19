@@ -1790,7 +1790,7 @@ vim --startuptime vim.log ~/path/to/file/to/edit
 vim --startuptime $(tempfile) ~/path/to/file/to/edit
 
 # On bash command line, edit current command in your favorite $EDITOR (e.g. vim)
-Ctrl-X Ctrl-E
+# Ctrl-X Ctrl-E
 # edit-and-execute-command (C-x C-e)
 # Invoke an editor on the current command line, and execute the result as shell
 # commands. Bash attempts to invoke $VISUAL, $EDITOR, and emacs as the editor,
@@ -1798,28 +1798,28 @@ Ctrl-X Ctrl-E
 # https://www.gnu.org/software/bash/manual/html_node/Miscellaneous-Commands.html
 
 # On bash command line, cut word before cursor
-Ctrl-W
+# Ctrl-W
 # On bash command line, cut word after cursor
-Esc-W
+# Esc-W
 # On bash command line, incremental undo
-Ctrl-X Ctrl-U
+# Ctrl-X Ctrl-U
 # On bash command line, move forward/backword one character
-Ctrl-F
-Ctrl-B
+# Ctrl-F
+# Ctrl-B
 # On bash command line, move forward/backword one word
-Esc-F
-Esc-B
+# Esc-F
+# Esc-B
 # On bash command line, reverse incremental search through previous commands
-Ctrl-R
-Ctrl-S # forward
+# Ctrl-R
+# Ctrl-S # forward
 # While using reverse incremental search:
-Enter  # Executes command immediately
-Ctrl-J # Copies command to prompt, allowing further editing
-Ctrl-G # Escapes incremental search without doing anything
+# Enter  # Executes command immediately
+# Ctrl-J # Copies command to prompt, allowing further editing
+# Ctrl-G # Escapes incremental search without doing anything
 # Move to beginning of history
-Alt-Shift-,
+# Alt-Shift-,
 # Move to end of history
-Alt-Shift-.
+# Alt-Shift-.
 # Bash history modifiers (bang commands) http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
 # The technical term is "event designator" http://www.catonmat.net/blog/top-ten-one-liners-from-commandlinefu-explained/
 !! # execute last command
@@ -1832,7 +1832,8 @@ Alt-Shift-.
 !?etc.gz # Like Ctrl-R, runs most recent command matching 'etc.gz'
 
 # Remove spaces and duplicate lines
-cat myfile.txt | tr --squeeze-repeats ' ' | sort | uniq > my-condensed-file-with-duplicates-removed.txt
+tr --squeeze-repeats ' ' < myfile.txt | sort | uniq > my-condensed-file-with-duplicates-removed.txt
+
 sudo grep -r helper /var/log/
 
 # Why sort | uniq, not sort -u? Because of unexpected behavior:
