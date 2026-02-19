@@ -1,8 +1,4 @@
 #! /usr/bin/env bash
-# Put this at the top
-# to Prevent this file from being run as a shell script.
-printf "ERROR: do not run this as a shell script.\n" >&2
-exit 1
 
 # Connecting to s-video out, changing display resolution, connecting to projector or external display
 xrandr
@@ -5055,14 +5051,14 @@ sudo tee /sys/class/backlight/acpi_video0/brightness < /sys/class/backlight/acpi
 echo 2000 | sudo tee /sys/class/backlight/intel_backlight/brightness
 
 # gnuplot command we typically use at the beamline
-gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
+# gnuplot> plot "smx.001" u 1:(log($2/$3)) w lp
 # Keep up gnuplot with shell after running a script
 gnuplot script.gnuplot -
 # gnuplot command with just part of the file:
-gnuplot> plot "smy.001" every ::0::136 u 1:(log($2/$3)) w lp
+# gnuplot> plot "smy.001" every ::0::136 u 1:(log($2/$3)) w lp
 
 # Ways to prevent a package from being installed
-Synaptic → Package → Lock version.
+# Synaptic → Package → Lock version.
 sudo apt-mark hold package-name
 echo package-name hold | sudo dpkg --set-selections
 # For aptitude only
@@ -5131,6 +5127,15 @@ man --apropos . | cut --delimiter=' ' --fields=1 | sort --ignore-case | uniq --i
 #      4 uuid
 #      5 md5
 #      8 intro
+# $ man -aw intro
+# /usr/share/man/man1/intro.1.gz
+# /usr/share/man/man8/intro.8.gz
+# /usr/share/man/man3/intro.3.gz
+# /usr/share/man/man2/intro.2.gz
+# /usr/share/man/man5/intro.5.gz
+# /usr/share/man/man4/intro.4.gz
+# /usr/share/man/man6/intro.6.gz
+# /usr/share/man/man7/intro.7.gz
 
 # Open manpage html page in chromium browser.
 man --html=/usr/bin/chromium man
@@ -5246,13 +5251,13 @@ man 7 hier
 # http://mindref.blogspot.com/2010/12/debian-disable-ipv6_22.html
 # First, comment out /etc/hosts ipv6 stuff
 # Then do
-use-ipv6=no
+# use-ipv6=no
 # in /etc/avahi/avahi-daemon.conf
 # Next, in /etc/sysctl.conf
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1
-net.ipv6.conf.eth0.disable_ipv6 = 1
+# net.ipv6.conf.all.disable_ipv6 = 1
+# net.ipv6.conf.default.disable_ipv6 = 1
+# net.ipv6.conf.lo.disable_ipv6 = 1
+# net.ipv6.conf.eth0.disable_ipv6 = 1
 # Restart stuff.
 sudo sysctl -p
 # To check what's using IPv6
@@ -5270,12 +5275,11 @@ echo "install ipv6 /bin/true" >> /etc/modprobe.d/disable-ipv6.conf
 # Also
 sudo vim /etc/netconfig
 # comment out lines starting with:
-udp6
-tcp6
+# udp6
+# tcp6
 # also this
 sudo vim /etc/default/grub
-
-GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 quiet"
+# GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 quiet"
 # and this
 # http://www.evsmisc.info/linux/mind-reference-how-to-disable-ipv6-in-debian.html
 # another way to check
@@ -5316,21 +5320,20 @@ sudo macchanger --another wlan0
 
 # TODO: learn how to recover deleted files on a Linux filesystem.
 # TODO: running a script on startup, shutdown, wake from suspend, etc.
-http://www.linuxquestions.org/questions/slackware-14/how-to-run-a-script-on-wake-up-from-sleep-state-940311/
-    When the computer wakes up from hibernate or suspend all scripts in
-    /etc/pm/sleep.d are called in reversed order with the argument "thaw" or "resume".
-
-    Just put something like
-    Code:
-    #!/bin/sh
-    case "$1" in
-        thaw|resume)
-            yourscript.sh
-            ;;
-    esac
-    in /etc/pm/sleep.d and you should be fine.
-
-For more information see man pm-action.
+# http://www.linuxquestions.org/questions/slackware-14/how-to-run-a-script-on-wake-up-from-sleep-state-940311/
+#    When the computer wakes up from hibernate or suspend all scripts in
+#    /etc/pm/sleep.d are called in reversed order with the argument "thaw" or "resume".
+#
+#    Just put something like
+#    Code:
+#    #!/bin/sh
+#    case "$1" in
+#        thaw|resume)
+#            yourscript.sh
+#            ;;
+#    esac
+#    in /etc/pm/sleep.d and you should be fine.
+# For more information see man pm-action.
 
 
 # open a file; desktop-independent command
@@ -5471,10 +5474,6 @@ type echo
 #     details about the options it supports.
 # http://askubuntu.com/questions/27355/how-do-i-get-help-for-echo-or-other-bash-commands
 
-# Using python instead of which:
->>>> import distutils.spawn
->>>> distutils.spawn.find_executable('mkdir')
-
 
 # Follow symbolic links recursively.
 namei /usr/bin/vim
@@ -5523,48 +5522,6 @@ SpiderOakONE --share-single-file=temp.txt
 # Use 'watch' with an alias or shell function.
 watch -x bash -ic 'my-alias'
 # https://unix.stackexchange.com/questions/614722/how-to-use-aliases-with-watch-command
-
-# Convert hexadecimal to decimal
-python:
-int("78",16) # 120
-float.fromhex('0x1.ffffp10') # -4.9406564584124654e-324
-int("0x78",16) # 120
-# Convert decimal to hexadecimal.
-hex(120) # '0x78'
-3.14159.hex() # '0x1.921f9f01b866ep+1'
-
-# Convert octal to decimal.
-int('0170', 8)
-# Convert decimal to octal.
-oct(120)
-
-# Convert decimal to binary.
-bin(120)
-# '0b1111000'
-# Convert binary to decimal.
-int('0b1111000', 2)
-int('1111000', 2)
-int('1111000', base=2)
-
-# Convert decimal to ternary (requires numpy).
-import numpy
-numpy.base_repr(73, 3)
-# '2201'
-
-# Convert integer to character.
-chr(32)
-
-# Convert character to integer.
-ord(' ')
-
-# Get partial ascii table.
-[(chr(i), unicodedata.name(chr(i))) for i in range(32, 127)]
-
-# See where code crashes.
-import ipdb; ipdb.set_trace()
-
-# Or use this:
-from IPython import embed; embed()
 
 # Capture screenshot.
 scrot
