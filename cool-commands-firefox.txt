@@ -1,5 +1,0 @@
-# Useful in Firefox developer toolbar.
-# https://stackoverflow.com/questions/32743509/can-i-create-high-resolution-screenshots-in-firefox
-:screenshot --dpr 4
-:screenshot filename.png --dpr 4
-
