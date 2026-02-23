@@ -230,3 +230,64 @@ uname -o
 compgen -A signal
 # DONE
 
+# See a list of all functions.
+compgen -A function
+
+# List of all functions, aliases, and variables.
+declare
+
+# Identify what kind of command 'ls' is
+type ls
+# Example output:
+# ls is aliased to `ls --color=auto'
+
+# Print all the definitions of 'ls', including executables in $PATH, aliases, functions, and builtins.
+type -a ls
+# Example output:
+# ls is aliased to `ls --color=auto'
+# ls is /bin/ls
+
+# Run the "real" `ls', for when it is aliased.
+command ls
+
+# A method to run the un-aliased version of `ls'.
+\ls
+
+# Print all the definitions of 'echo'
+type -a echo
+# Example output:
+# echo is a shell builtin
+# echo is /usr/bin/echo
+# echo is /bin/echo
+
+# Print all the definitions of 'time'
+type -a time
+# Example output:
+# time is a shell keyword
+# time is /usr/bin/time
+# time is /bin/time
+
+# Identify the kind of command 'ipython' is.
+type -a ipython
+# Example output:
+# ipython is /home/username/.local/bin/ipython
+# ipython is /usr/bin/ipython
+
+# See where the function `quote` was defined.
+shopt -s extdebug; declare -F quote; shopt -u extdebug
+
+# make bash re-read modified .bashrc file
+source .bashrc
+
+# search apt packages for 'my-package', case insensitive
+apt-cache search my-package
+
+# For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
+apt-cache search --names-only '^gnash$'
+
+# For when you only want to see 'mc', not '*mc*'
+apt-cache search --names-only '^mc$'
+
+# Find package descriptions that are longer than 4000 characters.
+apt-cache search '.{4000,}'
+
