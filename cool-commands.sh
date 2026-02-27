@@ -3046,12 +3046,12 @@ ffmpeg -y -start_number 0 -framerate 3 -i jpg/image%04d.jpg -c:v libx264 -pix_fm
 # https://stackoverflow.com/questions/19267443/vlc-freezes-for-low-1-fps-video-created-from-images-with-ffmpeg
 
 # Convert a sequence of JPEG images into a video running at 30 frames per second,
-# but duplicate the frames so it's effective framerate is 3 fps.
+# but duplicate the frames so its effective framerate is 3 fps.
 # Images in jpg/ directory and named like image_0001.jpg, image_0002.jpg, ...
 ffmpeg -y -start_number 0 -framerate 3 -i jpg/image%04d.jpg -c:v libx264 -pix_fmt yuv420p -r 30 out.mp4
 
 # Convert a sequence of JPEG images into a video running at 30 frames per second,
-# but duplicate the frames so it's effective framerate is 3 fps.
+# but duplicate the frames so its effective framerate is 3 fps.
 # Images in jpg/ directory and anything ending in `.jpg'.
 ffmpeg -y -start_number 0 -framerate 3 -pattern_type glob -i 'jpg/*.jpg' -c:v libx264 -pix_fmt yuv420p -r 30 out.mp4
 
@@ -7222,6 +7222,15 @@ sudo snap refresh
 snap disable firefox
 # Remove the snap package and remove the data also.
 snap remove plexmediaserver
+
+# List saved snapshots.
+sudo snap saved
+
+# List a single snapshot.
+snap saved --id=29
+
+# Restore a single snapshot.
+snap restore 29
 
 # Generate PostScript output from a text file.
 enscript -f Helvetica-Narrow12 example.txt -p example.ps
