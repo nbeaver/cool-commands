@@ -232,26 +232,32 @@ compgen -A signal
 
 # See a list of all functions.
 compgen -A function
+# DONE
 
-# List of all functions, aliases, and variables.
+# List of all shell functions, aliases, and variables.
 declare
+# DONE
 
 # Identify what kind of command 'ls' is
 type ls
 # Example output:
 # ls is aliased to `ls --color=auto'
+# DONE
 
 # Print all the definitions of 'ls', including executables in $PATH, aliases, functions, and builtins.
 type -a ls
 # Example output:
 # ls is aliased to `ls --color=auto'
 # ls is /bin/ls
+# DONE
 
 # Run the "real" `ls', for when it is aliased.
 command ls
+# DONE
 
 # A method to run the un-aliased version of `ls'.
 \ls
+# DONE
 
 # Print all the definitions of 'echo'
 type -a echo
@@ -259,6 +265,7 @@ type -a echo
 # echo is a shell builtin
 # echo is /usr/bin/echo
 # echo is /bin/echo
+# DONE
 
 # Print all the definitions of 'time'
 type -a time
@@ -266,15 +273,18 @@ type -a time
 # time is a shell keyword
 # time is /usr/bin/time
 # time is /bin/time
+# DONE
 
 # Identify the kind of command 'ipython' is.
 type -a ipython
 # Example output:
 # ipython is /home/username/.local/bin/ipython
 # ipython is /usr/bin/ipython
+# DONE
 
 # See where the function `quote` was defined.
 shopt -s extdebug; declare -F quote; shopt -u extdebug
+# DONE
 
 # make bash re-read modified .bashrc file
 source .bashrc
@@ -291,3 +301,13 @@ apt-cache search --names-only '^mc$'
 # Find package descriptions that are longer than 4000 characters.
 apt-cache search '.{4000,}'
 
+# Find out what kind of files are in the current directory and its subdirectories.
+find . -type f -exec file '{}' \; | less
+# Reference: man find or
+# https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
+# https://stackoverflow.com/questions/20913198/why-are-the-backslash-and-semicolon-required-with-the-find-commands-exec-optio
+# DONE
+
+# Execute /usr/bin/file on every file and directory below current directory
+find . -exec file '{}' + | less
+# DONE

@@ -981,15 +981,6 @@ patch < patch.txt
 # To revert the patch
 patch -R < patch.txt
 
-# Find out what kind of files are in the current directory and its subdirectories.
-find . -type f -exec file '{}' \; | less
-# Reference: man find or
-# https://stackoverflow.com/questions/21155287/shell-notation-find-type-f-exec-file
-# https://stackoverflow.com/questions/20913198/why-are-the-backslash-and-semicolon-required-with-the-find-commands-exec-optio
-
-# Execute /usr/bin/file on every file and directory below current directory
-find . -exec file '{}' + | less
-
 # Find all symlinks in directories below.
 find . -type l
 
