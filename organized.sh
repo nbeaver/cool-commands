@@ -311,3 +311,51 @@ find . -type f -exec file '{}' \; | less
 # Execute /usr/bin/file on every file and directory below current directory
 find . -exec file '{}' + | less
 # DONE
+
+# Show filesystem information for root directory.
+findmnt /
+# Example output:
+# TARGET
+#   SOURCE         FSTYPE OPTIONS
+# / /dev/nvme0n1p2 ext4   rw,relatime,stripe=64
+
+# List all filesystems.
+findmnt --all
+
+# Inspect text files for encoding information including line breaks, byte order
+# mark (BOM), and text/binary.
+dos2unix --info *
+# Example output:
+#     6       0       0  no_bom    text    dos.txt
+#     0       6       0  no_bom    text    unix.txt
+#     0       0       6  no_bom    text    mac.txt
+#     6       6       6  no_bom    text    mixed.txt
+#    50       0       0  UTF-16LE  text    utf16le.txt
+#     0      50       0  no_bom    text    utf8unix.txt
+#    50       0       0  UTF-8     text    utf8dos.txt
+#     2     418     219  no_bom    binary  dos2unix.exe
+
+# List all encodings iconv can handle.
+iconv --list
+
+# Convert from little-endian UTF-16 to UTF-8.
+iconv --from-code UTF-16LE --to-code UTF-8 utf16.txt > utf8.txt
+
+# Get CPU architecture by parsing JSON output of lscpu.
+lscpu --json | jq -r '.lscpu[] | select(.field=="Architecture:").data'
+# Example output:
+# x86_64
+
+# Get CPU model by parsing JSON output of lscpu.
+lscpu --json | jq -r '.lscpu[] | select(.field=="Model name:").data'
+# Example output:
+# 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz
+
+dir /b
+# Windows command to just show files without extra information.
+# /b  Displays a bare list of directories and files, with no additional information. The /b parameter overrides /w.
+# https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir
+
+systeminfo > systeminfo.txt
+# Save Windows version information to a text file.
+

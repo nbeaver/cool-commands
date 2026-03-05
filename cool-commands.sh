@@ -7678,14 +7678,6 @@ perf top
 # Show what udisks is doing.
 sudo udisksctl monitor
 
-dir /b
-# Windows command to just show files without extra information.
-# /b  Displays a bare list of directories and files, with no additional information. The /b parameter overrides /w.
-# https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir
-
-systeminfo > systeminfo.txt
-# Save Windows version information to a text file.
-
 # Show files installed by a pip package.
 pip show -f requests
 
@@ -7710,15 +7702,15 @@ bup -d /media/nathaniel/hgst-tb-backup/nathaniel/bup/ restore -C test1 /nathanie
 # run movemail manually
 movemail /var/mail/nathaniel ~/.thunderbird/knqzw79a.beta/Mail/pop3.localhost/Inbox
 
-# Convert from UTF-16 to UTF-8.
-iconv --from-code UTF-16LE --to-code UTF-8 utf16.txt > utf8.txt
-dos2unix -f -ul -n utf16.txt utf8.txt
+# Convert from UTF-16 to UTF-8 (does this work?)
+dos2unix --force --keep-utf16 --newline --newfile utf16.txt utf8.txt
+# CLEANUP
 
 # Take screenshot of a tty (i.e. framebuffer).
 fbcat > screenshot_01.ppm
 fbcat | pngtopng > screenshot_01.png
 
-# Show process CPU status for process ID 3909 every 2 second.
+# Show process CPU status for process ID 3909 every 2 seconds.
 pidstat -u -p 3909 2
 
 # Rip a CD into the current directory as MP3 files.
@@ -7823,3 +7815,7 @@ id username
 
 # Get the 3rd line of every text file and sort.
 find . -type f -name '*.txt' -exec sed -n '3p' '{}' \; | sort | less -c
+
+# Install a Ruby package to home directory.
+gem install --user-install bropages
+# http://bropages.org/
