@@ -60,6 +60,8 @@ q
 # Get batch output from top.
 top -b -n 1 -H -p 10104 > top.txt
 
+# -----------------------------------------------------------------------------
+
 # Changing sound settings
 alsamixer
 
@@ -2297,7 +2299,7 @@ sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf
 #       dmesg -w
 
 
-# Mount a ram drive
+# Mount a 20MB ram drive
 mkdir -p /mnt/ram
 mount -t ramfs -o size=20m ramfs /mnt/ram
 
