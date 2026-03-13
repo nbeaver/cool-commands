@@ -62,12 +62,6 @@ top -b -n 1 -H -p 10104 > top.txt
 
 # -----------------------------------------------------------------------------
 
-# Changing sound settings
-alsamixer
-
-# Show sound cards and headsets.
-cat /proc/asound/cards
-
 # Figure out which speaker is left and right
 speaker-test -Dplug:front -c2 -t sine -f100
 speaker-test --device plug:front --channels 2 --test sine --frequency 100 # long version
@@ -135,12 +129,6 @@ make > /dev/null |& grep "something"
 wget --timeout=3 --tries=1 --spider --no-check-certificate 'http://google.com' |& grep 'HTTP request'
 # Shorter version:
 wget --spider http://google.com |& grep 'HTTP request\|Location:'
-
-# Find non-executables in /usr/bin
-find /usr/bin/ -type f -not -executable -print
-
-# Find non-executables in /bin/
-find /bin/ -type f -not -executable -print
 
 # Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
@@ -2272,6 +2260,9 @@ exiftool -title="my title" input.jpg -o output.jpg
 exiftool -title="my title" file.jpg
 # https://exiftool.org/exiftool_pod.html
 # https://exiftool.org/examples.html
+
+# Copy EXIF metadata from one file to another.
+exiftool -tagsFromFile original.jpg out.jpg
 
 # Recursively extract common meta information from files in "pictures"
 # directory, writing text output to ".txt" files with the same names.
@@ -7821,3 +7812,9 @@ find . -type f -name '*.txt' -exec sed -n '3p' '{}' \; | sort | less -c
 # Install a Ruby package to home directory.
 gem install --user-install bropages
 # http://bropages.org/
+
+# Install a cargo package.
+cargo install navi
+
+# Install a cargo package with the exact dependencies as specified by the lockfile.
+cargo install --locked navi

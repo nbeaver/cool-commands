@@ -288,18 +288,23 @@ shopt -s extdebug; declare -F quote; shopt -u extdebug
 
 # make bash re-read modified .bashrc file
 source .bashrc
+# DONE
 
 # search apt packages for 'my-package', case insensitive
 apt-cache search my-package
+# DONE
 
 # For when you only want to see 'gnash', not 'blah-gnash' or 'gnash-blah'
 apt-cache search --names-only '^gnash$'
+# DONE
 
 # For when you only want to see 'mc', not '*mc*'
 apt-cache search --names-only '^mc$'
+# DONE
 
 # Find package descriptions that are longer than 4000 characters.
 apt-cache search '.{4000,}'
+# DONE
 
 # Find out what kind of files are in the current directory and its subdirectories.
 find . -type f -exec file '{}' \; | less
@@ -318,9 +323,11 @@ findmnt /
 # TARGET
 #   SOURCE         FSTYPE OPTIONS
 # / /dev/nvme0n1p2 ext4   rw,relatime,stripe=64
+# DONE
 
 # List all filesystems.
 findmnt --all
+# DONE
 
 # Inspect text files for encoding information including line breaks, byte order
 # mark (BOM), and text/binary.
@@ -334,28 +341,46 @@ dos2unix --info *
 #     0      50       0  no_bom    text    utf8unix.txt
 #    50       0       0  UTF-8     text    utf8dos.txt
 #     2     418     219  no_bom    binary  dos2unix.exe
+# DONE
 
 # List all encodings iconv can handle.
 iconv --list
+# DONE
 
 # Convert from little-endian UTF-16 to UTF-8.
 iconv --from-code UTF-16LE --to-code UTF-8 utf16.txt > utf8.txt
+# DONE
 
 # Get CPU architecture by parsing JSON output of lscpu.
 lscpu --json | jq -r '.lscpu[] | select(.field=="Architecture:").data'
 # Example output:
 # x86_64
+# DONE
 
 # Get CPU model by parsing JSON output of lscpu.
 lscpu --json | jq -r '.lscpu[] | select(.field=="Model name:").data'
 # Example output:
 # 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz
+# DONE
 
-dir /b
 # Windows command to just show files without extra information.
+dir /b
 # /b  Displays a bare list of directories and files, with no additional information. The /b parameter overrides /w.
 # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir
+# DONE
 
-systeminfo > systeminfo.txt
 # Save Windows version information to a text file.
+systeminfo > systeminfo.txt
+# DONE
 
+# Interactively adjust volume and other sound settings.
+alsamixer
+# DONE
+
+# Show sound cards and headsets.
+cat /proc/asound/cards
+# DONE
+
+# Find non-executables in /bin/ and /usr/bin/
+find /bin/ /usr/bin/ -type f -not -executable -print
+# DONE
