@@ -377,8 +377,43 @@ systeminfo > systeminfo.txt
 alsamixer
 # DONE
 
+# Mute master sound
+amixer set Master mute
+# DONE
+
+# Unmute master sound
+amixer set Master unmute
+# DONE
+
+# Set master to 50%.
+amixer set Master 50
+# http://www.tldp.org/HOWTO/Alsa-sound-6.html
+# http://www.linuxjournal.com/content/change-volume-bash-script
+# DONE
+
+# See master settings.
+amixer get Master
+# Example output:
+# Simple mixer control 'Master',0
+#   Capabilities: pvolume pswitch pswitch-joined
+#   Playback channels: Front Left - Front Right
+#   Limits: Playback 0 - 65536
+#   Mono:
+#   Front Left: Playback 19066 [29%] [on]
+#   Front Right: Playback 18600 [28%] [on]
+# DONE
+
 # Show sound cards and headsets.
 cat /proc/asound/cards
+# Example output:
+#  0 [PCH            ]: HDA-Intel - HDA Intel PCH
+#                       HDA Intel PCH at 0xf2420000 irq 33
+# DONE
+
+# Get default sink for PulseAudio.
+pactl get-default-sink
+# Example output:
+# alsa_output.pci-0000_00_1f.3.analog-stereo
 # DONE
 
 # Find non-executables in /bin/ and /usr/bin/

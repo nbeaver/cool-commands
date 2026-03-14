@@ -3977,18 +3977,6 @@ lynx gopher://gopher.floodgap.com/1/world
 # Link to USPS package tracking for three packages
 https://tools.usps.com/go/TrackConfirmAction.action?tLabels=23063250000076469472,23063250000076469489,VH642248316US
 
-# Mute master sound
-amixer set Master mute
-# Unmute master sound
-amixer set Master unmute
-# Set master to 50%.
-amixer set Master 50
-# http://www.tldp.org/HOWTO/Alsa-sound-6.html
-# http://www.linuxjournal.com/content/change-volume-bash-script
-
-# See master settings.
-amixer get Master
-
 # List only dotfiles, including `.' and `..'.
 ls -a | grep '^\.'
 ls -d .*
