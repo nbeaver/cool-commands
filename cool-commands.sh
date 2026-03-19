@@ -57,15 +57,7 @@ f
 s
 q
 
-# Get batch output from top.
-top -b -n 1 -H -p 10104 > top.txt
-
 # -----------------------------------------------------------------------------
-
-# Figure out which speaker is left and right
-speaker-test -Dplug:front -c2 -t sine -f100
-speaker-test --device plug:front --channels 2 --test sine --frequency 100 # long version
-# You have to pause other sound playback for this to work.
 
 # Append last command to this text file
 echo !! >> ~/Dropbox/how-to/cool-commands.txt
@@ -5899,24 +5891,7 @@ ag -G '.*\.sh' '<<<' .
 # Search for .tex files with 'x^{2n}'
 ag -G '.*\.tex' -F 'x^{2n}'
 
-# Save a transcript of terminal session.
-script
-# Default output file is `typescript`.
-# http://linuxers.org/article/script-command-line-tool-recordsave-your-terminal-activity
-script --flush
-
-# Works with util-linux-ng 2.17.2,
-# SHA1 e1f228ff87afb63f4213b1a1e01264a54c4cf70b
-script -f -t typescript.out 2> typescript.tm
-
-# Works with util-linux 2.25.2,
-# SHA1 5ce73e50ff00676cad8f477597a65c972af73f65
-script --timing=typescript.tm --flush "$logfile"
-
-# View the typescript.
-more typescript
-less -r typescript
-# Alternative: use `screen`.
+# Alternative to script(1): use `screen`.
 C-a H
 # Begins/ends logging of the current window to the file screenlog.n
 # in the window's default directory,
