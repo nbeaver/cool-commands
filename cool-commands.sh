@@ -59,11 +59,6 @@ q
 
 # -----------------------------------------------------------------------------
 
-# View error messages in less by redirecting stderr to stdout
-bash compile.sh 2>&1 | less
-bash compile.sh 2>&1 >/dev/null | less
-# https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
-
 # Send stderr to text file
 bash env.sh 2> err_log.txt
 
@@ -2232,10 +2227,10 @@ mogrify -trim myfile.png
 convert -fuzz 25% -trim myfile.png myfile-cropped.png
 # https://www.imagemagick.org/Usage/bugs/fuzz_distance/
 
-# Mount an external drive.
-sudo mkdir /media/nathaniel/external
-sudo mount /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
-sudo mount -t ext4 /dev/sdb1 /media/nathaniel/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+# Manually mount an external drive.
+sudo mkdir /media/$USER/external
+sudo mount /dev/sdb1 /media/$USER/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+sudo mount -t ext4 /dev/sdb1 /media/$USER/external/ -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
 # Can get errors like this:
 #mount: wrong fs type, bad option, bad superblock on /dev/sdb1,
 #       missing codepage or helper program, or other error
