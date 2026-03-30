@@ -59,44 +59,6 @@ q
 
 # -----------------------------------------------------------------------------
 
-# Append last command to this text file
-echo !! >> ~/Dropbox/how-to/cool-commands.txt
-# This is useful if you want to run it as a shell script. You can also just save it to a shell script like this:
-echo !! > my-script.sh
-
-# Append a file onto another file.
-# (A non-useless use of cat).
-cat commands.sh >> ~/.bash_history
-
-# See what piped output looks like
-# (another non-useless use of cat).
-ls * | cat
-
-# Grepping
-grep PHY unofficial-transcript-11-24-11.txt
-grep --recursive dveff *.f90
-grep '=>' *.f90
-grep Offenbach .
-
-# Grep recursively with a fixed string.
-grep --recursive 'fixed-string' .
-ls --recursive | grep kim *.f90
-grep --ignore-case --recursive "kim_api" . --include=*.f90
-grep --recursive "kim-str" .
-
-# Return all lines containing "kim_api" (case insensitive) and ending with .f90
-grep -ir "kim_api" . --include=*.f90
-grep -ir 'discrepancy' /var/log/messages | less
-
-
-# Grepping literal, raw strings without having to escape everything.
-grep -F
-grep --fixed-strings
-# For example, use
-grep -rF '[*'
-# instead of
-grep -r '\[\*'
-
 # View error messages in less by redirecting stderr to stdout
 bash compile.sh 2>&1 | less
 bash compile.sh 2>&1 >/dev/null | less

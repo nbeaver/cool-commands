@@ -153,11 +153,48 @@ cp ~/.local/share/mime/mime.cache{,.old}
 # http://www.shell-fu.org/lister.php?id=46
 # DONE
 
+# Match words that contain 'ae'.
+grep 'ae' /usr/share/dict/words
+
+# Case-insensitive match for 'error' in system log file.
+grep -i 'error' /var/log/syslog
+
+# Grep literal, raw strings without having to escape everything.
+grep --fixed-strings '[1]' /var/log/syslog
+
+# Grep literal, raw strings without having to escape everything (short flags).
+grep -F '[1]' /var/log/syslog
+
+# Grep the files under the /etc/ directory for the current machine's hostname.
+grep $HOSTNAME /etc/*
+
+# Grep the files under the /etc/ directory for the current machine's hostname, showing only filename.
+grep --files-with-matches $HOSTNAME /etc/*
+
+# Grep the files under the /etc/ directory for the current machine's hostname, showing only filename (short flags version).
+grep -l $HOSTNAME /etc/*
+
+# Grep the /etc/ directory recursively for the current machine's hostname.
+grep --recursive $HOSTNAME /etc/
+
+# Grep the /etc/ directory recursively for the current machine's hostname (short flags version).
+grep -r $HOSTNAME /etc/
+
+# Grep the /etc/ directory recursively for words matching current machine's hostname.
+grep --recursive --word-regexp $HOSTNAME /etc/
+
+# Grep the /etc/ directory recursively for words matching current machine's hostname (short flags version).
+grep -rw $HOSTNAME /etc/
+
 # Grepping the system dictionary for words starting with 's'
 # and containing 'm' and 'b';
-# this is how samba was named:
+# this is how samba was named.
 grep -E -i '^S.*M.*B' /usr/share/dict/words
 # http://www.rxn.com/services/faq/smb/samba.history.txt
+
+# Grepping the system dictionary for words starting with 's'
+# and containing 'm' and 'b';
+# this is how samba was named. (Short flags version.)
 grep -i '^s.*m.*b' /usr/share/dict/words
 # DONE
 
@@ -183,6 +220,12 @@ grep -i '.*gry$' /usr/share/dict/words
 # demagogry
 # hungry
 # DONE
+
+# Generate a list of unique Icon fields in desktop files, not showing filenames.
+grep --no-filename --recursive 'Icon=' --include='*.desktop' /usr/share/applications/ ~/.local/share/applications | sort --unique
+
+# Generate a list of unique Icon fields in desktop files, not showing filenames (short flags).
+grep -hr 'Icon=' --include='*.desktop' /usr/share/applications/ ~/.local/share/applications | sort -u
 
 # Print how many cores the CPU has.
 getconf _NPROCESSORS_ONLN
@@ -467,3 +510,12 @@ scriptreplay -T typescript.tm -O typescript.out
 gnome-screenshot --delay=1 --file="$(date +'%Y-%m-%d_%H_%M_%S').png"
 # https://stackoverflow.com/questions/8228047/adding-timestamp-to-a-filename-with-mv-in-bash
 # https://askubuntu.com/questions/202391/bash-script-to-take-screenshot-and-save-the-image-ubuntu
+
+# Append last interactive command to a file.
+echo !! >> my-commands.sh
+
+# Append a file onto another file (a non-useless use of cat).
+cat my-commands.sh >> big-command-list.sh
+
+# See what piped output looks like for commands like ls(1) that detect output with isatty (another non-useless use of cat).
+ls | cat
