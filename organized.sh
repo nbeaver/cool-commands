@@ -511,11 +511,35 @@ gnome-screenshot --delay=1 --file="$(date +'%Y-%m-%d_%H_%M_%S').png"
 # https://stackoverflow.com/questions/8228047/adding-timestamp-to-a-filename-with-mv-in-bash
 # https://askubuntu.com/questions/202391/bash-script-to-take-screenshot-and-save-the-image-ubuntu
 
-# Append last interactive command to a file.
+# Use history expansion to append the last interactive command to a file called 'my-commands.sh'.
 echo !! >> my-commands.sh
+# https://unix.stackexchange.com/questions/38072/how-can-i-save-the-last-command-to-a-file
+# https://unix.stackexchange.com/questions/3747/understanding-the-exclamation-mark-in-bash
+# https://www.gnu.org/software/bash/manual/html_node/History-Interaction.html
 
 # Append a file onto another file (a non-useless use of cat).
 cat my-commands.sh >> big-command-list.sh
+# https://www.cyberciti.biz/faq/unix-linux-cat-append-text-to-a-file/
+# https://stackoverflow.com/questions/4969641/how-to-append-one-file-to-another-in-linux-from-the-shell
+# https://unix.stackexchange.com/questions/355342/appending-one-file-to-another
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
 
-# See what piped output looks like for commands like ls(1) that detect output with isatty (another non-useless use of cat).
+# See what piped output looks like for commands like ls(1) that detect output with isatty (a non-useless use of cat).
 ls | cat
+# https://unix.stackexchange.com/questions/22162/ls-command-operating-differently-depending-on-recipient
+# https://stackoverflow.com/questions/8584356/why-does-ls-give-different-output-when-piped
+
+# View both stdout and stderr using input/output redirection.
+{ echo "stdout"; echo "stderr" >&2; } 2>&1 | less
+# https://stackoverflow.com/questions/16497317/piping-both-stdout-and-stderr-in-bash
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+
+# View both stdout and stderr from ffmpeg filters in less page using input/output redirection.
+ffmpeg -filters 2>&1 | less
+# https://stackoverflow.com/questions/16497317/piping-both-stdout-and-stderr-in-bash
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+
+# View only stderr in less using input/output redirection.
+ffmpeg -filters 2>&1 >/dev/null | less
+# https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
