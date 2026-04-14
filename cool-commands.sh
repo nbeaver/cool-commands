@@ -941,7 +941,7 @@ find ./ -print -exec recollindex -i '{}' \;
 find . -type f -print | recollindex -i
 # Also erase current file data.
 # -e will erase data for individual files from the database.
-find . -type f -print | recollindex -e
+find . -type f -print | recollindex -e -i
 
 # Do this without using too many resources.
 find . -type f -name '*.tex' -print | nice -n 19 ionice -c 3 recollindex -e
