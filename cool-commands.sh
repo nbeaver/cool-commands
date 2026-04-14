@@ -7738,3 +7738,25 @@ cargo install navi
 
 # Install a cargo package with the exact dependencies as specified by the lockfile.
 cargo install --locked navi
+
+# Change metadata of a video file, such as title and author.
+ffmpeg -i input.mp4 -metadata title="My Video" -metadata author="John Doe" -codec copy output.mp4
+# https://superuser.com/questions/783895/ffmpeg-edit-avi-metadata-and-audio-track-naming
+# https://ffmpeg.org/doxygen/7.0/group__metadata__api.html
+
+# Hibernate a laptop.
+systemctl hibernate
+# Example output:
+# Call to Hibernate failed: Sleep verb 'hibernate' is not configured or configuration is not supported by kernel
+
+# Update dlocatedb
+sudo update-dlocatedb
+
+# Print all files in node_modules/ folders.
+find . -type f -path '*node_modules/*'
+
+# Print all files in node_modules/ folders and erase them from recollindex.
+find . -type f -path '*node_modules/*' | recollindex -e
+
+# Print filename and title for all mp4 files.
+for f in *.mp4; do printf "%s: " "$f"; ffprobe -v quiet -print_format json -show_format "$f" | jq -r '.format.tags.title'; done | less
