@@ -565,13 +565,71 @@ ls | cat
 # https://www.gnu.org/software/bash/manual/html_node/Redirections.html
 # DONE
 
-# View both stdout and stderr from ffmpeg filters in less page using input/output redirection.
+# Pipe stdout and stderr together to another command (bash only).
+{ echo "stdout"; echo "stderr" >&2; } |& less
+# https://stackoverflow.com/questions/16497317/piping-both-stdout-and-stderr-in-bash
+# componentCommands: echo, less
+# DONE
+
+# Redirect stdout to file
+{ echo "stdout"; echo "stderr" >&2; } > stdout_log.txt
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# https://askubuntu.com/questions/420981/how-do-i-save-terminal-output-to-a-file
+# componentCommands: echo
+# DONE
+
+# Redirect stderr to file
+{ echo "stdout"; echo "stderr" >&2; } 2> stderr_log.txt
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# componentCommands: echo
+# DONE
+
+# Redirect both stdout and stderr to text file (bash only).
+{ echo "stdout"; echo "stderr" >&2; } &> full_log.txt
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# componentCommands: echo
+# DONE
+
+# Redirect both stdout and stderr to text file (note that `2>&1' must come after `>').
+{ echo "stdout"; echo "stderr" >&2; } > stdout_stderr_log.txt 2>&1
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# componentCommands: echo
+# DONE
+
+# Redirect both stdout and stderr to text file and view in pager.
+{ echo "stdout"; echo "stderr" >&2; } 2>&1 | tee stdout_stderr_log.txt | less
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# componentCommands: echo, less
+# DONE
+
+# Append both stdout and stderr to text file (note that `2>&1' must come after `>').
+{ echo "stdout"; echo "stderr" >&2; } >> append_stdout_stderr_log.txt 2>&1
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# https://stackoverflow.com/questions/876239/how-to-redirect-and-append-both-standard-output-and-standard-error-to-a-file-wit
+# componentCommands: echo
+# DONE
+
+# Append both stdout and stderr to text file (bash only).
+{ echo "stdout"; echo "stderr" >&2; } &>> append_stdout_stderr_log.txt
+# https://stackoverflow.com/questions/876239/how-to-redirect-and-append-both-standard-output-and-standard-error-to-a-file-wit
+# https://askubuntu.com/questions/420981/how-do-i-save-terminal-output-to-a-file
+# componentCommands: echo
+# DONE
+
+# Suppress stdout and view only stderr in pager
+{ echo "stdout"; echo "stderr" >&2; } >/dev/null 2>&1 | less
+# https://www.gnu.org/software/bash/manual/html_node/Redirections.html
+# https://stackoverflow.com/questions/2342826/how-can-i-pipe-stderr-and-not-stdout/
+# componentCommands: echo, less
+# DONE
+
+# View both stdout and stderr from ffmpeg filters in pager using input/output redirection.
 ffmpeg -filters 2>&1 | less
 # https://stackoverflow.com/questions/16497317/piping-both-stdout-and-stderr-in-bash
 # https://www.gnu.org/software/bash/manual/html_node/Redirections.html
 # DONE
 
-# View only stderr in less using input/output redirection.
+# View only stderr in pager using input/output redirection.
 ffmpeg -filters 2>&1 >/dev/null | less
 # https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
 # https://www.gnu.org/software/bash/manual/html_node/Redirections.html
@@ -583,4 +641,11 @@ less /usr/share/X11/locale/$LANG/Compose
 # https://superuser.com/questions/74763/how-to-type-unicode-characters-in-kde
 # https://userbase.kde.org/Tutorials/ComposeKey
 # https://wiki.debian.org/XCompose
+# DONE
+
+# Make Dropbox ignore file 'C:\Users\yourname\Dropbox (Personal)\YourFileName.pdf'.
+Set-Content -Path 'C:\Users\yourname\Dropbox (Personal)\YourFileName.pdf' -Stream com.dropbox.ignored -Value 1
+# https://help.dropbox.com/sync/ignored-files
+# shell: PowerShell
+# componentCommands: Set-Content
 # DONE

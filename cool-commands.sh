@@ -59,21 +59,6 @@ q
 
 # -----------------------------------------------------------------------------
 
-# Send stderr to text file
-bash env.sh 2> err_log.txt
-
-# Send stdout and stderr to text file
-bash env.sh &> full_log.txt
-bash env.sh > full_log.txt 2>&1
-
-# Note that this will not work.
-bash env.sh 2>&1 > full_log.txt
-
-# Pipe stdout and stderr together to another command.
-command > /dev/null |& grep "something"
-# e.g.
-make > /dev/null |& grep "something"
-
 # Grep HTTP requests from wget.
 wget --timeout=3 --tries=1 --spider --no-check-certificate 'http://google.com' |& grep 'HTTP request'
 # Shorter version:
