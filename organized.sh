@@ -170,31 +170,31 @@ grep -F '[1]' /var/log/syslog
 # DONE
 
 # Grep the files under the /etc/ directory for the current machine's hostname.
-grep $HOSTNAME /etc/*
+grep "$HOSTNAME" /etc/*
 # DONE
 
 # Grep the files under the /etc/ directory for the current machine's hostname, showing only filename.
-grep --files-with-matches $HOSTNAME /etc/*
+grep --files-with-matches "$HOSTNAME" /etc/*
 # DONE
 
 # Grep the files under the /etc/ directory for the current machine's hostname, showing only filename (short flags version).
-grep -l $HOSTNAME /etc/*
+grep -l "$HOSTNAME" /etc/*
 # DONE
 
 # Grep the /etc/ directory recursively for the current machine's hostname.
-grep --recursive $HOSTNAME /etc/
+grep --recursive "$HOSTNAME" /etc/
 # DONE
 
 # Grep the /etc/ directory recursively for the current machine's hostname (short flags version).
-grep -r $HOSTNAME /etc/
+grep -r "$HOSTNAME" /etc/
 # DONE
 
 # Grep the /etc/ directory recursively for words matching current machine's hostname.
-grep --recursive --word-regexp $HOSTNAME /etc/
+grep --recursive --word-regexp "$HOSTNAME" /etc/
 # DONE
 
 # Grep the /etc/ directory recursively for words matching current machine's hostname (short flags version).
-grep -rw $HOSTNAME /etc/
+grep -rw "$HOSTNAME" /etc/
 # DONE
 
 # Grepping the system dictionary for words starting with 's'
@@ -388,7 +388,7 @@ findmnt --all
 
 # Inspect text files for encoding information including line breaks, byte order
 # mark (BOM), and text/binary.
-dos2unix --info *
+dos2unix --info -- *
 # Example output:
 #     6       0       0  no_bom    text    dos.txt
 #     0       6       0  no_bom    text    unix.txt
