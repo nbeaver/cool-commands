@@ -1,68 +1,6 @@
 #! /usr/bin/env bash
 
-# Connecting to s-video out, changing display resolution, connecting to projector or external display
-xrandr
-
-# Reset screen resolution if another program goofs it up
-xrandr -s 1600x900
-xrandr --size 1600x900
-
-# Automatically turn on a second screen connected with VGA
-xrandr --output VGA --auto
-
-# Clone screens
-xrandr --output VGA --same-as LVDS
-
-# Extend screens
-xrandr --output VGA --left-of LVDS
-# http://forums.debian.net/viewtopic.php?f=10&t=40955
-
-# Find all files containing text 'NBMAX' and ending in .F90
-find . -name '*.F90' | xargs grep 'NBMAX'
-
-# Visit vim swap files.
-find . -name '*.sw?' | visit_paths.py
-
-# Create permissions report.
-find . -printf '%m\n' | sort | uniq -c | tee permissions-report.txt | less
-
-# Find all files with world-readable (777) permissions.
-find . -perm 777
-find . -perm -g+s
-find . -perm -o+r
-# https://askubuntu.com/questions/151615/how-do-i-list-the-public-files-in-my-home-directory-mode-777
-# https://superuser.com/questions/396513/how-to-filter-files-with-specific-permissions-or-attributes-while-running-ls
-# TODO: what is the right way to do this?
-
-# Fix permissions recursively by changing 777 (world readable) to 755.
-find . -perm 777 -exec chmod 755 '{}' \;
-find . -perm 777 -exec chmod 775 '{}' \;
-# TODO: what is the right way to do this?
-
-# Find a writable file owned by root.
-find / -xdev -user root -perm -u+w -name hello 2>/dev/null
-# https://unix.stackexchange.com/questions/17556/how-to-find-a-writable-file-owned-by-root
-
-# View only files not ending in '.txt'
-ls --ignore=*.txt
-
-# Viewing active processes
-top
-
-# Sorting by memory
-top -o %MEM
-# Interactively
-f
-# (navigate to %MEM)
-s
-q
-
 # -----------------------------------------------------------------------------
-
-# Grep HTTP requests from wget.
-wget --timeout=3 --tries=1 --spider --no-check-certificate 'http://google.com' |& grep 'HTTP request'
-# Shorter version:
-wget --spider http://google.com |& grep 'HTTP request\|Location:'
 
 # Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
 rename --no-act 's/^/digital_media_archive_assistant_/' *.png
@@ -3962,19 +3900,6 @@ pdftk A=missing15-16.pdf B=pg15-16.pdf cat A1-14 B2 B1 A15-end output manual.pdf
 # Sorry.
 pdfjoin $(ls -v)
 
-# Splitting pdfs.
-# Get only a single page (number 17 in this case).
-pdftk myoldfile.pdf cat 17 output mynewfile.pdf
-# Get a range of pages (10 through 12 and 17 to the end in this case).
-pdftk myoldfile.pdf cat 10-12 17-end output mynewfile.pdf
-# Get all but a single page (number 17 in this case).
-pdftk myoldfile.pdf cat '~17' output mynewfile.pdf
-# http://linuxcommando.blogspot.com/2013/02/splitting-up-is-easy-for-pdf-file.html
-gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutputFile=outputT4.pdf T4.pdf
-# http://linuxcommando.blogspot.com/2014/01/how-to-split-up-pdf-files-part-2.html
-convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
-# http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
-
 convert -density 300 temp.pdf out.png
 
 
@@ -6019,6 +5944,9 @@ gvfs-mime --query x-scheme-handler/thunderlink
 gio mime x-scheme-handler/thunderlink
 ktraderclient5 --mimetype 'x-scheme-handler/thunderlink'
 
+# Get a bunch of information about a file.
+gio info /usr/share/dict/word
+
 # Check what mimetype a file is.
 xdg-mime query filetype /tmp/foobar.png
 gio info -a 'standard::content-type' /tmp/foobar.png
@@ -7745,3 +7673,24 @@ find . -type f -path '*node_modules/*' | recollindex -e
 
 # Print filename and title for all mp4 files.
 for f in *.mp4; do printf "%s: " "$f"; ffprobe -v quiet -print_format json -show_format "$f" | jq -r '.format.tags.title'; done | less
+
+
+# Heredoc examples.
+# https://linuxize.com/post/bash-heredoc/
+# https://stackoverflow.com/questions/2128949/how-to-pipe-a-here-document-through-a-command-and-capture-the-result-into-a-vari
+
+tee example.txt > /dev/null << EOF
+This is an example text file.
+
+1.
+2.
+3.
+EOF
+
+cat << EOF
+This is an example text file.
+
+1.
+2.
+3.
+EOF

@@ -649,3 +649,66 @@ Set-Content -Path 'C:\Users\yourname\Dropbox (Personal)\YourFileName.pdf' -Strea
 # shell: PowerShell
 # componentCommands: Set-Content
 # DONE
+
+# Grep HTTP requests from wget.
+wget --timeout=3 --tries=1 --spider --no-check-certificate 'http://google.com' |& grep 'HTTP request\|Location:'
+# componentCommands: wget, grep
+
+# List all extended attributes of files / folders in current directory.
+getfattr -dm- -- *
+# componentCommands: getfattr
+# https://superuser.com/questions/858210/how-can-you-show-list-all-extended-attributes-in-linux
+# https://unix.stackexchange.com/questions/180019/why-doesnt-getfattr-d-show-anything
+
+# Ignore a file in Dropbox folder so it isn't synced.
+attr -s com.dropbox.ignored -V 1 ~/'Dropbox/file-to-ignore.pdf'
+# https://help.dropbox.com/sync/ignored-files
+# componentCommands: attr
+
+# Ignore a file in Dropbox folder so it isn't synced.
+setfattr -n com.dropbox.ignored -v 1 ~/'Dropbox/file-to-ignore.pdf'
+# https://help.dropbox.com/sync/ignored-files
+# componentCommands: setfattr
+
+# Undo ignoring a file in Dropbox folder so it isn't synced.
+attr -s com.dropbox.ignored -V 1 ~/'Dropbox/file-to-ignore.pdf'
+# https://help.dropbox.com/sync/ignored-files
+# componentCommands: attr
+
+# Ignore a Git repo folder in Dropbox folder so it isn't synced.
+attr -s com.dropbox.ignored -V 1 ~/'Dropbox/example-repo/.git'
+# https://help.dropbox.com/sync/ignored-files
+# componentCommands: attr
+
+# Split out a single page of a PDF (page 17 in this case).
+pdftk example.pdf cat 17 output page-17.pdf
+# componentCommands: pdftk
+
+# Get a range of pages from a PDF (10 through 12 and 17 to the end in this case).
+pdftk myoldfile.pdf cat 10-12 17-end output mynewfile.pdf
+# componentCommands: pdftk
+# https://askubuntu.com/questions/221962/how-can-i-extract-a-page-range-a-part-of-a-pdf
+# https://stackoverflow.com/questions/17776582/split-a-pdf-in-two
+# https://superuser.com/questions/1882737/remove-the-first-three-pages-of-a-pdf-file-using-pdftk
+# https://unix.stackexchange.com/questions/796293/how-do-i-extract-some-pages-of-a-pdf-into-another-pdf-file
+# http://linuxcommando.blogspot.com/2013/02/splitting-up-is-easy-for-pdf-file.html
+
+# Remove last page of a PDF.
+pdftk example.pdf cat '1-r2' output last-page-removed.pdf
+# componentCommands: pdftk
+# https://stackoverflow.com/questions/17705974/remove-the-last-page-of-a-pdf-file-using-pdftk
+# https://www.pdflabs.com/docs/pdftk-cli-examples/
+
+# Get all but a single page (number 17 in this case).
+pdftk myoldfile.pdf cat '~17' output mynewfile.pdf
+# componentCommands: pdftk
+
+# Extract pages 1-4 of a PDF using GhostScript.
+gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutputFile=example-pages1-4.pdf example.pdf
+# http://linuxcommando.blogspot.com/2014/01/how-to-split-up-pdf-files-part-2.html
+# componentCommands: gs
+
+# Extract pages 1-4 of a PDF using ImageMagick.
+convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
+# componentCommands: convert
+# http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
