@@ -57,3 +57,12 @@ top -o %MEM
 # s # sort
 # q # go back to output
 
+# Extract pages 1-4 of a PDF using ImageMagick. Note that this only preserves images, not text or layout.
+convert file1.pdf[0-3] output.pdf
+# componentCommands: convert
+# http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
+
+# Merge page 1 of file1.pdf with pages 1, 2, and 4 of file2.pdf to output.pdf using ImageMagick.  Note that this only preserves images, not text or layout.
+convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
+# componentCommands: convert
+# http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
