@@ -724,3 +724,11 @@ gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=1 -dLastPage=4 -sOutp
 # http://linuxcommando.blogspot.com/2014/01/how-to-split-up-pdf-files-part-2.html
 # componentCommands: gs
 # DONE
+
+# Use snap to run an application directly.
+snap run slack
+
+# Enable debug mode for slack snap package.
+snap set slack debugmode=true
+# https://forum.snapcraft.io/t/slack-snap-stopped-working-after-ubuntu-updates/51066/4
+# componentCommands: snap

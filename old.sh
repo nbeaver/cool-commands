@@ -66,3 +66,35 @@ convert file1.pdf[0-3] output.pdf
 convert file1.pdf[0] file2.pdf[0-1,3] output.pdf
 # componentCommands: convert
 # http://linuxcommando.blogspot.com/2015/03/how-to-merge-or-split-pdf-files-using.html
+
+# Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
+rename --no-act 's/^/digital_media_archive_assistant_/' *.png
+# This would work also:
+for i in *.png; do mv $i digital_media_archive_assistant_$i; done
+
+# Rename all files starting with Ch so that they now end with .doc.
+# Dry run with --no-act --verbose to check for correctness.
+rename -nv 's/$/.doc/' Ch*
+rename --no-act --verbose 's/$/.doc/' Ch*
+
+# Rename all files starting with Ch so that they now end with .doc.
+rename 's/$/.doc/' Ch*
+
+# Rename all files ending with .csv so that they end with .dat instead.
+# Also handles names with spaces and weird names like my.csv.file.csv properly.
+rename -nv 's/\.csv$/\.dat/' *.csv
+
+# Rename files so that Cu becomes C
+rename -nv 's/Cu/C/' Te_Na2Cu2Te.*
+rename 's/Cu/C/' Te_Na2Cu2Te.*
+# Te_Na2Cu2Te.001 renamed as Te_Na2C2Te.001
+
+# Rename folders starting with 2014 so that they start with 2015 instead.
+rename  's/2014/2015/' 2014*
+
+# Search for a package in all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
+dcontrol warsow | less
+
+# Show the release for the package.
+dcontrol --show-suite warsow | less
+

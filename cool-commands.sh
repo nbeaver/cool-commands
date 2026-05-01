@@ -1,36 +1,9 @@
 #! /usr/bin/env bash
 
-# -----------------------------------------------------------------------------
-
-# Rename all .png files by prepending 'digital_media_archive_assistant_' to the filename:
-rename --no-act 's/^/digital_media_archive_assistant_/' *.png
-# This would work also:
-for i in *.png; do mv $i digital_media_archive_assistant_$i; done
-
-# Rename all files starting with Ch so that they now end with .doc.
-# Dry run with --no-act --verbose to check for correctness.
-rename -nv 's/$/.doc/' Ch*
-rename --no-act --verbose 's/$/.doc/' Ch*
-
-# Rename all files starting with Ch so that they now end with .doc.
-rename 's/$/.doc/' Ch*
-
-# Rename all files ending with .csv so that they end with .dat instead.
-# Also handles names with spaces and weird names like my.csv.file.csv properly.
-rename -nv 's/\.csv$/\.dat/' *.csv
-
-# Rename files so that Cu becomes C
-rename -nv 's/Cu/C/' Te_Na2Cu2Te.*
-rename 's/Cu/C/' Te_Na2Cu2Te.*
-# Te_Na2Cu2Te.001 renamed as Te_Na2C2Te.001
-
 # Remove pipe characters from filenames recursively.
 find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
 
-# Rename folders starting with 2014 so that they start with 2015 instead.
-rename  's/2014/2015/' 2014*
-
-# Filter out the words with uppercase / capital letters.
+# Filter out words with uppercase (i.e capital) letters.
 grep -v '[A-Z]' /usr/share/dict/words | less
 
 # Disk usage:
@@ -60,13 +33,6 @@ chmod a-w,u+w,g+w mydir/
 # Change permission so only user can access.
 chmod 0700 mydir/
 chmod u+rwx,g-rwx,o-rwx mydir/
-
-# Search for a package in all debian releases by querying http://qa.debian.org/cgi-bin/dcontrol
-dcontrol warsow | less
-# CLEANUP
-
-# Show the release for the package.
-dcontrol --show-suite warsow | less
 
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
@@ -4409,7 +4375,7 @@ sudo apt-get update -V
 apt-get changelog git
 # TODO: does this require you do apt-get first?
 
-# See output
+# See output with labels for stdout/stderr and timestamps
 annotate-output
 
 # Open emacs in the terminal instead of a separate window
