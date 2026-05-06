@@ -732,3 +732,19 @@ snap run slack
 snap set slack debugmode=true
 # https://forum.snapcraft.io/t/slack-snap-stopped-working-after-ubuntu-updates/51066/4
 # componentCommands: snap
+
+# Make all files under current directory readable and writable by current user.
+chmod -R u+rw .
+# componentCommands: chmod
+
+# Iterate over all MP4 files in current directory and convert to MP3.
+for f in *.mp4; do ffmpeg -i "$f" -c:a libmp3lame "${f%.mp4}.mp3"; done
+# https://stackoverflow.com/questions/38449239/converting-all-the-mp4-audio-files-in-a-folder-to-mp3-using-ffmpeg
+# https://stackoverflow.com/questions/5784661/how-do-you-convert-an-entire-directory-with-ffmpeg
+# componentCommands: for do done ffmpeg
+
+# Iterate over all WAV files in current directory and convert to MP3.
+for f in *.wav; do ffmpeg -i "$f" -c:a libmp3lame "${f%.wav}.mp3"; done
+# https://stackoverflow.com/questions/3255674/convert-audio-files-to-mp3-using-ffmpeg
+# https://stackoverflow.com/questions/5784661/how-do-you-convert-an-entire-directory-with-ffmpeg
+# componentCommands: for do done ffmpeg

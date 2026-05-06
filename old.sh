@@ -98,3 +98,7 @@ dcontrol warsow | less
 # Show the release for the package.
 dcontrol --show-suite warsow | less
 
+# Make all files in '.mozilla' readable and writable.
+sudo chmod -R +rwx .mozilla
+# TODO: why is this necessary?
+

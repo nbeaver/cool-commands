@@ -17,10 +17,6 @@ mkvextract tracks movie5.mkv 2:audio_track.ac3
 # Show list of all files except . and .. in a single column.
 ls --almost-all --format=single-column
 
-# Make all files in '.mozilla' readable and writable.
-sudo chmod -R +rwx .mozilla
-# TODO: why is this necessary?
-
 # shortcut to repeat previous command in bash
 !!
 
