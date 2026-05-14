@@ -748,3 +748,8 @@ for f in *.wav; do ffmpeg -i "$f" -c:a libmp3lame "${f%.wav}.mp3"; done
 # https://stackoverflow.com/questions/3255674/convert-audio-files-to-mp3-using-ffmpeg
 # https://stackoverflow.com/questions/5784661/how-do-you-convert-an-entire-directory-with-ffmpeg
 # componentCommands: for do done ffmpeg
+
+# Run calibre in debug mode and save output to out.txt
+calibre-debug --gui 2>&1 | tee out.txt
+# componentCommands: calibre-debug
+# https://manual.calibre-ebook.com/generated/en/calibre-debug.html
