@@ -3,71 +3,87 @@
 # List wireless access points
 sudo iwlist scanning
 # https://hewlettpackard.github.io/wireless-tools/Tools
+# componentCommands: sudo, iwlist
 # DONE
 
 # Find all files with 'cool' somewhere in the filename
 find . -name  '*cool*'
+# componentCommands: find
 # DONE
 
 # Find all files with 'cool'/'COOL'/'CoOl' somewhere in the filename (case insensitive).
 find . -iname  '*cool*'
+# componentCommands: find
 # DONE
 
 # Find all files ending in .html in current directory and subdirectories
 find . -name '*.html'
+# componentCommands: find
 # DONE
 
 # Find vim swap files (e.g. .swp, .swo, .example.txt.swp):
 find . -type f -name '*.sw?'
+# componentCommands: find
 # DONE
 
 # Find files with spaces in the filename.
 find . -name '* *'
+# componentCommands: find
 # DONE
 
 # Find all files with world-readable, writable, and executable permissions.
 find . -perm -a+rwx
+# componentCommands: find
 # DONE
 
 # Find directories that are world-writable.
 find . -type d -perm -a+w
+# componentCommands: find
 # DONE
 
 # Find directories that aren't permissions 0775 (drwxr-xr-x).
 find . -type d \! -perm 0775
+# componentCommands: find
 # DONE
 
 # Find files or directories that are not writable in the current directory.
 find . \! -writable
+# componentCommands: find
 # DONE
 
 # Find files or directories that are not writable in the current directory.
 # Not compliant with POSIX-standard `find` command.
 find . -not -writable
+# componentCommands: find
 # DONE
 
 # Find files or directories that are not writable and make them writable again.
 find . \! -writable -exec chmod --changes +w '{}' \+
+# componentCommands: find, chmod
 # DONE
 
 # Find all files with world-readable (777) permissions, but skip symbolic links.
 find . \! -type l -perm 777
 find . '!' -type l -perm 777
 find . -not -type l -perm 777
+# componentCommands: find
 # DONE
 
 # Find directories and sort by permissions type.
 find . -type d -printf '%m %p\n' | sort
+# componentCommands: find, sort
 # DONE
 
 # Show permissions of a directory.
 ls -ld /var/log
+# componentCommands: ls
 # Example output:
 # drwxr-xr-x 23 root root 4096 May 23 08:18 /var/log
 # DONE
 
 # Show permissions of a directory.
 stat /var/log
+# componentCommands: stat
 # Example output:
 #   File: ‘/var/log’
 #   Size: 4096      	Blocks: 8          IO Block: 4096   directory
@@ -83,17 +99,20 @@ stat /var/log
 stat -c '%a %n' -- *
 stat --format='%a %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
+# componentCommands: stat
 # DONE
 
 # Show permissions in octal, but also include the human-readable permissions.
 stat -c '%a %A %n' -- *
 stat --format='%a %A %n' -- *
 # https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
+# componentCommands: stat
 # DONE
 
 # Show human-readable and octal permissions of files recursively.
 find . -type f -printf "%m %M %f\n"
 # https://unix.stackexchange.com/questions/126040/convert-the-permissions-in-ls-l-output-to-octal
+# componentCommands: find
 # DONE
 
 # Find all files over a certain size (500MB in this case.)
@@ -753,3 +772,39 @@ for f in *.wav; do ffmpeg -i "$f" -c:a libmp3lame "${f%.wav}.mp3"; done
 calibre-debug --gui 2>&1 | tee out.txt
 # componentCommands: calibre-debug
 # https://manual.calibre-ebook.com/generated/en/calibre-debug.html
+
+# Embed fonts into a PDF
+pdftocairo -pdf input.pdf output.pdf.
+# componentCommands: pdftocairo
+# https://stackoverflow.com/questions/4231656/how-do-i-embed-fonts-in-an-existing-pdf/
+# https://stackoverflow.com/questions/12857849/how-to-repair-a-pdf-file-and-embed-missing-fonts/
+
+# Embed fonts into a PDF
+gs -sFONTPATH=/path/to/fonts:/another/dir/with/more/fonts -o output-pdf-with-embedded-fonts.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress input-pdf-where-some-fonts-are-not-embedded.pdf
+# componentCommands: gs
+# https://stackoverflow.com/questions/4231656/how-do-i-embed-fonts-in-an-existing-pdf/
+# https://stackoverflow.com/questions/12857849/how-to-repair-a-pdf-file-and-embed-missing-fonts/
+
+# Export SVG to PNG using Inkscape v1.0 and later.
+inkscape "image.svg" --export-overwrite --export-filename="out.png" --export-width=128 --export-height=128
+# componentCommands: inkscape
+
+# Export SVG to PNG using Inkscape v1.0 and later (short flags).
+inkscape -w 128 -h 128 image.svg -o out.png
+# componentCommands: inkscape
+
+# Export SVG to PNG using older versions of Inkscape, e.g. 0.92.2
+inkscape -z -e out.png -w 128 -h 128 image.svg
+# componentCommands: inkscape
+
+# Get build ID from an elf binary.
+readelf -n /usr/bin/gawk | grep -A4 build.id
+# https://man.archlinux.org/man/debuginfod.8.en
+# https://manpages.debian.org/experimental/debuginfod/debuginfod-find.1.en.html
+# componentCommands: readelf
+
+# Reduce the fraction 2340/1080; works in python 3.9 and later.
+python3 -c "from fractions import Fraction; print(Fraction(2340, 1080))"
+# Output: 13/6
+# componentCommands: python3
+# https://stackoverflow.com/questions/17537613/does-python-have-a-function-to-reduce-fractions
