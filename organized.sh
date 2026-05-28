@@ -808,3 +808,25 @@ python3 -c "from fractions import Fraction; print(Fraction(2340, 1080))"
 # Output: 13/6
 # componentCommands: python3
 # https://stackoverflow.com/questions/17537613/does-python-have-a-function-to-reduce-fractions
+
+# Inspect PDF for errors.
+mutool info example.pdf
+# componentCommands: mutool
+# https://bitsgalore.org/2021/09/06/pdf-processing-and-analysis-with-open-source-tools.html
+
+# Inspect PDF for errors.
+gs -dNOPAUSE -dBATCH -dPDFSTOPONERROR -sDEVICE=nullpage example.pdf
+# componentCommands: gs
+# https://bitsgalore.org/2021/09/06/pdf-processing-and-analysis-with-open-source-tools.html
+# https://stackoverflow.com/questions/3108201/detect-if-pdf-file-is-correct-header-pdf
+# https://ghostscript.readthedocs.io/en/latest/Use.html
+
+# Inspect PDF for errors.
+pdfcpu validate -m strict example.pdf
+# componentCommands: pdfcpu
+# https://pdfcpu.io/
+# https://bitsgalore.org/2021/09/06/pdf-processing-and-analysis-with-open-source-tools.html
+
+# Create a new Python virtual environment in .venv but make Dropbox ignore it.
+python3 -m venv .venv; attr -s com.dropbox.ignored -V 1 .venv
+# componentCommands: python3, attr
