@@ -848,3 +848,18 @@ pdfcpu validate -m strict example.pdf
 python3 -m venv .venv; attr -s com.dropbox.ignored -V 1 .venv
 # componentCommands: python3, attr
 # DONE
+
+# Fetch git server status for branch 'main' from remote called 'origin'. Useful when status or tags are stale.
+git fetch 'origin/main'
+# componentCommands: git
+# https://git-scm.com/docs/git-fetch
+# https://stackoverflow.com/questions/47009237/what-is-the-difference-between-git-fetch-and-git-fetch-origin
+
+# Clone a git repository while preserving symbolic links.
+git clone --config core.symlinks=true 'https://example.org//myrepo.git' 'myrepo'
+# componentCommands: git
+# https://cal.com/help/event-types/symbolic-issues
+# https://stackoverflow.com/questions/11662868/what-happens-when-i-clone-a-repository-with-symlinks-on-windows
+# https://stackoverflow.com/questions/51119974/how-do-you-preserve-symlinks-in-a-git-repo
+# https://superuser.com/questions/1713099/symbolic-link-does-not-work-in-git-over-windows
+# https://www.jvt.me/posts/2024/10/01/mac-symlinks-git/
