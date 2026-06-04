@@ -781,7 +781,7 @@ calibre-debug --gui 2>&1 | tee out.txt
 # DONE
 
 # Embed fonts into a PDF
-pdftocairo -pdf input.pdf output.pdf.
+pdftocairo -pdf input.pdf output.pdf
 # componentCommands: pdftocairo
 # https://stackoverflow.com/questions/4231656/how-do-i-embed-fonts-in-an-existing-pdf/
 # https://stackoverflow.com/questions/12857849/how-to-repair-a-pdf-file-and-embed-missing-fonts/
