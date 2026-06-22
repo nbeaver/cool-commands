@@ -328,6 +328,10 @@ sudo lsof -i :22
 # sshd    650 root    3u  IPv4 59613617      0t0  TCP *:ssh (LISTEN)
 # sshd    650 root    4u  IPv6 59613619      0t0  TCP *:ssh (LISTEN)
 
+sudo lsof -i:8080
+# COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+# ipfs    2452 ipfs   22u  IPv4  45275      0t0  TCP localhost:http-alt (LISTEN)
+
 # Sure ways to restart a wireless network
 ping -c 4 google.com # ping 4 times
 lspci | grep -i network
@@ -1322,9 +1326,6 @@ journalctl -fu NetworkManager
 # Look in kernel log (ring buffer).
 dmesg | grep 'rtl8192\|wlan' | tee dmesg.log
 
-# Look at journal for GNOME shell.
-journalctl -f /usr/bin/gnome-shell
-
 # Detach process from gnome-terminal
 Ctrl-Z # Access shell prompt
 bg     # Put job in background, but let it keep running.
@@ -2253,12 +2254,6 @@ find . -name '*[\*"><?:\\|]*' -exec rename 's/[\*"><\?:|]//g' '{}' \;
 # Change all spaces in file names into underscores, even files with weird names
 find . -depth | rename 's/\ /_/g'
 
-# Extract embedded images from a pdf and dump them as JPEGs into the current directory
-pdfimages -j mypdf.pdf mypdf-images
-# A somewhat neater solution for all pdfs in current directory.
-for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
-# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
-
 # Show info about pages 1-10 of a PDF.
 pdfimages -f 1 -l 10 -list example.pdf | less
 
@@ -2546,9 +2541,6 @@ ls -d1 "$PWD"/*
 
 # Use a text file as a command line argument
 w3m $(<temp.txt)
-
-# Add an OCR layer to a PDF.
-ocrmypdf input.pdf out-with-ocr.pdf
 
 # Get the fonts used by a pdf; useful to determine if it's OCR'ed or not,
 # and also if the fonts are embedded or not.
@@ -6003,13 +5995,6 @@ sftp://itcsubmit.wustl.edu
 # Get number of pages in a pdf.
 pdfinfo file.pdf | grep 'Pages'
 pdftk file.pdf dump_data | grep 'NumberOfPages'
-
-# Use top in batch mode to get a report.
-top -n 1 -b > top.txt
-# For a single process.
-top -n 1 -b -p 4469 > top1.txt
-# For multiple processes
-top -n 1 -b -p 4469,4530 > top2.txt
 
 # Uses BSD top, not procps (Linux) top.
 top -stats pid,command,cpu,idlew,power -o power -d

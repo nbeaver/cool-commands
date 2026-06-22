@@ -863,3 +863,108 @@ git clone --config core.symlinks=true 'https://example.org//myrepo.git' 'myrepo'
 # https://stackoverflow.com/questions/51119974/how-do-you-preserve-symlinks-in-a-git-repo
 # https://superuser.com/questions/1713099/symbolic-link-does-not-work-in-git-over-windows
 # https://www.jvt.me/posts/2024/10/01/mac-symlinks-git/
+
+# Copy a folder without copying symbolic links.
+rsync --archive --no-links /usr/share/backgrounds/ ./usr_share_backgrounds/
+# componentCommands: rsync
+# https://unix.stackexchange.com/questions/392236/how-can-i-copy-a-directory-structure-but-ignore-symlinks
+
+# Add an OCR layer to a PDF.
+ocrmypdf input.pdf out-with-ocr.pdf
+# componentCommands: ocrmypdf
+# https://ocrmypdf.readthedocs.io/en/latest/cookbook.html#basic-examples
+
+# See LD_DEBUG options.
+LD_DEBUG=help ls
+# componentCommands: ls
+# https://bnikolic.co.uk/blog/linux-ld-debug.html
+
+# Match python3 scripts in /usr/bin/.
+grep --max-count=1 --binary-files=without-match 'python3' /usr/bin/*
+# componentCommands: grep
+
+# Exit gnome session from command line.
+gnome-session-quit --no-prompt --logout --force
+# componentCommands: gnome-sesssion-quit
+# https://gnome.pages.gitlab.gnome.org/gnome-session/re03.html
+# https://fostips.com/log-out-command-linux-desktops/
+# https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
+
+# List running graphical sessions.
+loginctl list-sessions
+# https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
+
+# Write output of top(1) command in batch mode to a text file (long flags style).
+top --iterations=1 --batch > top.txt
+# componentCommands: top
+# https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+
+# Write output of top(1) command in batch mode to a text file.
+top -n 1 -b > top.txt
+# componentCommands: top
+# https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+
+# For process IDs 4469 and 4530, Write output of top(1) command in batch mode to a text file.
+top -n 1 -b -p 4469,4530 > top.txt
+# componentCommands: top
+# https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+
+# List all running systemd services.
+systemctl list-units --type=service
+# componentCommands: systemctl
+# https://unix.stackexchange.com/questions/517872/systemctl-list-all-possible-including-disabled-services
+
+# List all running systemd services for the current user (not global services).
+systemctl list-units --user --type=service
+# componentCommands: systemctl
+# https://askubuntu.com/questions/1300152/how-to-list-user-services-of-another-user-under-ubuntu
+# https://til.devjugal.com/linux/systemd/list-services-of-a-user
+
+#systemctl list-units --user --type=service Look at the status of a particular service, in this case the CUPS printing daemon.
+systemctl status cups.service
+# Example output:
+# ● cups.service - CUPS Scheduler
+#      Loaded: loaded (/usr/lib/systemd/system/cups.service; enabled; preset: enabled)
+#      Active: active (running) since Sun 2026-06-14 08:38:40 EDT; 1 day 4h ago
+# TriggeredBy: ● cups.path
+#              ● cups.socket
+#        Docs: man:cupsd(8)
+#    Main PID: 123124 (cupsd)
+#      Status: "Scheduler is running..."
+#       Tasks: 1 (limit: 38061)
+#      Memory: 8.3M (peak: 35.6M)
+#         CPU: 3.222s
+#      CGroup: /system.slice/cups.service
+#              └─123124 /usr/sbin/cupsd -l
+#
+# Jun 14 08:38:40 mica systemd[1]: Starting cups.service - CUPS Scheduler...
+# Jun 14 08:38:40 mica systemd[1]: Started cups.service - CUPS Scheduler.
+# componentCommands: systemctl
+# https://systemd.io/DEBUGGING/#status-and-logs-of-services
+# https://systemd.io/TIPS_AND_TRICKS/#showing-runtime-status
+
+# Look at the status of a particular user service, in this case for the ssh-agent.
+systemctl status --user ssh-agent.service
+# componentCommands: systemctl
+
+# Look at journal for GNOME shell as it updates in real time.
+journalctl --follow /usr/bin/gnome-shell
+# componentCommands: journalctl
+
+# Extract embedded images from a PDF and dump them as JPEGs into the current directory, with filenames starting with 'mypdf-images'.
+pdfimages -j mypdf.pdf mypdf-images
+# componentCommands: pdfimages
+
+# Extract embedded images from first page of a PDF.
+pdfimages -all -f 1 -l 1 -j mypdf.pdf mypdf-images
+# componentCommands: pdfimages
+
+# List embedded images from first page of a PDF.
+pdfimages -l -f 1 -l 1 -j mypdf.pdf mypdf-images
+# componentCommands: pdfimages
+
+# Extract images for all PDFs in current directory.
+for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
+# ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
+# componentCommands: for, mkdir, pdfimages
+# DONE
