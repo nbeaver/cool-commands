@@ -889,20 +889,29 @@ gnome-session-quit --no-prompt --logout --force
 # https://gnome.pages.gitlab.gnome.org/gnome-session/re03.html
 # https://fostips.com/log-out-command-linux-desktops/
 # https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
+# componentCommands: gnome-session-quit
+
+# Restart gnome session from command line.
+busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
+# componentCommands: busctl
+# https://askubuntu.com/questions/100226/how-to-restart-gnome-shell-from-command-line
+# https://www.linuxuprising.com/2020/07/how-to-restart-gnome-shell-from-command.html
+# https://discourse.gnome.org/t/proper-way-to-restart-the-shell-from-a-script/9797
 
 # List running graphical sessions.
 loginctl list-sessions
 # https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
+# componentCommands: loginctl
 
 # Write output of top(1) command in batch mode to a text file (long flags style).
 top --iterations=1 --batch > top.txt
-# componentCommands: top
 # https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+# componentCommands: top
 
 # Write output of top(1) command in batch mode to a text file.
 top -n 1 -b > top.txt
-# componentCommands: top
 # https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+# componentCommands: top
 
 # For process IDs 4469 and 4530, Write output of top(1) command in batch mode to a text file.
 top -n 1 -b -p 4469,4530 > top.txt
@@ -968,3 +977,50 @@ for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"
 # ~/archive/2015/not-iit-or-research-2015/src/python/cmd_oysters/cmdoysters/6c0081a3-5c10-4cdf-826b-1bd778ae8ef0.json
 # componentCommands: for, mkdir, pdfimages
 # DONE
+
+# Render text in 'example-file.txt' to 'out.png' with FreeMono font.
+pango-view --font='FreeMono' -qo out.png example-file.txt
+# componentCommands: pango-view
+
+# Preprocess a video for use with Sony Vegas.
+ffmpeg -i 'example.webm' -vf 'format=rgb24,crop=w=.95*iw:h=.95*ih,scale=w=1440:h=1080,minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,hqdn3d=luma_spatial=10' -c:v libx264 -qp 18 -preset medium -s 1440x1080 -aspect 4:3 -r 60 -pix_fmt yuv420p -af 'aresample=48000,aexciter,afftdn' -c:a alac upscale.mov
+# https://www.youtube.com/watch?v=I7lgm7LqzBA&t=659s
+# componentCommands: ffmpeg
+
+# Download a YouTube video to the current directory with JSON metadata and a filesystem-safe filename, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].webm' and 'Me_at_the_zoo-[jNQXAC9IVRw].info.json'.
+yt-dlp --write-info-json --restrict-filenames 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
+# https://stackoverflow.com/questions/32322771/what-is-the-downloader-option-restrict-filenames-for-python-youtube-dl
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
+
+# Download just the JSON metadata for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].info.json'.
+yt-dlp --write-info-json --restrict-filenames --skip-download 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
+# https://stackoverflow.com/questions/32322771/what-is-the-downloader-option-restrict-filenames-for-python-youtube-dl
+# https://unix.stackexchange.com/questions/528302/how-can-i-download-just-the-info-json-files-using-youtube-dl-without-downloadin
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
+
+# List the available subtitles for a YouTube video.
+yt-dlp --list-subs 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
+# https://www.ubuntubuzz.com/2023/07/practically-useful-youtube-dl-command-list.html
+# https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
+
+# Download just the subtitles for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].en.vtt'.
+yt-dlp --write-subs --restrict-filenames --sub-langs='en.*' --skip-download 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
+# https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
+
+# Download just the automatic subtitles for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].en.vtt'.
+yt-dlp --write-auto-sub --write-info-json --sub-lang en 'https://www.youtube.com/watch?v=QncdLPYLPkA'
+# https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
+
+# Download a YouTube video to ~/Videos/me-at-the-zoo.webm and create parent directories as needed.
+yt-dlp --output ~/Videos/me-at-the-zoo.webm 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
+# https://www.ditig.com/yt-dlp-cheat-sheet
+# https://github.com/yt-dlp/yt-dlp
+# componentCommands: yt-dlp
