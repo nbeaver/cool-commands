@@ -943,7 +943,7 @@ systemctl list-units --user --type=service
 # https://til.devjugal.com/linux/systemd/list-services-of-a-user
 # DONE
 
-#systemctl list-units --user --type=service Look at the status of a particular service, in this case the CUPS printing daemon.
+# Look at the status of a particular service, in this case the CUPS printing daemon.
 systemctl status cups.service
 # Example output:
 # ● cups.service - CUPS Scheduler
