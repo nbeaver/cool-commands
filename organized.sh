@@ -854,6 +854,7 @@ git fetch 'origin/main'
 # componentCommands: git
 # https://git-scm.com/docs/git-fetch
 # https://stackoverflow.com/questions/47009237/what-is-the-difference-between-git-fetch-and-git-fetch-origin
+# DONE
 
 # Clone a git repository while preserving symbolic links.
 git clone --config core.symlinks=true 'https://example.org//myrepo.git' 'myrepo'
@@ -863,25 +864,30 @@ git clone --config core.symlinks=true 'https://example.org//myrepo.git' 'myrepo'
 # https://stackoverflow.com/questions/51119974/how-do-you-preserve-symlinks-in-a-git-repo
 # https://superuser.com/questions/1713099/symbolic-link-does-not-work-in-git-over-windows
 # https://www.jvt.me/posts/2024/10/01/mac-symlinks-git/
+# DONE
 
 # Copy a folder without copying symbolic links.
 rsync --archive --no-links /usr/share/backgrounds/ ./usr_share_backgrounds/
 # componentCommands: rsync
 # https://unix.stackexchange.com/questions/392236/how-can-i-copy-a-directory-structure-but-ignore-symlinks
+# DONE
 
 # Add an OCR layer to a PDF.
 ocrmypdf input.pdf out-with-ocr.pdf
 # componentCommands: ocrmypdf
 # https://ocrmypdf.readthedocs.io/en/latest/cookbook.html#basic-examples
+# DONE
 
 # See LD_DEBUG options.
 LD_DEBUG=help ls
 # componentCommands: ls
 # https://bnikolic.co.uk/blog/linux-ld-debug.html
+# DONE
 
 # Match python3 scripts in /usr/bin/.
 grep --max-count=1 --binary-files=without-match 'python3' /usr/bin/*
 # componentCommands: grep
+# DONE
 
 # Exit gnome session from command line.
 gnome-session-quit --no-prompt --logout --force
@@ -890,6 +896,7 @@ gnome-session-quit --no-prompt --logout --force
 # https://fostips.com/log-out-command-linux-desktops/
 # https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
 # componentCommands: gnome-session-quit
+# DONE
 
 # Restart gnome session from command line.
 busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
@@ -897,37 +904,44 @@ busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta
 # https://askubuntu.com/questions/100226/how-to-restart-gnome-shell-from-command-line
 # https://www.linuxuprising.com/2020/07/how-to-restart-gnome-shell-from-command.html
 # https://discourse.gnome.org/t/proper-way-to-restart-the-shell-from-a-script/9797
+# DONE
 
 # List running graphical sessions.
 loginctl list-sessions
 # https://askubuntu.com/questions/180628/how-can-i-logout-from-the-gui-using-cli
 # componentCommands: loginctl
+# DONE
 
 # Write output of top(1) command in batch mode to a text file (long flags style).
 top --iterations=1 --batch > top.txt
 # https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
 # componentCommands: top
+# DONE
 
 # Write output of top(1) command in batch mode to a text file.
 top -n 1 -b > top.txt
 # https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
 # componentCommands: top
+# DONE
 
 # For process IDs 4469 and 4530, Write output of top(1) command in batch mode to a text file.
 top -n 1 -b -p 4469,4530 > top.txt
 # componentCommands: top
 # https://stackoverflow.com/questions/11729720/how-to-capture-the-output-of-a-top-command-in-a-file-in-linux
+# DONE
 
 # List all running systemd services.
 systemctl list-units --type=service
 # componentCommands: systemctl
 # https://unix.stackexchange.com/questions/517872/systemctl-list-all-possible-including-disabled-services
+# DONE
 
 # List all running systemd services for the current user (not global services).
 systemctl list-units --user --type=service
 # componentCommands: systemctl
 # https://askubuntu.com/questions/1300152/how-to-list-user-services-of-another-user-under-ubuntu
 # https://til.devjugal.com/linux/systemd/list-services-of-a-user
+# DONE
 
 #systemctl list-units --user --type=service Look at the status of a particular service, in this case the CUPS printing daemon.
 systemctl status cups.service
@@ -951,26 +965,32 @@ systemctl status cups.service
 # componentCommands: systemctl
 # https://systemd.io/DEBUGGING/#status-and-logs-of-services
 # https://systemd.io/TIPS_AND_TRICKS/#showing-runtime-status
+# DONE
 
 # Look at the status of a particular user service, in this case for the ssh-agent.
 systemctl status --user ssh-agent.service
 # componentCommands: systemctl
+# DONE
 
 # Look at journal for GNOME shell as it updates in real time.
 journalctl --follow /usr/bin/gnome-shell
 # componentCommands: journalctl
+# DONE
 
 # Extract embedded images from a PDF and dump them as JPEGs into the current directory, with filenames starting with 'mypdf-images'.
 pdfimages -j mypdf.pdf mypdf-images
 # componentCommands: pdfimages
+# DONE
 
 # Extract embedded images from first page of a PDF.
 pdfimages -all -f 1 -l 1 -j mypdf.pdf mypdf-images
 # componentCommands: pdfimages
+# DONE
 
 # List embedded images from first page of a PDF.
 pdfimages -l -f 1 -l 1 -j mypdf.pdf mypdf-images
 # componentCommands: pdfimages
+# DONE
 
 # Extract images for all PDFs in current directory.
 for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"; done
@@ -981,17 +1001,20 @@ for f in *.pdf; do dir="${f%.*}"; mkdir -p "$dir"; pdfimages -j "$f" "$dir/$dir"
 # Render text in 'example-file.txt' to 'out.png' with FreeMono font.
 pango-view --font='FreeMono' -qo out.png example-file.txt
 # componentCommands: pango-view
+# DONE
 
 # Preprocess a video for use with Sony Vegas.
 ffmpeg -i 'example.webm' -vf 'format=rgb24,crop=w=.95*iw:h=.95*ih,scale=w=1440:h=1080,minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,hqdn3d=luma_spatial=10' -c:v libx264 -qp 18 -preset medium -s 1440x1080 -aspect 4:3 -r 60 -pix_fmt yuv420p -af 'aresample=48000,aexciter,afftdn' -c:a alac upscale.mov
 # https://www.youtube.com/watch?v=I7lgm7LqzBA&t=659s
 # componentCommands: ffmpeg
+# DONE
 
 # Download a YouTube video to the current directory with JSON metadata and a filesystem-safe filename, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].webm' and 'Me_at_the_zoo-[jNQXAC9IVRw].info.json'.
 yt-dlp --write-info-json --restrict-filenames 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
 # https://stackoverflow.com/questions/32322771/what-is-the-downloader-option-restrict-filenames-for-python-youtube-dl
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
 
 # Download just the JSON metadata for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].info.json'.
 yt-dlp --write-info-json --restrict-filenames --skip-download 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
@@ -999,6 +1022,7 @@ yt-dlp --write-info-json --restrict-filenames --skip-download 'https://www.youtu
 # https://unix.stackexchange.com/questions/528302/how-can-i-download-just-the-info-json-files-using-youtube-dl-without-downloadin
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
 
 # List the available subtitles for a YouTube video.
 yt-dlp --list-subs 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
@@ -1006,21 +1030,25 @@ yt-dlp --list-subs 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
 # https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
 
 # Download just the subtitles for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].en.vtt'.
 yt-dlp --write-subs --restrict-filenames --sub-langs='en.*' --skip-download 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
 # https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
 
 # Download just the automatic subtitles for a YouTube video to the current directory, in this case 'Me_at_the_zoo-[jNQXAC9IVRw].en.vtt'.
 yt-dlp --write-auto-sub --write-info-json --sub-lang en 'https://www.youtube.com/watch?v=QncdLPYLPkA'
 # https://superuser.com/questions/927523/how-to-download-only-subtitles-of-videos-using-youtube-dl
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
 
 # Download a YouTube video to ~/Videos/me-at-the-zoo.webm and create parent directories as needed.
 yt-dlp --output ~/Videos/me-at-the-zoo.webm 'https://www.youtube.com/watch?v=jNQXAC9IVRw'
 # https://www.ditig.com/yt-dlp-cheat-sheet
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
+# DONE
