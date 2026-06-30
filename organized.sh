@@ -1052,3 +1052,17 @@ yt-dlp --output ~/Videos/me-at-the-zoo.webm 'https://www.youtube.com/watch?v=jNQ
 # https://github.com/yt-dlp/yt-dlp
 # componentCommands: yt-dlp
 # DONE
+
+# Get duration of a video in seconds.
+ffprobe -i example.mp4 -show_entries format=duration -v error -of csv="p=0"
+# Example output:
+# 4.970000
+# https://superuser.com/questions/361329/how-can-i-get-the-length-of-a-video-file-from-the-console
+# https://askubuntu.com/questions/224237/how-to-check-how-long-a-video-mp4-is-using-the-shell
+# componentCommands: ffprobe
+
+# Get duration of a video in hour:minute:seconds format.
+ffprobe -i example.mp4 -show_entries format=duration -sexagesimal -v error -of csv="p=0"
+# https://superuser.com/questions/361329/how-can-i-get-the-length-of-a-video-file-from-the-console
+# https://askubuntu.com/questions/224237/how-to-check-how-long-a-video-mp4-is-using-the-shell
+# componentCommands: ffprobe
