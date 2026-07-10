@@ -1066,3 +1066,11 @@ ffprobe -i example.mp4 -show_entries format=duration -sexagesimal -v error -of c
 # https://superuser.com/questions/361329/how-can-i-get-the-length-of-a-video-file-from-the-console
 # https://askubuntu.com/questions/224237/how-to-check-how-long-a-video-mp4-is-using-the-shell
 # componentCommands: ffprobe
+
+# Save USB devices to text file.
+Get-PnpDevice -InstanceId 'USB*' -Status OK | Out-File -FilePath "USB_Devices.txt" -Encoding UTF8
+# componentCommands: Get-PnpDevice
+
+# Save USB devices to CSV file.
+Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' } | Select-Object Status, Class, FriendlyName, InstanceId | Export-Csv -Path "USB_Devices.csv" -NoTypeInformation -Encoding UTF8
+# componentCommands: Get-PnpDevice
