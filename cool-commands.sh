@@ -7183,6 +7183,9 @@ pdftocairo -png -rx 300 -ry 300 input.pdf out
 pdftoppm -png -rx 300 -ry 300 input.pdf out
 # creates out-1.png, out-2.png, etc.
 
+# Just first page:
+pdftoppm -png -r 300 -f 1 -l 1 example.pdf out.png
+
 # Get font metadata, also works on TrueType Fonts (TTF) files.
 otfinfo --info /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
 # Family:              Liberation Sans
