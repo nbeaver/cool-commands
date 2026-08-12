@@ -1074,3 +1074,41 @@ Get-PnpDevice -InstanceId 'USB*' -Status OK | Out-File -FilePath "USB_Devices.tx
 # Save USB devices to CSV file.
 Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' } | Select-Object Status, Class, FriendlyName, InstanceId | Export-Csv -Path "USB_Devices.csv" -NoTypeInformation -Encoding UTF8
 # componentCommands: Get-PnpDevice
+
+# Save the bash(1) man page to a plain text file.
+man bash | col -bx > man_bash.txt
+# https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page
+# componentCommands: man, col
+
+# Save the bash(1) man page to a plain text file, using a width of 120 characters.
+MANWIDTH=120 man bash | col -bx > man_bash.txt
+# https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page
+# componentCommands: man, col
+
+# Convert from UTF-8 to ISO-8859-1.
+iconv -f UTF-8 -t ISO-8859-1 input_utf8.txt > output_latin1.txt
+# https://stackoverflow.com/questions/44412168/convert-utf8-to-iso8859-1-using-iconv-command
+# componentCommands: iconv
+
+# Convert from UTF8 to ISO8859-1, silently discarding encoding errors.
+iconv -c -f UTF-8 -t ISO-8859-1 input_utf8.txt > output_latin1.txt
+# https://stackoverflow.com/questions/44412168/convert-utf8-to-iso8859-1-using-iconv-command
+# componentCommands: iconv
+
+# Show default file manager application along with debug output.
+XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default 'inode/directory'
+# https://askubuntu.com/questions/1292612/xdg-open-does-not-open-files-in-the-preferred-applicaton
+# componentCommands: xdg-mime
+
+# Show default PDF reader.
+xdg-mime query default 'application/pdf'
+
+# Trace the file that gives the mimetype association for PDF files.
+XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default 'application/pdf'
+# componentCommands: xdg-mime
+
+# See how KDE handles the 'appplication/pdf' mimetype.
+ktraderclient5 --mimetype 'application/pdf'
+# https://bugs.kde.org/show_bug.cgi?id=347353
+# https://unix.stackexchange.com/questions/565202/kde-is-not-saving-a-mime-type-file-association
+# componentCommands: ktraderclient5

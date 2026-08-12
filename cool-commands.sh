@@ -5916,15 +5916,6 @@ mimetype -LM * | sort -k 2 | less
 # Set the default application for ftp:// urls to be Thunar.
 xdg-mime default Thunar.desktop x-scheme-handler/ftp
 
-# Get default PDF reader.
-xdg-mime query default application/pdf
-
-# Trace the file that gives the mimetype association.
-XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default application/pdf
-
-# See how KDE handles the 'appplication/pdf' mimetype.
-ktraderclient5 --mimetype 'application/pdf'
-
 # Securely access cups server on another machine by ssh tunneling the port to 3631 instead of 631.
 ssh nbeaver@chloride.phys.iit.edu -L 1631:localhost:631
 xdg-open http://localhost:1631/
