@@ -493,24 +493,6 @@ usermod -a -G sudo nathaniel
 sudo passwd root
 # https://unix.stackexchange.com/questions/35929/how-can-we-change-root-password#35938
 
-# Locate all files with a path or name containing 'file'
-locate --ignore-case file
-# Locate all files ending with '.cif'
-locate '*.cif'
-# Slower way to do the same thing.
-locate -r '\.cif$'
-# Locate all base filenames starting with phys
-locate -b 'phys*'
-# Locate using the ? for one or zero unknown letter, * for many unknown letters
-locate '*.htm?'
-# Restrict locate to a single path
-locate --count /home/nathaniel/*/Makefile
-locate --count /home/nathaniel/*/Makefile
-# Use regular expressions, e.g. match end of line to get all .bib files.
-locate -b -r '\.bib$' | less
-# Another regex example.
-locate -r share/applications$
-
 # https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
 
 # Update the locate database

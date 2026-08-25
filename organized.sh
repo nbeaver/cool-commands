@@ -1112,3 +1112,59 @@ ktraderclient5 --mimetype 'application/pdf'
 # https://bugs.kde.org/show_bug.cgi?id=347353
 # https://unix.stackexchange.com/questions/565202/kde-is-not-saving-a-mime-type-file-association
 # componentCommands: ktraderclient5
+
+# Print all directories with exact name 'build', works with mlocate but not plocate.
+locate -b '\build'
+# componentCommands: locate
+# https://askubuntu.com/questions/831869/locate-command-for-searching-exact-filename-only
+
+# Print all directories with exact name 'build', works with both mlocate and plocate.
+locate -b -r '^build$'
+# https://askubuntu.com/questions/831869/locate-command-for-searching-exact-filename-only
+# componentCommands: locate
+
+# Print all files with a path or name containing 'LC_TIME', case-sensitive.
+locate 'LC_TIME'
+# componentCommands: locate
+
+# Print all files with a path or name containing 'lc_time', ignoring case.
+locate -i 'LC_TIME'
+# componentCommands: locate
+
+# Print all base filenames or base directory names containing '[' character.
+locate -b '\['
+# componentCommands: locate
+
+# Print all base filenames or directories starting with 'conf'.
+locate -b 'conf*'
+# componentCommands: locate
+
+# Print all filenames or directories under /usr/share.
+locate '/usr/share/*'
+# https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
+# componentCommands: locate
+
+# Print all filenames or directories ending with '.conf' under /usr/share.
+locate '/usr/share/*.conf'
+# https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
+# componentCommands: locate
+
+# Print all file paths ending with '.conf', using built-in glob pattern.
+locate '*.conf'
+# componentCommands: locate
+
+# Print all file paths ending with '.conf', using regular expressions.
+locate -r '\.conf$'
+# componentCommands: locate
+
+# Print all files that end with '.htm' and '.html' (basic POSIX regular expressions).
+locate -b -r '\.\(htm\|html\)$'
+# componentCommands: locate
+
+# Print all files that end with '.htm' and  '.html' (extended POSIX regular expressions).
+locate -b --regex '\.html?$'
+# componentCommands: locate
+
+# Print all paths that end in 'share/applications'
+locate -r 'share/applications$'
+# componentCommands: locate
