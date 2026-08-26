@@ -1060,111 +1060,137 @@ ffprobe -i example.mp4 -show_entries format=duration -v error -of csv="p=0"
 # https://superuser.com/questions/361329/how-can-i-get-the-length-of-a-video-file-from-the-console
 # https://askubuntu.com/questions/224237/how-to-check-how-long-a-video-mp4-is-using-the-shell
 # componentCommands: ffprobe
+# DONE
 
 # Get duration of a video in hour:minute:seconds format.
 ffprobe -i example.mp4 -show_entries format=duration -sexagesimal -v error -of csv="p=0"
 # https://superuser.com/questions/361329/how-can-i-get-the-length-of-a-video-file-from-the-console
 # https://askubuntu.com/questions/224237/how-to-check-how-long-a-video-mp4-is-using-the-shell
 # componentCommands: ffprobe
+# DONE
 
 # Save USB devices to text file.
 Get-PnpDevice -InstanceId 'USB*' -Status OK | Out-File -FilePath "USB_Devices.txt" -Encoding UTF8
 # componentCommands: Get-PnpDevice
+# DONE
 
 # Save USB devices to CSV file.
 Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' } | Select-Object Status, Class, FriendlyName, InstanceId | Export-Csv -Path "USB_Devices.csv" -NoTypeInformation -Encoding UTF8
 # componentCommands: Get-PnpDevice
+# DONE
 
 # Save the bash(1) man page to a plain text file.
 man bash | col -bx > man_bash.txt
 # https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page
 # componentCommands: man, col
+# DONE
 
 # Save the bash(1) man page to a plain text file, using a width of 120 characters.
 MANWIDTH=120 man bash | col -bx > man_bash.txt
 # https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page
 # componentCommands: man, col
+# DONE
 
 # Convert from UTF-8 to ISO-8859-1.
 iconv -f UTF-8 -t ISO-8859-1 input_utf8.txt > output_latin1.txt
 # https://stackoverflow.com/questions/44412168/convert-utf8-to-iso8859-1-using-iconv-command
 # componentCommands: iconv
+# DONE
 
 # Convert from UTF8 to ISO8859-1, silently discarding encoding errors.
 iconv -c -f UTF-8 -t ISO-8859-1 input_utf8.txt > output_latin1.txt
 # https://stackoverflow.com/questions/44412168/convert-utf8-to-iso8859-1-using-iconv-command
 # componentCommands: iconv
+# DONE
 
 # Show default file manager application along with debug output.
 XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default 'inode/directory'
 # https://askubuntu.com/questions/1292612/xdg-open-does-not-open-files-in-the-preferred-applicaton
 # componentCommands: xdg-mime
+# DONE
 
 # Show default PDF reader.
 xdg-mime query default 'application/pdf'
+# componentCommands: xdg-mime
+# DONE
 
 # Trace the file that gives the mimetype association for PDF files.
 XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default 'application/pdf'
 # componentCommands: xdg-mime
+# DONE
 
 # See how KDE handles the 'appplication/pdf' mimetype.
 ktraderclient5 --mimetype 'application/pdf'
 # https://bugs.kde.org/show_bug.cgi?id=347353
 # https://unix.stackexchange.com/questions/565202/kde-is-not-saving-a-mime-type-file-association
 # componentCommands: ktraderclient5
+# DONE
 
 # Print all directories with exact name 'build', works with mlocate but not plocate.
 locate -b '\build'
 # componentCommands: locate
 # https://askubuntu.com/questions/831869/locate-command-for-searching-exact-filename-only
+# DONE
 
 # Print all directories with exact name 'build', works with both mlocate and plocate.
 locate -b -r '^build$'
 # https://askubuntu.com/questions/831869/locate-command-for-searching-exact-filename-only
 # componentCommands: locate
+# DONE
 
 # Print all files with a path or name containing 'LC_TIME', case-sensitive.
 locate 'LC_TIME'
 # componentCommands: locate
+# DONE
 
 # Print all files with a path or name containing 'lc_time', ignoring case.
 locate -i 'LC_TIME'
 # componentCommands: locate
+# DONE
 
 # Print all base filenames or base directory names containing '[' character.
 locate -b '\['
 # componentCommands: locate
+# DONE
 
 # Print all base filenames or directories starting with 'conf'.
 locate -b 'conf*'
 # componentCommands: locate
+# DONE
 
 # Print all filenames or directories under /usr/share.
 locate '/usr/share/*'
 # https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
 # componentCommands: locate
+# DONE
 
 # Print all filenames or directories ending with '.conf' under /usr/share.
 locate '/usr/share/*.conf'
 # https://askubuntu.com/questions/33280/use-locate-under-some-specific-directory
 # componentCommands: locate
+# DONE
 
 # Print all file paths ending with '.conf', using built-in glob pattern.
 locate '*.conf'
 # componentCommands: locate
+# DONE
 
 # Print all file paths ending with '.conf', using regular expressions.
 locate -r '\.conf$'
 # componentCommands: locate
+# DONE
 
 # Print all files that end with '.htm' and '.html' (basic POSIX regular expressions).
 locate -b -r '\.\(htm\|html\)$'
 # componentCommands: locate
+# DONE
 
 # Print all files that end with '.htm' and  '.html' (extended POSIX regular expressions).
 locate -b --regex '\.html?$'
 # componentCommands: locate
+# DONE
 
 # Print all paths that end in 'share/applications'
 locate -r 'share/applications$'
 # componentCommands: locate
+# DONE
