@@ -181,7 +181,7 @@ grep 'ae' /usr/share/dict/words
 # componentCommands: grep
 # DONE
 
-# Filter out words with uppercase (i.e capital) letters.
+# Filter out words with uppercase (i.e. capital) letters.
 grep -v '[A-Z]' /usr/share/dict/words
 # componentCommands: grep
 
