@@ -1,11 +1,5 @@
 #! /usr/bin/env bash
 
-# Remove pipe characters from filenames recursively.
-find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
-
-# Filter out words with uppercase (i.e capital) letters.
-grep -v '[A-Z]' /usr/share/dict/words | less
-
 # Disk usage:
 du | sort --numeric-sort --reverse
 du | sort -nr # quick version

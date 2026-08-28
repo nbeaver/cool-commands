@@ -151,6 +151,10 @@ find . -name "*:*" -exec rename 's/:/-/g' {} \+
 find . -name '*:*' -exec rename -n 's/://g' '{}' \+
 # DONE
 
+# Remove pipe characters from filenames recursively.
+find . -name '*|*' -exec rename -n 's/\|//g' '{}' \+
+# componentCommands: find, rename
+
 # Remove non-ASCII characters from filenames.
 rename 's/[^\x00-\x7F]//g' -- *
 # DONE
@@ -174,7 +178,12 @@ cp ~/.local/share/mime/mime.cache{,.old}
 
 # Match words that contain 'ae'.
 grep 'ae' /usr/share/dict/words
+# componentCommands: grep
 # DONE
+
+# Filter out words with uppercase (i.e capital) letters.
+grep -v '[A-Z]' /usr/share/dict/words
+# componentCommands: grep
 
 # Case-insensitive match for 'error' in system log file.
 grep -i 'error' /var/log/syslog
