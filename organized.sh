@@ -1203,3 +1203,67 @@ locate -b --regex '\.html?$'
 locate -r 'share/applications$'
 # componentCommands: locate
 # DONE
+
+# Print disk usage of current directory and subdirectories in 1024 bytes (KiB).
+du
+# componentCommands: du
+
+# Print disk usage of current directory and subdirectories in bytes.
+du -b
+# componentCommands: du
+
+# Print disk usage of current directory and subdirectories in bytes (long flag).
+du --bytes
+# componentCommands: du
+
+# Print disk usage of /boot and subdirectories in bytes.
+du -b | sort -nr
+# Example output:
+# 357321475	/boot
+# 8076090	/boot/grub
+# 6458969	/boot/efi/EFI
+# 6458969	/boot/efi
+# 4547681	/boot/efi/EFI/ubuntu
+# 3105455	/boot/grub/x86_64-efi
+# 2411806	/boot/grub/fonts
+# 1911288	/boot/efi/EFI/BOOT
+# 135880	/boot/grub/locale
+# 0	/boot/efi/EFI/UpdateCapsule
+# 0	/boot/efi/EFI/ubuntu/fw
+# componentCommands: du, sort
+
+# Print disk usage of /boot and subdirectories in bytes (long flags).
+du --bytes /boot | sort --numeric-sort --reverse
+# Example output:
+# 357321475	/boot
+# 8076090	/boot/grub
+# 6458969	/boot/efi/EFI
+# 6458969	/boot/efi
+# 4547681	/boot/efi/EFI/ubuntu
+# 3105455	/boot/grub/x86_64-efi
+# 2411806	/boot/grub/fonts
+# 1911288	/boot/efi/EFI/BOOT
+# 135880	/boot/grub/locale
+# 0	/boot/efi/EFI/UpdateCapsule
+# 0	/boot/efi/EFI/ubuntu/fw
+# componentCommands: du, sort
+
+# Print which user directory is taking up the most disk space in units of KiB.
+du -k --max-depth=1 /home | sort -nr
+# componentCommands: du, sort
+
+# Look at disk usage of current directory interactively.
+ncdu
+# componentCommands: ncdu
+
+# Extract audio tracks from an mkv file.
+mkvextract tracks example.mkv 2:example_out.ac3
+# componentCommands: mkvextract
+
+# Show list of all files except . and .. in a single column.
+ls --almost-all --format=single-column
+# componentCommands: ls
+
+# Shortcut to repeat previous command in bash, interactive shells only.
+!!
+# componentCommands: !!

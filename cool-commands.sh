@@ -1,19 +1,5 @@
 #! /usr/bin/env bash
 
-# Disk usage:
-du | sort --numeric-sort --reverse
-du | sort -nr # quick version
-du -k --max-depth=1 /home | sort -nr
-
-# Extract audio tracks from an mkv file.
-mkvextract tracks movie5.mkv 2:audio_track.ac3
-
-# Show list of all files except . and .. in a single column.
-ls --almost-all --format=single-column
-
-# shortcut to repeat previous command in bash
-!!
-
 # TODO: explain
 chmod u+rw,g+r,o+r myfile.txt
 
