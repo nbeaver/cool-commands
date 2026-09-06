@@ -1267,3 +1267,16 @@ ls --almost-all --format=single-column
 # Shortcut to repeat previous command in bash, interactive shells only.
 !!
 # componentCommands: !!
+
+# List USB devices every second and highlight any changes. Useful to plugging in new USB devices.
+watch -d -n 1 lsusb
+# componentCommands: watch, lsusb
+
+# Prevent laptop from going to idle standby or sleep mode for 1 hour (3600 seconds).
+systemd-inhibit --what=idle:sleep sleep 3600
+# https://askubuntu.com/questions/577862/how-to-temporarily-disable-sleep-and-hibernate-from-the-command-line
+# componentCommands: systemd-inhibit, sleep
+
+# Search for HTML files constaining CSS for a dark color scheme.
+ag -lQG '.*\.html' 'prefers-color-scheme: dark'
+# componentCommands: ag
