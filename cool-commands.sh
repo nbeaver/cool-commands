@@ -1,15 +1,5 @@
 #! /usr/bin/env bash
 
-# TODO: explain
-chmod u+rw,g+r,o+r myfile.txt
-
-# TODO: explain
-chmod a-w,u+w,g+w mydir/
-
-# Change permission so only user can access.
-chmod 0700 mydir/
-chmod u+rwx,g-rwx,o-rwx mydir/
-
 # find all files ending in .wma and copy them to ~/wma-dump, not overwriting repeated files
 find ~ -type f -name "*.wma" -exec cp -n '{}' /home/nathaniel/wma-dump/ ';'
 

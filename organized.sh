@@ -1207,14 +1207,17 @@ locate -r 'share/applications$'
 # Print disk usage of current directory and subdirectories in 1024 bytes (KiB).
 du
 # componentCommands: du
+# DONE
 
 # Print disk usage of current directory and subdirectories in bytes.
 du -b
 # componentCommands: du
+# DONE
 
 # Print disk usage of current directory and subdirectories in bytes (long flag).
 du --bytes
 # componentCommands: du
+# DONE
 
 # Print disk usage of /boot and subdirectories in bytes.
 du -b | sort -nr
@@ -1231,6 +1234,7 @@ du -b | sort -nr
 # 0	/boot/efi/EFI/UpdateCapsule
 # 0	/boot/efi/EFI/ubuntu/fw
 # componentCommands: du, sort
+# DONE
 
 # Print disk usage of /boot and subdirectories in bytes (long flags).
 du --bytes /boot | sort --numeric-sort --reverse
@@ -1247,36 +1251,101 @@ du --bytes /boot | sort --numeric-sort --reverse
 # 0	/boot/efi/EFI/UpdateCapsule
 # 0	/boot/efi/EFI/ubuntu/fw
 # componentCommands: du, sort
+# DONE
 
 # Print which user directory is taking up the most disk space in units of KiB.
 du -k --max-depth=1 /home | sort -nr
 # componentCommands: du, sort
+# DONE
 
 # Look at disk usage of current directory interactively.
 ncdu
 # componentCommands: ncdu
+# DONE
 
 # Extract audio tracks from an mkv file.
 mkvextract tracks example.mkv 2:example_out.ac3
 # componentCommands: mkvextract
+# DONE
 
 # Show list of all files except . and .. in a single column.
 ls --almost-all --format=single-column
 # componentCommands: ls
+# DONE
 
-# Shortcut to repeat previous command in bash, interactive shells only.
+# Shortcut to repeat previous command in bash using history expansion. Interactive shells only.
 !!
 # componentCommands: !!
+# https://www.gnu.org/software/bash/manual/html_node/Event-Designators.html
+# https://www.redhat.com/en/blog/bash-bang-commands
+# https://unix.stackexchange.com/questions/147563/how-do-i-repeat-the-last-command-without-using-the-arrow-keys
+# DONE
 
-# List USB devices every second and highlight any changes. Useful to plugging in new USB devices.
+# List USB devices every second and highlight any changes. Useful while plugging or unplugging USB devices.
 watch -d -n 1 lsusb
 # componentCommands: watch, lsusb
+# https://askubuntu.com/questions/600818/bluetooth-messed-up-by-kernel-3-13-46
+# https://unix.stackexchange.com/questions/776606/usb-wireless-adapter-not-showing-except-in-lsusb
+# DONE
 
 # Prevent laptop from going to idle standby or sleep mode for 1 hour (3600 seconds).
 systemd-inhibit --what=idle:sleep sleep 3600
 # https://askubuntu.com/questions/577862/how-to-temporarily-disable-sleep-and-hibernate-from-the-command-line
 # componentCommands: systemd-inhibit, sleep
+# DONE
 
 # Search for HTML files constaining CSS for a dark color scheme.
 ag -lQG '.*\.html' 'prefers-color-scheme: dark'
 # componentCommands: ag
+# DONE
+
+# Print permissions in human-readable (%A) and octal (%a) format, as well as owner (%U) and group (%G).
+stat -c '%A %a %U %G %n' myfile.txt
+# componentCommands: ag
+# DONE
+
+# Set permissions of a file so that all users can read it but only the owner can modify it.
+chmod u=rw,g=r,o=r myfile.txt
+# componentCommands: chmod
+# http://www.quitsendingmetrash.com/lrn/unix/commands/chmod/chmodBasics.html
+# https://www.linuxjournal.com/article/1190
+# https://marcyes.com/2018/0208-a-simple-way-to-remember-linux-permissions/
+# DONE
+
+# Set permissions of a file so that all users can read it but only the owner can modify it.
+chmod 0644 myfile.txt
+# componentCommands: chmod
+# http://www.quitsendingmetrash.com/lrn/unix/commands/chmod/chmodBasics.html
+# https://www.linuxjournal.com/article/1190
+# https://marcyes.com/2018/0208-a-simple-way-to-remember-linux-permissions/
+# DONE
+
+# Set permissions of a directory called mydir/ so that only the owner and group members can modify it, but don't change access settings.
+chmod a-w,ug+w mydir/
+# componentCommands: chmod
+# DONE
+
+# Set permissions of a directory called mydir/ so that only the owner and group members can modify it, but don't change access settings.
+chmod ug+w,o-w mydir/
+# componentCommands: chmod
+# DONE
+
+# Set permissions of a directory so that only the owner and group members access and modify mydir/.
+chmod ug=rwx,o=rwx mydir/
+# componentCommands: chmod
+# DONE
+
+# Set permissions of a directory so that only the owner and group members access and modify mydir/.
+chmod 0770 mydir/
+# componentCommands: chmod
+# DONE
+
+# Set permissions of a directory so only the owner can access.
+chmod u+rwx,g-rwx,o-rwx mydir/
+# componentCommands: chmod
+# DONE
+
+# Set permissions of a directory so only the owner can access.
+chmod 0700 mydir/
+# componentCommands: chmod
+# DONE
